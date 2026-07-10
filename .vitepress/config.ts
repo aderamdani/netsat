@@ -51,6 +51,10 @@ export default defineConfig({
     ['meta', { name: 'twitter:image', content: 'https://netsat.aderamdani.web.id/og-image.png' }],
   ],
 
+  vite: {
+    server: { hmr: { overlay: false } },
+  },
+
   sitemap: {
     hostname: 'https://netsat.aderamdani.web.id',
   },
@@ -79,6 +83,7 @@ export default defineConfig({
             { text: 'Switching & VLAN', link: '/networking/switching' },
             { text: 'Protokol Jaringan', link: '/networking/protokol' },
             { text: 'Keamanan Jaringan', link: '/networking/keamanan' },
+            { text: 'Keamanan Lanjutan', link: '/networking/keamanan-lanjut' },
           ],
         },
         {

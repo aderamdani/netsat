@@ -229,3 +229,4 @@ loss menentukan seberapa dekat kamu ke batas itu**.
 5. [Switching & VLAN](/networking/switching) — lalu lintas di dalam satu jaringan lokal
 6. [Protokol Jaringan](/networking/protokol) — TCP, UDP, DNS, DHCP, HTTP, dan kawan-kawan
 7. [Keamanan Jaringan](/networking/keamanan) — ancaman dan pertahanannya
+8. [Keamanan Lanjutan](/networking/keamanan-lanjut) — manajemen risiko, respon insiden, SIEM, standar keamanan
