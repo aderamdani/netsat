@@ -83,6 +83,7 @@ export default defineConfig({
             { text: 'Switching & VLAN', link: '/networking/switching' },
             { text: 'Protokol Jaringan', link: '/networking/protokol' },
             { text: 'Keamanan Jaringan', link: '/networking/keamanan' },
+            { text: 'Firewall — Panduan Lengkap', link: '/networking/firewall' },
             { text: 'Keamanan Lanjutan', link: '/networking/keamanan-lanjut' },
           ],
         },

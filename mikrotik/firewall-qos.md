@@ -4,7 +4,8 @@ title: Firewall & QoS
 
 # Firewall & QoS
 
-Prinsipnya sudah ditegakkan di [Keamanan Jaringan](/networking/keamanan#firewall):
+Prinsipnya sudah ditegakkan di [Keamanan Jaringan](/networking/keamanan#firewall)
+dan [Firewall — Panduan Lengkap](/networking/firewall):
 **default deny**, stateful, pertahanan berlapis. Halaman ini membangunnya di
 `/ip/firewall` — lalu mengatur *seberapa cepat* yang lolos boleh berlari
 dengan QoS.

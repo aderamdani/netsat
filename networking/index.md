@@ -135,7 +135,7 @@ Kenali dulu perannya:
 | Repeater / Hub | Fisik (L1) | Menguatkan/meneruskan sinyal ke semua port, tanpa berpikir |
 | Switch | Data Link (L2) | Meneruskan *frame* hanya ke port tujuan berdasarkan alamat MAC → [Switching](/networking/switching) |
 | Router | Network (L3) | Memilih jalur antar-jaringan berdasarkan alamat IP → [Routing](/networking/routing) |
-| Firewall | L3–L7 | Menyaring trafik sesuai aturan keamanan → [Keamanan](/networking/keamanan) |
+| Firewall | L3–L7 | Menyaring trafik sesuai aturan keamanan → [Firewall](/networking/firewall), [Keamanan](/networking/keamanan) |
 | Access Point | L1–L2 | Menjembatani perangkat nirkabel ke jaringan kabel |
 | Modem | L1 | Mengubah sinyal digital ↔ analog (termasuk **modem satelit** di terminal VSAT) |
 
@@ -229,4 +229,5 @@ loss menentukan seberapa dekat kamu ke batas itu**.
 5. [Switching & VLAN](/networking/switching) — lalu lintas di dalam satu jaringan lokal
 6. [Protokol Jaringan](/networking/protokol) — TCP, UDP, DNS, DHCP, HTTP, dan kawan-kawan
 7. [Keamanan Jaringan](/networking/keamanan) — ancaman dan pertahanannya
-8. [Keamanan Lanjutan](/networking/keamanan-lanjut) — manajemen risiko, respon insiden, SIEM, standar keamanan
+8. [Firewall — Panduan Lengkap](/networking/firewall) — dari packet filter hingga NGFW, arsitektur, NAT, logging, performa, skenario deployment
+9. [Keamanan Lanjutan](/networking/keamanan-lanjut) — manajemen risiko, respon insiden, SIEM, standar keamanan
