@@ -2,7 +2,6 @@
 import {
   ArrowRight,
   Layers,
-  Network,
   Route,
   Split,
   Binary,
@@ -14,6 +13,12 @@ import {
   Antenna,
   AudioWaveform,
   SatelliteDish,
+  KeyRound,
+  EthernetPort,
+  ArrowLeftRight,
+  BrickWall,
+  Lock,
+  Wifi,
 } from '@lucide/vue'
 
 const modules = [
@@ -43,6 +48,20 @@ const modules = [
       { icon: AudioWaveform, text: 'Frekuensi & Band', link: '/satelit/frekuensi-band' },
       { icon: SatelliteDish, text: 'VSAT', link: '/satelit/vsat' },
       { icon: Antenna, text: 'Pengantar Satelit', link: '/satelit/' },
+    ],
+  },
+  {
+    code: 'MODUL 03',
+    title: 'MikroTik',
+    desc: 'Modul praktik: teori dua modul sebelumnya diterjemahkan menjadi konfigurasi nyata di RouterOS, baris demi baris.',
+    link: '/mikrotik/',
+    topics: [
+      { icon: KeyRound, text: 'Akses Awal & Keamanan', link: '/mikrotik/akses-awal' },
+      { icon: EthernetPort, text: 'Interface & IP Address', link: '/mikrotik/interface-ip' },
+      { icon: ArrowLeftRight, text: 'DHCP, DNS & NAT', link: '/mikrotik/dhcp-dns-nat' },
+      { icon: BrickWall, text: 'Firewall & QoS', link: '/mikrotik/firewall-qos' },
+      { icon: Lock, text: 'VPN', link: '/mikrotik/vpn' },
+      { icon: Wifi, text: 'Wireless & Satelit', link: '/mikrotik/wireless-dan-satelit' },
     ],
   },
 ]
@@ -75,7 +94,7 @@ const modules = [
 <style scoped>
 .ns-modules {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   padding: 40px 0 8px;
 }
@@ -111,7 +130,7 @@ const modules = [
   margin: 22px 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 4px 16px;
 }
 
@@ -155,12 +174,8 @@ const modules = [
   color: var(--ns-gold-strong);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 960px) {
   .ns-modules {
-    grid-template-columns: 1fr;
-  }
-
-  .ns-topic-list {
     grid-template-columns: 1fr;
   }
 }

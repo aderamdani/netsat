@@ -158,5 +158,9 @@ Daftar minimum untuk jaringan apa pun, dari lab sekolah sampai kantor:
 
 ---
 
+**Praktik:** firewall default-deny, address-list dinamis, dan VPN dari halaman
+ini dibangun di [Firewall & QoS](/mikrotik/firewall-qos) dan
+[VPN (MikroTik)](/mikrotik/vpn).
+
 Modul networking selesai. Sekarang saatnya meninggalkan permukaan bumi:
 [Pengantar Satelit](/satelit/) menunggu di modul berikutnya.

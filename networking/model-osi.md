@@ -128,3 +128,7 @@ dan beberapa teknologi menolak dikotakkan (MPLS sering disebut "layer 2,5";
 tunneling menumpuk lapisan di atas lapisan). Gunakan OSI sebagai **peta**,
 bukan sebagai kitab suci — dan lanjutkan ke model yang benar-benar dipakai:
 [Model TCP/IP](/networking/model-tcp-ip).
+
+---
+
+**Praktik:** cara menu RouterOS dipetakan berdasarkan lapisan OSI — layer 2 di `/interface/bridge`, layer 3 di `/ip` dan `/routing` — dijelaskan di [Pengantar RouterOS](/mikrotik/#arsitektur-menu-konfigurasi-sebagai-pohon).

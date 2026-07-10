@@ -62,6 +62,7 @@ export default defineConfig({
       { text: 'Beranda', link: '/' },
       { text: 'Networking', link: '/networking/', activeMatch: '^/networking/' },
       { text: 'Satelit', link: '/satelit/', activeMatch: '^/satelit/' },
+      { text: 'MikroTik', link: '/mikrotik/', activeMatch: '^/mikrotik/' },
       { text: 'Tentang', link: '/tentang' },
     ],
 
@@ -85,6 +86,11 @@ export default defineConfig({
           collapsed: true,
           items: [{ text: 'Buka Modul Satelit →', link: '/satelit/' }],
         },
+        {
+          text: 'MODUL 03 — MIKROTIK',
+          collapsed: true,
+          items: [{ text: 'Buka Modul MikroTik →', link: '/mikrotik/' }],
+        },
       ],
       '/satelit/': [
         {
@@ -101,6 +107,38 @@ export default defineConfig({
             { text: 'Ground Station', link: '/satelit/ground-station' },
             { text: 'Frekuensi & Band', link: '/satelit/frekuensi-band' },
             { text: 'VSAT', link: '/satelit/vsat' },
+          ],
+        },
+        {
+          text: 'MODUL 03 — MIKROTIK',
+          collapsed: true,
+          items: [{ text: 'Buka Modul MikroTik →', link: '/mikrotik/' }],
+        },
+      ],
+      '/mikrotik/': [
+        {
+          text: 'MODUL 01 — NETWORKING',
+          collapsed: true,
+          items: [{ text: 'Buka Modul Networking →', link: '/networking/' }],
+        },
+        {
+          text: 'MODUL 02 — SATELIT',
+          collapsed: true,
+          items: [{ text: 'Buka Modul Satelit →', link: '/satelit/' }],
+        },
+        {
+          text: 'MODUL 03 — MIKROTIK',
+          items: [
+            { text: 'Pengantar RouterOS', link: '/mikrotik/' },
+            { text: 'Akses Awal', link: '/mikrotik/akses-awal' },
+            { text: 'Manajemen Perangkat', link: '/mikrotik/manajemen' },
+            { text: 'Interface & IP Address', link: '/mikrotik/interface-ip' },
+            { text: 'Bridging & Switching', link: '/mikrotik/bridging-switching' },
+            { text: 'DHCP, DNS & NAT', link: '/mikrotik/dhcp-dns-nat' },
+            { text: 'Routing di RouterOS', link: '/mikrotik/routing' },
+            { text: 'Firewall & QoS', link: '/mikrotik/firewall-qos' },
+            { text: 'VPN', link: '/mikrotik/vpn' },
+            { text: 'Wireless & Satelit', link: '/mikrotik/wireless-dan-satelit' },
           ],
         },
       ],

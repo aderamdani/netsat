@@ -24,6 +24,7 @@ handshake*. Belajar keduanya berdampingan membuat masing-masing lebih masuk akal
 | Sudah paham dasar jaringan | [Model OSI](/networking/model-osi) sebagai penyegar, lalu lompat ke topik yang dibutuhkan |
 | Penasaran dengan satelit | [Pengantar Satelit](/satelit/) — bisa dibaca tanpa modul networking, tapi lebih kaya jika sudah |
 | Bekerja dengan VSAT | [VSAT](/satelit/vsat) dan [Frekuensi & Band](/satelit/frekuensi-band) |
+| Ingin langsung praktik di perangkat | [Pengantar RouterOS](/mikrotik/) — modul praktik MikroTik yang menautkan balik ke teorinya |
 
 ## Konvensi penulisan
 

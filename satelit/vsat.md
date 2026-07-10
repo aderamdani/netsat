@@ -145,5 +145,9 @@ memantul di [transponder](/satelit/) 36.000 km di atas ekuator, turun ke
 kenapa ia terlambat setengah detik, dan siapa yang
 [mengamankannya](/networking/keamanan) di sepanjang jalan.
 
+**Praktik:** konfigurasi router di sisi remote VSAT — QoS untuk link sempit,
+DNS cache lokal, monitoring — ada di
+[Wireless & Satelit (MikroTik)](/mikrotik/wireless-dan-satelit#routeros-di-jaringan-vsat).
+
 Selamat — dan sampai jumpa di pembaruan materi berikutnya. Kontribusi terbuka
 di [GitHub](https://github.com/aderamdani/netsat).

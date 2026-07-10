@@ -152,5 +152,8 @@ bagian host praktis tak pernah habis.
 3. Butuh 6 subnet dari satu /24 — prefix barunya? <br>→ 3 bit (2³ = 8 ≥ 6) → **/27**
 4. Dua router dihubungkan langsung — prefix paling hemat? <br>→ **/30** (atau /31)
 
+**Praktik:** pasang alamat dan prefix hasil hitunganmu ke router sungguhan di
+[Interface & IP Address (MikroTik)](/mikrotik/interface-ip).
+
 Selanjutnya: alamat sudah tertata — sekarang bagaimana paket berpindah
 antar-subnet? Lanjut ke [Routing](/networking/routing).

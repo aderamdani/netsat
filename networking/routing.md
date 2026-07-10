@@ -145,5 +145,8 @@ Dua titik temu yang menarik:
    jalur teresterial mati (cadangan).
 3. Protokol apa yang merutekan **antar**-ISP? → **BGP**.
 
+**Praktik:** rute statis, failover dua WAN, OSPF, dan BGP dikonfigurasi nyata
+di [Routing di RouterOS (MikroTik)](/mikrotik/routing).
+
 Routing mengurus perpindahan **antar**-jaringan. Perpindahan **di dalam** satu
 jaringan lokal adalah dunia yang berbeda: [Switching & VLAN](/networking/switching).

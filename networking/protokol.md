@@ -153,6 +153,9 @@ Untuk menyelam lebih dalam, **Wireshark** menampilkan isi tiap paket lapis per
 lapis — ARP, DHCP DORA, TCP handshake, semua yang dibahas modul ini terlihat
 telanjang di sana. Sangat dianjurkan dicoba minimal sekali.
 
+**Praktik:** DHCP server, DNS cache, dan NAT dari halaman ini dipasang langkah
+demi langkah di [DHCP, DNS & NAT (MikroTik)](/mikrotik/dhcp-dns-nat).
+
 Protokol-protokol ini dirancang di era jaringan yang saling percaya. Apa yang
 terjadi ketika ada pihak yang berniat jahat? Lanjut ke
 [Keamanan Jaringan](/networking/keamanan).

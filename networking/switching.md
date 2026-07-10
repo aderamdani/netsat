@@ -158,5 +158,8 @@ transponder yang sama dengan prioritas QoS berbeda. Semua konsep di halaman
 ini bekerja persis sama; satelit hanya mengganti "kabel antar-gedung" dengan
 lompatan 36.000 km.
 
+**Praktik:** bangun bridge, access port, dan trunk 802.1Q dari halaman ini di
+[Bridging & Switching (MikroTik)](/mikrotik/bridging-switching).
+
 Berikutnya: nama-nama protokol yang sejak tadi berseliweran — TCP, UDP, DNS,
 DHCP, HTTP — dibedah satu per satu di [Protokol Jaringan](/networking/protokol).
