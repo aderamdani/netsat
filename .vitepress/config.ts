@@ -7,6 +7,7 @@ export default defineConfig({
     'Dokumentasi dan pembelajaran lengkap seputar jaringan komputer dan komunikasi satelit — dari model OSI hingga orbit geostasioner.',
   cleanUrls: true,
   lastUpdated: true,
+  srcExclude: ['CLAUDE.md', 'README.md'],
 
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],

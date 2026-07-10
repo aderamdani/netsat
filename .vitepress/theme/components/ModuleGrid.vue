@@ -116,6 +116,7 @@ const modules = [
 }
 
 .ns-topic {
+  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 9px;
@@ -139,6 +140,7 @@ const modules = [
 }
 
 .ns-module-link {
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 7px;

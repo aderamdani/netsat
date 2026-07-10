@@ -7,7 +7,7 @@ import { ArrowRight, BookOpen } from '@lucide/vue'
     <div class="ns-hero-text">
       <p class="ns-eyebrow">LINK ▸ ESTABLISHED — DOKUMENTASI TERBUKA</p>
       <h1 class="ns-hero-title">
-        Dari kabel di lantai satu<br />
+        Dari kabel di lantai satu<br class="ns-hero-br" />
         sampai orbit <span class="ns-hero-geo">35.786&nbsp;km</span>.
       </h1>
       <p class="ns-hero-desc">
@@ -115,6 +115,7 @@ import { ArrowRight, BookOpen } from '@lucide/vue'
 }
 
 .ns-btn {
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -196,17 +197,21 @@ import { ArrowRight, BookOpen } from '@lucide/vue'
   transform-origin: 210px 210px;
 }
 
-/* kecepatan orbit mengikuti fisika: makin rendah makin cepat */
+/* kecepatan orbit mengikuti fisika: makin rendah makin cepat;
+   delay negatif menyebar posisi awal agar tidak menumpuk */
 .ns-sat-leo {
   animation: ns-orbit 14s linear infinite;
+  animation-delay: -3s;
 }
 
 .ns-sat-meo {
   animation: ns-orbit 34s linear infinite;
+  animation-delay: -21s;
 }
 
 .ns-sat-geo {
   animation: ns-orbit 80s linear infinite;
+  animation-delay: -52s;
 }
 
 @keyframes ns-orbit {
@@ -227,6 +232,12 @@ import { ArrowRight, BookOpen } from '@lucide/vue'
   font-size: 10px;
   letter-spacing: 0.08em;
   color: var(--vp-c-text-3);
+}
+
+@media (max-width: 560px) {
+  .ns-hero-br {
+    display: none;
+  }
 }
 
 @media (max-width: 860px) {

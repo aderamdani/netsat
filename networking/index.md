@@ -20,7 +20,7 @@ Sebelum masuk teori, ini gambaran besarnya. Saat kamu mengetik
 1. **Resolusi nama** — komputermu bertanya ke server [DNS](/networking/protokol#dns):
    "berapa alamat IP dari nama ini?"
 2. **Pembentukan koneksi** — komputermu menjalin koneksi
-   [TCP](/networking/model-tcp-ip#lapisan-transport) ke alamat IP tersebut.
+   [TCP](/networking/model-tcp-ip#lapisan-transport-ujung-ke-ujung) ke alamat IP tersebut.
 3. **Permintaan data** — lewat koneksi itu, browser mengirim permintaan
    [HTTP](/networking/protokol#http-dan-https) yang dienkripsi TLS.
 4. **Perjalanan paket** — permintaan dipecah menjadi paket-paket, tiap paket
