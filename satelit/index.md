@@ -148,6 +148,7 @@ teknologi mana pun, karena dibatasi kecepatan cahaya.
 3. [Ground Station](/satelit/ground-station) — kaki bumi dari jaringan angkasa
 4. [Frekuensi & Band](/satelit/frekuensi-band) — L, S, C, Ku, Ka, dan hujan tropis
 5. [VSAT](/satelit/vsat) — internet piringan kecil yang menyatukan nusantara
+6. [VSAT — Operasional & Perencanaan](/satelit/vsat-lanjut) — SCPC, bandwidth planning, instalasi, troubleshooting, platform, SATRIA-1
 
 Disarankan membaca [modul Networking](/networking/) dulu — terutama
 [TCP/IP](/networking/model-tcp-ip) — supaya bab latensi terasa "nyambung".

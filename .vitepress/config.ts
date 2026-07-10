@@ -113,6 +113,7 @@ export default defineConfig({
             { text: 'Ground Station', link: '/satelit/ground-station' },
             { text: 'Frekuensi & Band', link: '/satelit/frekuensi-band' },
             { text: 'VSAT', link: '/satelit/vsat' },
+            { text: 'VSAT — Operasional & Perencanaan', link: '/satelit/vsat-lanjut' },
           ],
         },
         {

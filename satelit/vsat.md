@@ -188,5 +188,9 @@ kenapa ia terlambat setengah detik, dan siapa yang
 DNS cache lokal, monitoring — ada di
 [Wireless & Satelit (MikroTik)](/mikrotik/wireless-dan-satelit#routeros-di-jaringan-vsat).
 
+**Lanjutan:** detail operasional — SCPC, perencanaan bandwidth, instalasi
+SOP, troubleshooting, dan platform VSAT — ada di
+[VSAT — Operasional & Perencanaan](/satelit/vsat-lanjut).
+
 Selamat — dan sampai jumpa di pembaruan materi berikutnya. Kontribusi terbuka
 di [GitHub](https://github.com/aderamdani/netsat).
