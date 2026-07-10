@@ -184,17 +184,73 @@ Kebalikan subnetting: menggabungkan beberapa blok menjadi satu rute ringkas.
 `192.168.0.0/22`. Inilah yang membuat tabel routing internet global "hanya"
 ±1 juta entri, bukan miliaran — detailnya di [Routing](/networking/routing#longest-prefix-match).
 
-## Sekilas IPv6
+## Deep-Dive IPv6 & Subnetting
 
-Prinsipnya identik, angkanya raksasa:
+Prinsip dasar pembagian prefix pada IPv6 sama dengan IPv4 (menggunakan notasi CIDR), namun IPv6 memiliki ukuran alamat raksasa sebesar **128 bit** yang ditulis dalam format heksadesimal (8 grup x 16 bit, dipisahkan oleh titik dua `:`).
 
-- 128 bit, heksadesimal: `2001:db8:aa::1/64`.
-- Subnet standar untuk LAN selalu **/64** — tidak perlu berhemat host.
-- Organisasi biasanya menerima /48 (= 65.536 subnet /64).
-- Tidak ada broadcast (diganti multicast), tidak butuh NAT.
+Format dasar IPv6:
+`2001:0db8:85a3:0000:0000:8a2e:0370:7334`
 
-Latihan subnetting IPv6 = latihan menghitung di kolom prefix saja, karena
-bagian host praktis tak pernah habis.
+### 1. Aturan Penulisan Singkat (Kompresi IPv6)
+Untuk mempermudah penulisan, terdapat dua aturan resmi:
+1. **Omit Leading Zeros:** Nol di depan setiap grup boleh dihapus.
+   * `0db8` menjadi `db8`
+   * `0000` menjadi `0`
+2. **Double Colon (`::`):** Satu blok atau lebih grup nol berurutan dapat diganti dengan titik dua ganda `::`. Aturan ini **hanya boleh digunakan sekali** dalam satu alamat untuk menghindari ambiguitas.
+   * Contoh: `2001:db8:85a3:0:0:8a2e:370:7334` ──▶ `2001:db8:85a3::8a2e:370:7334`
+
+---
+
+### 2. Anatomi Alamat IPv6
+Secara default, alamat IPv6 standar untuk pengguna akhir (LAN) adalah **/64**. Alamat ini dibagi menjadi dua bagian sama besar:
+
+```
+┌───────────────────────────────── 128 Bit ─────────────────────────────────┐
+│              Network Prefix (64 Bit)              │   Interface ID (64 Bit)   │
+├───────────────────────────────────┼───────────────┼───────────────────────┤
+│    Global Routing Prefix (48 Bit) │ Subnet (16 Bit)│   MAC / Random (64)   │
+└───────────────────────────────────┴───────────────┴───────────────────────┘
+```
+
+* **Network Prefix (64 bit pertama):** Digunakan untuk proses routing di internet dan lokal.
+  * **Global Routing Prefix (biasanya 48 bit pertama):** Blok alamat yang diberikan oleh ISP ke organisasi/pelanggan.
+  * **Subnet ID (16 bit berikutnya):** Digunakan oleh internal administrator untuk membagi segmen jaringan (menghasilkan hingga $2^{16} = 65.536$ subnet /64).
+* **Interface ID (64 bit terakhir):** Identitas unik fisik host (seperti MAC Address yang diubah dengan metode EUI-64 atau diacak demi privasi).
+
+---
+
+### 3. Jenis Alamat IPv6 Terpenting
+
+| Jenis Alamat | Prefix | Fungsi & Analogi IPv4 | Contoh Alamat |
+| --- | --- | --- | --- |
+| **Global Unicast Address (GUA)** | `2000::/3` (Dimulai dengan angka `2` atau `3`) | IP Publik internet. Dapat dirutekan secara global di internet tanpa NAT. | `2001:db8::1` |
+| **Link-Local Address (LLA)** | `fe80::/10` | IP otomatis per interface (seperti APIPA `169.254.x.x`). Digunakan untuk komunikasi lokal satu segmen fisik LAN (misal: bertukar routing protocol). | `fe80::e02:9eff:fe88:12` |
+| **Unique Local Address (ULA)** | `fc00::/7` (Seringnya `fd00::/8`) | IP Privat lokal (seperti `192.168.x.x`). Tidak dapat dirutekan ke internet. | `fd00:1234:5678::1` |
+| **Loopback Address** | `::1/128` | Localhost (`127.0.0.1`). | `::1` |
+| **Default Route** | `::/0` | Default route (`0.0.0.0/0`). | `::/0` |
+
+---
+
+### 4. Perencanaan Subnetting IPv6
+Karena jumlah alamat host dalam satu prefix `/64` adalah $2^{64} \approx 18$ triliun host, kita **tidak pernah melakukan subnetting di bawah /64** (seperti membuat /70 atau /80) untuk jaringan LAN. Hal ini dikarenakan fitur otomatisasi seperti **SLAAC (Stateless Address Autoconfiguration)** membutuhkan prefix tepat `/64` untuk bekerja.
+
+Subnetting IPv6 dilakukan dengan membagi blok besar (biasanya `/48` atau `/56` dari ISP) pada blok 16-bit Subnet ID.
+
+**Contoh Kasus:**
+ISP memberikan alokasi IPv6 block **`2001:db8:cafe::/48`** ke kantor Anda. Anda diminta membagi blok ini ke 3 segmen LAN dan 1 link point-to-point.
+
+Satu blok `/48` memiliki 16 bit kosong sebelum mencapai batas standar `/64` (`64 - 48 = 16 bit`). Kita cukup mengganti karakter heksadesimal pada digit grup ke-4:
+
+`2001:0db8:cafe:[SUBNET]::/64`
+
+* **LAN 1 (Staff):** `2001:db8:cafe:0001::/64` (singkat: `2001:db8:cafe:1::/64`)
+* **LAN 2 (Guest):** `2001:db8:cafe:0002::/64` (singkat: `2001:db8:cafe:2::/64`)
+* **LAN 3 (Server):** `2001:db8:cafe:000a::/64` (singkat: `2001:db8:cafe:a::/64`)
+* **Link Router-to-Router:** `2001:db8:cafe:ffff::/64` (singkat: `2001:db8:cafe:ffff::/64`)
+
+*Keuntungan Subnetting IPv6:* Sangat mudah dibaca secara visual dan tidak membutuhkan konversi biner yang rumit seperti IPv4, karena pembagian batas subnet bertepatan dengan batas karakter heksadesimal (setiap 1 karakter heksadesimal mewakili 4 bit).
+
+---
 
 ## Uji pemahaman
 

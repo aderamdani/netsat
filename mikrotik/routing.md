@@ -249,6 +249,112 @@ routing yang sama — krusial agar respon server kembali via VSAT, bukan
 terlempar ke fiber.
 :::
 
+## Load Balancing Lanjutan: Per Connection Classifier (PCC)
+
+Meskipun **ECMP** mudah dikonfigurasi, ia memiliki kelemahan besar: pembagian bebannya berbasis round-robin per-tujuan tanpa mengingat status sesi secara persisten. Hal ini sering menyebabkan masalah pada situs HTTPS bank atau portal login e-commerce yang memverifikasi alamat IP pengirim secara berkala — jika IP Anda terus berganti di tengah sesi, koneksi Anda akan diputus (logout paksa).
+
+Untuk mengatasinya, RouterOS menggunakan metode **PCC (Per Connection Classifier)**. PCC membagi lalu lintas ke beberapa WAN dengan mengelompokkan koneksi berdasarkan informasi header (biasanya kombinasi `src-address` dan `dst-address`), sehingga memastikan satu aliran sesi (*session stream*) dari client tertentu ke server tujuan selalu melewati jalur WAN yang sama secara konsisten.
+
+### Cara Kerja Pembagian Beban PCC
+Misalkan kita memiliki 2 koneksi WAN: **WAN1 (Fiber)** dan **WAN2 (Starlink/VSAT)**.
+PCC akan membagi koneksi menjadi 2 bagian (`denominator=2`):
+* Koneksi bagian pertama (`remainder=0`) dikirim ke **WAN1**.
+* Koneksi bagian kedua (`remainder=1`) dikirim ke **WAN2**.
+
+```
+                           ┌──▶ Mangle (PCC 2/0) ──▶ Table: via-wan1 ──▶ [WAN1 - Fiber]
+ [Client-Client LAN] ──▶ Prerouting
+                           └──▶ Mangle (PCC 2/1) ──▶ Table: via-wan2 ──▶ [WAN2 - Starlink]
+```
+
+### Langkah-Langkah Konfigurasi PCC (Dual-WAN)
+
+Berikut adalah konfigurasi lengkap untuk membagi beban 2 WAN dengan rasio 50:50.
+
+**1. Definisikan Tabel Routing Tambahan**
+Kita buat tabel routing khusus untuk masing-masing WAN (FIB):
+```bash
+/routing/table/add name=to-wan1 fib
+/routing/table/add name=to-wan2 fib
+```
+
+**2. Konfigurasi IP Route**
+Tambahkan rute default untuk masing-masing tabel routing khusus, serta rute cadangan di tabel `main` agar jika salah satu WAN mati, rute utama tetap ter-failover:
+```bash
+# Rute di tabel khusus masing-masing
+/ip/route/add dst-address=0.0.0.0/0 gateway=203.0.113.1 routing-mark=to-wan1 check-gateway=ping
+/ip/route/add dst-address=0.0.0.0/0 gateway=198.51.100.1 routing-mark=to-wan2 check-gateway=ping
+
+# Rute di tabel main (dengan distance berbeda untuk failover otomatis)
+/ip/route/add dst-address=0.0.0.0/0 gateway=203.0.113.1 distance=1 check-gateway=ping
+/ip/route/add dst-address=0.0.0.0/0 gateway=198.51.100.1 distance=2 check-gateway=ping
+```
+
+**3. Buat Aturan Mangle (Firewall)**
+Di sinilah letak logika PCC. Kita harus memastikan:
+* Lalu lintas lokal (antar-LAN) dibebaskan dari proses penandaan rute agar koneksi lokal tidak terlempar ke internet.
+* Paket respon yang masuk dari luar lewat salah satu WAN harus dikirim balik lewat WAN yang sama (*connection tracking*).
+* Koneksi outbound baru dari LAN dikelompokkan dengan PCC dan diberi tanda rute (*routing mark*).
+
+```bash
+# Bebaskan trafik lokal agar tidak melalui proses load balancing
+/ip/firewall/address-list/add list=IP-LAN address=192.168.88.0/24
+
+/ip/firewall/mangle
+# 3.1. Tandai koneksi masuk dari luar agar kembali lewat jalur yang sama
+add chain=input in-interface=ether1 action=mark-connection new-connection-mark=wan1-conn passthrough=yes
+add chain=input in-interface=ether2 action=mark-connection new-connection-mark=wan2-conn passthrough=yes
+
+# 3.2. Pastikan respon rute balik untuk koneksi masuk tersebut melewati interface yang tepat
+add chain=output connection-mark=wan1-conn action=mark-routing new-routing-mark=to-wan1 passthrough=no
+add chain=output connection-mark=wan2-conn action=mark-routing new-routing-mark=to-wan2 passthrough=no
+
+# 3.3. Logika Pembagian Beban PCC 2-WAN (untuk client LAN)
+# Bagi koneksi baru menjadi 2 bagian secara merata
+add chain=prerouting dst-address-type=!local dst-address-list=!IP-LAN src-address-list=IP-LAN connection-state=new \
+    per-connection-classifier=both-addresses-and-ports:2/0 action=mark-connection new-connection-mark=wan1-conn passthrough=yes
+add chain=prerouting dst-address-type=!local dst-address-list=!IP-LAN src-address-list=IP-LAN connection-state=new \
+    per-connection-classifier=both-addresses-and-ports:2/1 action=mark-connection new-connection-mark=wan2-conn passthrough=yes
+
+# 3.4. Pasang Routing Mark ke paket berdasarkan Connection Mark
+add chain=prerouting src-address-list=IP-LAN connection-mark=wan1-conn action=mark-routing new-routing-mark=to-wan1 passthrough=no
+add chain=prerouting src-address-list=IP-LAN connection-mark=wan2-conn action=mark-routing new-routing-mark=to-wan2 passthrough=no
+```
+
+*Keterangan parameter PCC `both-addresses-and-ports`:* Menggunakan alamat IP pengirim, IP penerima, serta port sumber & tujuan untuk membagi trafik. Ini memberikan distribusi bandwidth yang paling merata, namun tetap menjaga stabilitas sesi per koneksi.
+
+---
+
+### 3. Studi Kasus: Hybrid WAN (Fiber + Starlink/VSAT)
+
+Dalam skenario modern (khususnya daerah rural di Indonesia), router sering menghubungkan jaringan lokal ke dua jenis penyedia internet yang bertolak belakang:
+1. **Jalur Fiber (Indihome/Biznet):** Bandwidth kecil (misal 50 Mbps), tetapi latensi sangat rendah (~10-30 ms), ideal untuk aplikasi *real-time*.
+2. **Jalur Satelit (Starlink/VSAT):** Bandwidth sangat besar (misal 200 Mbps), tetapi latensi tinggi (~50ms untuk LEO Starlink, ~600ms untuk GEO VSAT) dan rentan *rain fade*, ideal untuk pengunduhan file besar.
+
+Jika kita hanya menggunakan load balancing biasa (PCC 50:50), game online atau video conference akan sesekali mengalami lag berat karena terlempar ke jalur satelit yang latensinya tinggi. 
+
+**Solusinya adalah Policy-Based Hybrid WAN Routing:**
+Kita memodifikasi mangle rules untuk memisahkan lalu lintas berdasarkan **tipe aplikasi (port)**:
+
+* **Trafik Prioritas & Real-Time (VoIP, Game, SSH, VPN):** Dipaksa selalu keluar lewat **WAN1 (Fiber)**.
+* **Trafik Bulk & Download (HTTP, HTTPS Streaming, Speedtest):** Dipaksa keluar lewat **WAN2 (Starlink/VSAT)**.
+
+```bash
+/ip/firewall/mangle
+# Alirkan port VoIP (SIP 5060) dan DNS (53) ke WAN1 (Fiber)
+add chain=prerouting dst-port=5060,53 protocol=udp action=mark-routing new-routing-mark=to-wan1 comment="VoIP & DNS ke Fiber"
+
+# Alirkan port game online populer (misal TCP 20002-20010) ke WAN1 (Fiber)
+add chain=prerouting dst-port=20002-20010 protocol=tcp action=mark-routing new-routing-mark=to-wan1 comment="Game ke Fiber"
+
+# Alirkan sisanya ke WAN2 (Starlink) untuk download/streaming
+add chain=prerouting connection-state=new action=mark-connection new-connection-mark=wan2-conn comment="Sisa trafik ke Starlink"
+```
+
+Dengan metode Hybrid WAN ini, pengguna mendapatkan kenyamanan ganda: berselancar web dan mengunduh file terasa instan karena memanfaatkan bandwidth satelit yang besar, sementara komunikasi VoIP dan bermain game tetap lancar tanpa jeda berkat latensi kecil dari kabel fiber.
+
+---
+
 ## Uji pemahaman
 
 1. Tabel memuat `0.0.0.0/0 via A` dan `198.51.100.0/24 via B`; paket menuju

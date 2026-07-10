@@ -7,7 +7,7 @@ export default defineConfig({
     'Dokumentasi dan pembelajaran lengkap seputar jaringan komputer dan komunikasi satelit — dari model OSI hingga orbit geostasioner.',
   cleanUrls: true,
   lastUpdated: true,
-  srcExclude: ['CLAUDE.md', 'README.md'],
+  srcExclude: ['CLAUDE.md', 'README.md', 'DOCUMENTATION.md'],
 
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
@@ -140,6 +140,7 @@ export default defineConfig({
             { text: 'Akses Awal', link: '/mikrotik/akses-awal' },
             { text: 'Manajemen Perangkat', link: '/mikrotik/manajemen' },
             { text: 'Interface & IP Address', link: '/mikrotik/interface-ip' },
+            { text: 'IPv6 di RouterOS', link: '/mikrotik/ipv6' },
             { text: 'Bridging & Switching', link: '/mikrotik/bridging-switching' },
             { text: 'DHCP, DNS & NAT', link: '/mikrotik/dhcp-dns-nat' },
             { text: 'Routing di RouterOS', link: '/mikrotik/routing' },
@@ -148,6 +149,7 @@ export default defineConfig({
             { text: 'VPN', link: '/mikrotik/vpn' },
             { text: 'Wireless & Satelit', link: '/mikrotik/wireless-dan-satelit' },
             { text: 'Operasi & Monitoring', link: '/mikrotik/monitoring' },
+            { text: 'Scripting & Otomatisasi', link: '/mikrotik/scripting-otomatisasi' },
             { text: 'Glosari', link: '/mikrotik/glosari' },
           ],
         },
