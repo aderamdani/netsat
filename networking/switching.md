@@ -1,0 +1,162 @@
+---
+title: Switching & VLAN
+---
+
+# Switching & VLAN
+
+Kalau [routing](/networking/routing) mengatur perjalanan **antar**-jaringan,
+switching mengatur lalu lintas **di dalam** satu jaringan lokal. Switch bekerja
+di [layer 2](/networking/model-osi#layer-2-—-data-link), berbicara dalam bahasa
+*frame* dan alamat MAC.
+
+## Alamat MAC
+
+Alamat MAC (*Media Access Control*) adalah identitas 48-bit yang tertanam di
+setiap kartu jaringan, ditulis heksadesimal:
+
+```
+3C:5A:B4:12:34:56
+└───┬────┘└───┬───┘
+    OUI      NIC-specific
+ (vendor)   (nomor seri)
+```
+
+24 bit pertama (OUI) mengidentifikasi vendor; sisanya nomor urut perangkat.
+Berbeda dengan IP yang **logis dan hierarkis** (bisa dipindah, menunjukkan
+lokasi jaringan), MAC itu **fisik dan datar** — melekat pada perangkat, tidak
+menunjukkan lokasi.
+
+`FF:FF:FF:FF:FF:FF` adalah MAC broadcast: frame untuk semua perangkat di
+jaringan lokal.
+
+## Bagaimana switch belajar
+
+Switch memegang **MAC address table** (CAM table): pemetaan alamat MAC → port.
+Cara kerjanya elegan karena sepenuhnya otomatis:
+
+1. **Learning** — setiap frame yang masuk dibaca **MAC sumbernya**, lalu
+   dicatat: "MAC ini ada di port ini".
+2. **Forwarding** — MAC **tujuan** dicari di tabel; jika ketemu, frame dikirim
+   hanya ke port itu.
+3. **Flooding** — jika MAC tujuan belum dikenal (atau broadcast), frame
+   dikirim ke **semua** port kecuali port asal.
+4. **Aging** — entri yang lama tidak terdengar (default ±300 detik) dihapus.
+
+```
+Frame masuk dari port 3, sumber AA:..:01, tujuan BB:..:02
+
+MAC table:                      Keputusan:
+AA:..:01 → port 3  (baru dicatat)
+BB:..:02 → port 7  (sudah ada)   → kirim hanya ke port 7
+CC:..:03 → port 1
+```
+
+Inilah bedanya dengan **hub** zaman dulu yang membabi buta mengulang sinyal ke
+semua port: switch menciptakan jalur privat antar-dua-port, sehingga banyak
+percakapan bisa berlangsung serentak tanpa tabrakan.
+
+## ARP: jembatan antara IP dan MAC
+
+Komputer berpikir dalam IP, tapi frame butuh MAC. **ARP** (*Address Resolution
+Protocol*) menerjemahkannya:
+
+```
+Host 192.168.1.7 ingin mengirim ke 192.168.1.20:
+
+1. Broadcast : "Siapa yang punya 192.168.1.20? Beri tahu 192.168.1.7"
+2. Jawaban   : "192.168.1.20 ada di BB:CC:DD:11:22:33"
+3. Disimpan di ARP cache, frame pun bisa dikirim.
+```
+
+```bash
+ip neigh show          # lihat ARP cache di Linux
+# 192.168.1.1 dev wlan0 lladdr a4:91:b1:xx:xx:xx REACHABLE
+```
+
+Penting: jika tujuan berada di **subnet lain**, host tidak meng-ARP tujuan —
+ia meng-ARP **gateway**-nya, karena frame hanya perlu sampai ke router.
+
+## Broadcast domain dan masalah skala
+
+Semua port di satu switch (dan switch-switch yang tersambung) membentuk satu
+**broadcast domain**: satu broadcast ARP didengar semua perangkat. Dengan 500
+host di satu domain, setiap komputer terus-menerus diganggu broadcast orang
+lain — boros, berisik, dan satu insiden (badai broadcast, perangkat nakal)
+menular ke semuanya.
+
+Solusinya: memecah broadcast domain. Bisa dengan router fisik — atau dengan
+cara yang jauh lebih luwes: **VLAN**.
+
+## VLAN: banyak jaringan di satu switch
+
+VLAN (*Virtual LAN*) membagi satu switch fisik menjadi beberapa jaringan logis
+yang saling terisolasi. Port yang berbeda VLAN tidak bisa saling bicara di
+layer 2 — seolah-olah berada di switch yang berbeda.
+
+```
+Switch 24 port, tiga VLAN:
+
+VLAN 10 (Karyawan) : port 1–8
+VLAN 20 (Tamu)     : port 9–16
+VLAN 30 (CCTV)     : port 17–24
+
+CCTV tidak bisa mengendus trafik karyawan; tamu terisolasi dari keduanya.
+```
+
+Manfaatnya: segmentasi keamanan, membatasi broadcast, dan pengelompokan
+berdasarkan fungsi tanpa peduli lokasi fisik.
+
+### Trunk dan tagging 802.1Q
+
+Bagaimana VLAN 10 di switch A tersambung ke VLAN 10 di switch B? Lewat **trunk
+port** — satu kabel yang membawa banyak VLAN sekaligus. Setiap frame di trunk
+diberi **tag 802.1Q**: 4 byte tambahan berisi VLAN ID (1–4094).
+
+```
+Frame biasa : [MAC tujuan|MAC sumber|      Type|data|FCS]
+Frame tagged: [MAC tujuan|MAC sumber|802.1Q|Type|data|FCS]
+                                      └─ VLAN ID di sini
+```
+
+- **Access port** — milik satu VLAN; frame keluar-masuk tanpa tag (untuk
+  perangkat akhir).
+- **Trunk port** — membawa banyak VLAN; frame diberi tag (untuk antar-switch
+  dan ke router).
+
+### Antar-VLAN tetap butuh router
+
+VLAN memisahkan di layer 2; untuk berkomunikasi antar-VLAN, trafik harus naik
+ke layer 3. Pola umumnya **router-on-a-stick** (satu trunk ke router dengan
+sub-interface per VLAN) atau **switch layer 3** yang bisa merutekan langsung
+antar-VLAN di dalam dirinya — pilihan standar jaringan kampus/kantor modern.
+
+## Spanning Tree Protocol (STP)
+
+Demi redundansi, antar-switch sering dihubungkan lebih dari satu jalur. Tapi
+loop di layer 2 fatal: frame broadcast tidak punya TTL, sehingga berputar dan
+menggandakan diri tanpa henti — **broadcast storm** yang melumpuhkan jaringan
+dalam hitungan detik.
+
+**STP (802.1D)** mencegahnya: switch-switch memilih satu *root bridge*, lalu
+memblokir port-port yang membentuk loop, menyisakan topologi pohon (bebas
+loop). Saat jalur aktif putus, port cadangan dibuka otomatis. Varian modern
+**RSTP** (802.1w) konvergen dalam ±1–2 detik.
+
+::: tip Ringkasan mental: switch vs router
+- Switch: "MAC ini di port mana?" — cepat, satu gedung, plug-and-play.
+- Router: "prefix IP ini lewat mana?" — antar-jaringan, kenal dunia luar.
+- VLAN: switch fisik dipotong jadi beberapa switch logis; router (atau switch
+  L3) menjembatani antar-potongan.
+:::
+
+## Di jaringan berbasis satelit
+
+Terminal [VSAT](/satelit/vsat) di lokasi terpencil biasanya menjadi ujung
+trunk: di belakang modem satelit ada switch kecil dengan VLAN terpisah untuk
+data operasional, telepon (VoIP), dan Wi-Fi publik — tiga layanan berbagi satu
+transponder yang sama dengan prioritas QoS berbeda. Semua konsep di halaman
+ini bekerja persis sama; satelit hanya mengganti "kabel antar-gedung" dengan
+lompatan 36.000 km.
+
+Berikutnya: nama-nama protokol yang sejak tadi berseliweran — TCP, UDP, DNS,
+DHCP, HTTP — dibedah satu per satu di [Protokol Jaringan](/networking/protokol).
