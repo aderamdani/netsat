@@ -14,7 +14,7 @@ dengan QoS.
 Firewall filter RouterOS memilah paket berdasarkan arah relatifnya terhadap
 router:
 
-```
+```text
             ┌────────────────────────────┐
  masuk ───▶ │  input    → ke router ini  │  (SSH/WinBox ke router, ping router)
             │  forward  → numpang lewat  │  (LAN ↔ internet — mayoritas trafik)
@@ -40,7 +40,7 @@ loloskan sisanya secara massal — cepat dan aman.
 
 Urutan aturan untuk chain `input` (melindungi router itu sendiri):
 
-```
+```bash
 /ip/firewall/filter/add chain=input action=accept connection-state=established,related \
   comment="1: loloskan koneksi yang sudah sah"
 /ip/firewall/filter/add chain=input action=drop connection-state=invalid \
@@ -60,7 +60,7 @@ Urutan aturan untuk chain `input` (melindungi router itu sendiri):
 
 Untuk chain `forward` (melindungi LAN):
 
-```
+```bash
 /ip/firewall/filter/add chain=forward action=accept connection-state=established,related
 /ip/firewall/filter/add chain=forward action=drop connection-state=invalid
 /ip/firewall/filter/add chain=forward action=accept in-interface=bridge1 out-interface=ether1 \
@@ -86,7 +86,7 @@ tempat memutus sesimu sendiri.
 Kumpulan alamat bernama, bisa diisi manual maupun **otomatis** — bahan baku
 aturan dinamis:
 
-```
+```bash
 /ip/firewall/address-list/add list=manajemen address=192.0.2.0/24
 /ip/firewall/filter/add chain=input protocol=tcp dst-port=22 src-address-list=!manajemen \
   action=add-src-to-address-list address-list=penyusup address-list-timeout=1d
@@ -105,7 +105,7 @@ aturan dinamis:
 **Mangle** menandai paket/koneksi tanpa menghakimi — tandanya dipakai
 komponen lain (queue, routing policy):
 
-```
+```bash
 /ip/firewall/mangle/add chain=forward protocol=udp dst-port=5060,10000-20000 \
   action=mark-connection new-connection-mark=koneksi-voip passthrough=yes
 /ip/firewall/mangle/add chain=forward connection-mark=koneksi-voip \
@@ -118,7 +118,7 @@ komponen lain (queue, routing policy):
 **FastTrack** melompati sebagian besar pemrosesan untuk koneksi yang sudah
 dipercaya — throughput naik drastis di perangkat kecil:
 
-```
+```bash
 /ip/firewall/filter/add chain=forward action=fasttrack-connection \
   connection-state=established,related hw-offload=yes comment="jalur cepat"
 /ip/firewall/filter/add chain=forward action=accept connection-state=established,related
@@ -135,7 +135,7 @@ dipercaya — throughput naik drastis di perangkat kecil:
 
 Cara tercepat membatasi bandwidth per pelanggan/subnet:
 
-```
+```bash
 /queue/simple/add name=lab target=192.0.2.128/26 max-limit=10M/20M
 ```
 
@@ -148,7 +148,7 @@ Cara tercepat membatasi bandwidth per pelanggan/subnet:
 
 Untuk kebijakan hierarkis — "VoIP selalu menang, sisanya berbagi rata":
 
-```
+```bash
 /queue/type/add name=bagi-rata kind=pcq pcq-classifier=dst-address
 /queue/tree/add name=total parent=global max-limit=50M
 /queue/tree/add name=voip parent=total packet-mark=voip priority=1 limit-at=5M max-limit=10M
@@ -161,6 +161,87 @@ Untuk kebijakan hierarkis — "VoIP selalu menang, sisanya berbagi rata":
   [dunia VSAT](/satelit/vsat#merancang-layanan-parameter-yang-diperjualbelikan)).
 - `pcq` membagi kapasitas secara adil per alamat — satu pengunduh rakus tak
   bisa memonopoli.
+
+## Interface lists: aturan yang tak perlu diubah saat topologi berubah
+
+- Problem: firewall rules referencing specific interfaces break when you rename/restructure ports
+- Solution: `/interface/list/add name=WAN` and `/interface/list/member/add list=WAN interface=ether1`
+- Use in firewall: `in-interface-list=WAN` instead of `in-interface=ether1`
+- Add other WANs later by just adding members
+- Predefined lists: `WAN`, `LAN` (from default config)
+- Interface lists work everywhere: firewall, NAT, queue, routes
+
+```bash
+/interface/list/add name=WAN
+/interface/list/member/add list=WAN interface=ether1
+/interface/list/member/add list=WAN interface=sfp1
+
+/ip/firewall/filter/add chain=input in-interface-list=WAN protocol=tcp dst-port=22 action=drop
+```
+
+## DSCP: menandai paket untuk QoS upstream
+
+DSCP *marking* di mangle memberi sinyal prioritas ke router hilir — seberapa
+penting sebuah paket di mata jaringan selanjutnya:
+
+```bash
+/ip/firewall/mangle/add chain=forward protocol=udp dst-port=5060 action=set-dscp new-dscp=ef
+/ip/firewall/mangle/add chain=forward protocol=tcp dst-port=443 action=set-dscp new-dscp=af21
+```
+
+| Nilai    | Kegunaan             | Singkatan                              |
+|----------|----------------------|----------------------------------------|
+| `ef`     | VoIP                 | Expedited Forwarding                   |
+| `af41`   | Video streaming      | Assured Forwarding kelas 4 prioritas 1 |
+| `af21`   | Data kritis / RDP    | Assured Forwarding kelas 2 prioritas 1 |
+| `default`| Best effort          | Default (tanda DSCP 0)                 |
+
+- Efeknya bergantung pada **kebijakan operator** (ISP bisa menghormati atau
+  mengabaikan — banyak ISP Indonesia justru menimpa ulang).
+- Di jaringan sendiri, kombinasikan dengan queue tree untuk prioritas
+  *end-to-end*: mangle memberi tanda, queue tree membaca `packet-mark` lalu
+  mengatur antrean berdasarkan tanda itu.
+
+## Burst: kecepatan ekstra di awal
+
+Simple queue bisa memberi **semburan** kecepatan di detik-detik pertama,
+selama pemakaian rata-rata masih di bawah ambang — efeknya *browsing* terasa
+ringan meskipun bandwidth kecil:
+
+```bash
+/queue/simple/add name=tetangga target=192.0.2.50/32 \
+  max-limit=5M/10M \
+  burst-limit=15M/20M \
+  burst-threshold=3M/5M \
+  burst-time=1m/1m
+```
+
+Cara kerja algoritma burst: saat trafik turun di bawah `burst-threshold`,
+*pendingin* berjalan — `burst-time` (1 menit) adalah durasi maksimal
+kecepatan penuh boleh bertahan. Begitu rata-rata menyentuh threshold lagi,
+kecepatan dipotong ke `max-limit` sampai pendinginan berikutnya.
+
+Cocok untuk koneksi *residential* (browsing, scroll media sosial), **tidak
+cocok** untuk VoIP atau streaming real-time yang butuh bandwidth stabil.
+
+## Aturan berbasis waktu
+
+Filter dan mangle bisa dibatasi jadwal — matikan akses game/workstation di
+jam kerja, batasi internet anak-anak di malam hari:
+
+```bash
+/ip/firewall/filter/add chain=forward protocol=udp dst-port=3478,3479 \
+  time=07:00-17:00,sun,mon,tue,wed,thu,fri action=drop \
+  comment="blokir Discord voice di jam kerja"
+/ip/firewall/filter/add chain=forward src-address-list=anak \
+  time=21:00-06:00,sun,mon,tue,wed,thu,fri,sat action=drop \
+  comment="internet anak mati pukul 21.00"
+```
+
+- `time=start_time-stop_time,daftar_hari` — format hari sama seperti di
+  cron, tiga huruf bahasa Inggris.
+- Kombinasikan dengan address-list untuk kontrol **siapa** dan **kapan**:
+  daftar `anak` diisi manual, aturan waktu di atas membatasi jadwal.
 
 ## Uji pemahaman
 

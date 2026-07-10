@@ -151,6 +151,24 @@ bekerja tanpa kamu minta. Lengkapi dengan penjaga kedua di port akses:
   sendiri (ada yang mencolok kabel membentuk lingkaran — kejadian nyata di
   kantor mana pun), port dimatikan otomatis.
 
+## Bonding: gabung bandwidth, lipat ketahanan
+
+- Bonding/LAG: beberapa port Ethernet digabung jadi satu interface logis
+- `/interface/bonding/add name=bond1 mode=lacp slaves=ether3,ether4`
+- Add bond to bridge: `/interface/bridge/port/add bridge=bridge1 interface=bond1`
+- Modes: `lacp` (802.3ad, standar), `balance-xor` (sederhana), `active-backup` (redundansi saja)
+- Prasyarat: switch tujuan juga harus dikonfigurasi LACP
+- Cek status: `/interface/bonding/print`
+- Switch chip HW offload: tidak semua chipset mendukung HW bonding; tanpa HW offload, bonding = beban CPU
+
+## Storm control: batasi banjir
+
+- Batasi broadcast/multicast/unknown-unicast agar satu link macet tak meracuni sisanya
+- `/interface/bridge/port/set numbers=ether2 broadcast-limit=200` (200 pps)
+- Available limits: `broadcast-limit`, `multicast-limit`, `unknown-unicast-limit`
+- Juga per interface Ethernet: `/interface/ethernet/set ether1 storm-rate=100`
+- Konsep: proteksi switch — bukan QoS untuk paket normal
+
 ## Uji pemahaman
 
 1. IP LAN dipasang di `ether2` yang berstatus slave bridge — kenapa jaringan

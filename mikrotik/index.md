@@ -136,8 +136,10 @@ Contoh formatnya:
 | 5 | [DHCP, DNS & NAT](/mikrotik/dhcp-dns-nat) | [Protokol Jaringan](/networking/protokol) |
 | 6 | [Routing di RouterOS](/mikrotik/routing) | [Routing](/networking/routing) |
 | 7 | [Firewall & QoS](/mikrotik/firewall-qos) | [Keamanan Jaringan](/networking/keamanan) |
-| 8 | [VPN](/mikrotik/vpn) | [Keamanan](/networking/keamanan#vpn-terowongan-terenkripsi) |
-| 9 | [Wireless & Satelit](/mikrotik/wireless-dan-satelit) | [VSAT](/satelit/vsat), [Komunikasi Satelit](/satelit/komunikasi) |
+| 8 | [PPPoE](/mikrotik/pppoe) | [Protokol Jaringan](/networking/protokol) (PPP) |
+| 9 | [VPN](/mikrotik/vpn) | [Keamanan](/networking/keamanan#vpn-terowongan-terenkripsi) |
+| 10 | [Wireless & Satelit](/mikrotik/wireless-dan-satelit) | [VSAT](/satelit/vsat), [Komunikasi Satelit](/satelit/komunikasi) |
+| 11 | [Operasi & Monitoring](/mikrotik/monitoring) | [Manajemen Perangkat](/mikrotik/manajemen) (bekal) |
 
 Referensi utama modul ini adalah dokumentasi resmi
 [manual.mikrotik.com](https://manual.mikrotik.com) — struktur topiknya sengaja

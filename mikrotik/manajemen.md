@@ -28,7 +28,7 @@ terasa seperti versi klik-nya.
 
 Semua menu memakai kata kerja yang sama:
 
-```
+```bash
 /ip/address/add address=192.0.2.1/24 interface=ether2   ← tambah entri
 /ip/address/print                                       ← lihat daftar
 /ip/address/set 0 comment="LAN"                         ← ubah entri nomor 0
@@ -39,7 +39,7 @@ Semua menu memakai kata kerja yang sama:
 - Angka `0` adalah **nomor urut hasil `print` terakhir** — bukan identitas
   permanen. Untuk skrip yang aman, cari berdasarkan properti:
 
-```
+```bash
 /ip/address/set [find interface=ether2] comment="LAN"
 ```
 
@@ -72,7 +72,7 @@ Dua format, dua kegunaan — pakai **keduanya**:
 | Bisa dibaca/diedit | ✗ | ✓ |
 | Cocok untuk | Pemulihan total ke perangkat yang sama | Migrasi antar-perangkat, audit, versioning |
 
-```
+```bash
 /system/backup/save name=sebelum-upgrade password=RahasiaBackup!
 /export file=konfig-2026-07-10
 ```
@@ -85,7 +85,7 @@ Dua format, dua kegunaan — pakai **keduanya**:
 
 Pulihkan dengan:
 
-```
+```bash
 /system/backup/load name=sebelum-upgrade.backup password=RahasiaBackup!
 /import file-name=konfig-2026-07-10.rsc
 ```
@@ -97,7 +97,7 @@ Pulihkan dengan:
 
 Versi baru = tambalan keamanan. Ritualnya dua tahap:
 
-```
+```bash
 /system/package/update/check-for-updates
 /system/package/update/install
 ```
@@ -105,7 +105,7 @@ Versi baru = tambalan keamanan. Ritualnya dua tahap:
 - `install` mengunduh paket dan me-reboot. Setelah menyala kembali,
   samakan juga firmware bootloader-nya:
 
-```
+```bash
 /system/routerboard/upgrade
 ```
 
@@ -123,7 +123,7 @@ butuh 6 jam perjalanan bukan pengalaman yang menyenangkan. Channel
 
 Kelola siapa boleh apa lewat `/user`:
 
-```
+```bash
 /user/group/print
 /user/add name=teknisi password=SandiTeknisi_99 group=read
 /user/add name=noc password=SandiNOC_2026! group=write
@@ -137,6 +137,177 @@ Kelola siapa boleh apa lewat `/user`:
 
 Jejak kerja setiap user terekam di `/log/print` — log juga hal pertama yang
 dilihat saat troubleshooting.
+
+## NTP: jam yang akurat
+
+Waktu yang akurat bukan sekadar kenyamanan — ini kebutuhan keamanan. Sertifikat
+VPN, log serangan, dan debugging semuanya bergantung pada *timestamp* yang
+benar. Router dengan jam meleset akan menolak sertifikat yang sudah valid atau
+mencatat insiden di waktu yang salah.
+
+```bash
+/system/ntp/client/set enabled=yes servers=0.id.pool.ntp.org,1.id.pool.ntp.org
+```
+
+Pastikan sinkronisasi berjalan:
+
+```bash
+/system/ntp/client/print
+```
+
+Perhatikan kolom `status` — seharusnya `synchronized`. Jika tetap `error`,
+periksa apakah UDP/123 diizinkan keluar di firewall.
+
+Router juga bisa menjadi sumber waktu (NTP server) untuk perangkat di LAN:
+
+```bash
+/system/ntp/server/set enabled=yes broadcast=yes
+```
+
+::: warning Firewall untuk NTP
+- **Client**: izinkan `udp/123` ke **luar** — hanya dari router sendiri,
+  bukan dari LAN (kecuali LAN juga perlu NTP lewat router).
+- **Server**: batasi `udp/123` masuk hanya dari subnet LAN, jangan dari
+  internet — atau siap-siap menjadi korban *amplifikasi DDoS*.
+:::
+
+## Sistem logging
+
+RouterOS mencatat peristiwa dalam *topik* berjenjang: `info`, `warning`,
+`error`, `critical`. Semakin parah tingkatannya, semakin penting untuk dicek.
+
+Lihat 100 entri terakhir:
+
+```bash
+/log/print
+```
+
+Kirim log ke server pusat (syslog remote) jika jaringanmu punya SIEM atau
+Log Management:
+
+```bash
+/system/logging/action/add name=syslog-remote type=remote remote=192.0.2.100
+/system/logging/add topics=info,error action=syslog-remote
+```
+
+Sebagian topik bisa tetap disimpan di memori untuk akses cepat:
+
+```bash
+/system/logging/add topics=firewall,info action=memory
+```
+
+Topik yang paling sering dipantau: `firewall` (blokade), `dhcp`, `system`,
+`critical` (segala yang darurat).
+
+::: tip Rotasi log otomatis
+Buffer memory terbatas — entri lama akan tertimpa. Jika perlu jejak panjang,
+arahkan topik penting ke remote syslog atau simpan ke file dengan action
+`disk`.
+:::
+
+## Manajemen file
+
+Semua file — backup, ekspor konfigurasi, paket upgrade, log — berada di
+satu tempat:
+
+```bash
+/file/print
+```
+
+Hapus file yang tidak perlu (misal backup lama sebelum rilis baru):
+
+```bash
+/file/remove nama-file.backup
+```
+
+Cara memasukkan atau mengeluarkan file:
+
+| Metode | Cara |
+| --- | --- |
+| **WinBox** | Drag & drop di jendela Files |
+| **SCP** | `scp konfig.rsc admin@192.0.2.1:` |
+| **/tool/fetch** | Unduh dari URL: `/tool/fetch url=http://...` |
+| **Export** | `/export file=namafile` — langsung dari CLI |
+
+File yang biasa ditemui di router:
+
+- `*.backup` — backup biner (kredensial terenkripsi dengan password)
+- `*.rsc` — *export* konfigurasi teks (aman dibaca/diedit sebelum
+  `import`)
+- `*.npk` — paket upgrade RouterOS (letakkan di `/file`, lalu reboot)
+- `flash/` dan `disk/` — partisi penyimpanan; cek kapasitas dengan
+  `/file/print detail`
+
+## Skrip dan penjadwalan
+
+Tugas rutin seperti backup harian, reboot dini hari, atau cek koneksi bisa
+diotomatiskan dengan skrip + scheduler.
+
+Buat skrip:
+
+```bash
+/system/script/add name=backup-harian source={
+  /system/backup/save name=("backup-" . [/system/clock/get date])
+  /export file=("konfig-" . [/system/clock/get date])
+  /log/info "Backup harian selesai"
+}
+```
+
+Jadwalkan eksekusi setiap hari:
+
+```bash
+/system/scheduler/add name=backup-harian interval=1d on-event=backup-harian
+```
+
+Contoh kegunaan scheduler lain:
+
+| Skenario | Interval | Perintah inti |
+| --- | --- | --- |
+| Reboot mingguan | `1w` | `/system/reboot` |
+| Ping watchdog | `5m` | `/ping count=3 8.8.8.8` lalu kirim notifikasi jika gagal |
+| Backup otomatis | `1d` | Skrip `backup-harian` di atas |
+| Matikan WiAX malam | `24h` | `/interface/wireless/disable 0` pada jam tertentu |
+
+::: warning Hati-hati dengan reboot otomatis
+Pastikan konfigurasi sudah **stabil** sebelum menjadwalkan reboot. Router yang
+_macet setengah jalan_ karena skrip startup belum selesai saat reboot adalah
+masalah yang merepotkan di lokasi terpencil.
+:::
+
+## Notifikasi email
+
+Router bisa mengirim email — berguna untuk memberi tahu admin saat ada
+peristiwa penting (misal backup gagal, reboot, atau serangan terdeteksi).
+
+Konfigurasi SMTP (contoh Gmail):
+
+```bash
+/tool/e-mail/set address=smtp.gmail.com port=587 user=akun@gmail.com password=sandi-aplikasi
+/tool/e-mail/send to=admin@example.com subject="Router menyala" body="Router sudah nyala setelah reboot."
+```
+
+::: warning App password Gmail
+Gmail mewajibkan **App Password** (bukan sandi akun biasa) jika 2FA aktif.
+Buat di `myaccount.google.com/apppasswords`. Untuk SMTP lain sesuaikan
+`address` dan `port` (465/TLS atau 587/STARTTLS).
+:::
+
+Kombinasikan dengan scheduler untuk laporan status rutin. Buat skrip:
+
+```bash
+/system/script/add name=kirim-laporan source={
+  /tool/e-mail/send to=admin@example.com subject="Laporan harian" body="Router aktif sejak [/system/resource/get uptime]"
+}
+```
+
+Lalu jadwalkan:
+
+```bash
+/system/scheduler/add name=kirim-laporan interval=1d on-event=kirim-laporan start-time=07:00:00
+```
+
+Untuk firewall `output`, pastikan `tcp/587` (atau `tcp/465`) diizinkan keluar
+menuju server SMTP.
 
 ## Uji pemahaman
 
