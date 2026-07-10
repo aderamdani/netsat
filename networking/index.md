@@ -30,6 +30,46 @@ Sebelum masuk teori, ini gambaran besarnya. Saat kamu mengetik
 
 Seluruh modul networking pada dasarnya membedah lima langkah ini lapis demi lapis.
 
+::: info Analogi yang dipakai sepanjang modul: sistem pos
+Bayangkan jaringan sebagai **sistem pos**. Data adalah isi surat; paket adalah
+amplop dengan alamat pengirim dan penerima; router adalah kantor sortir yang
+memutuskan surat naik truk yang mana; dan protokol adalah aturan penulisan
+alamat yang disepakati semua kantor pos sedunia. Analogi ini tidak sempurna,
+tapi hampir setiap konsep baru di modul ini bisa dipetakan kembali ke sana —
+dan kami akan sering melakukannya.
+:::
+
+## Istilah dasar yang akan terus muncul
+
+Delapan kata ini dipakai di hampir setiap halaman. Kenali sekarang supaya tidak
+tersandung nanti:
+
+| Istilah | Arti sederhana |
+| --- | --- |
+| **Host** | Perangkat ujung yang memakai jaringan: laptop, ponsel, server, kamera IP |
+| **Node** | Titik apa pun di jaringan — host *maupun* perangkat perantara (switch, router) |
+| **Server** | Host yang **menyediakan** layanan (menunggu diminta) |
+| **Client** | Host yang **meminta** layanan (memulai percakapan) |
+| **Protokol** | Kesepakatan format & urutan pesan — "bahasa" yang dipahami kedua pihak |
+| **Paket** | Potongan data + header alamat; satuan yang berpindah-pindah di jaringan |
+| **Interface** | "Pintu" sebuah perangkat ke jaringan: port Ethernet, radio Wi-Fi, modem |
+| **Gateway** | Router yang menjadi pintu keluar dari jaringan lokalmu ke jaringan lain |
+
+### Client–server vs peer-to-peer
+
+Dua pola hubungan antar-host:
+
+- **Client–server** — peran tegas: server selalu siap melayani (web, email,
+  database), client datang meminta. Mudah dikelola dan diamankan; hampir semua
+  layanan internet memakai pola ini.
+- **Peer-to-peer (P2P)** — semua host setara, saling melayani sekaligus
+  meminta: berbagi file antar-laptop, BitTorrent, panggilan video langsung
+  antar-perangkat. Tanpa titik pusat, tapi lebih sulit diatur.
+
+Satu perangkat bisa memainkan dua peran sekaligus: laptopmu adalah *client*
+saat membuka situs ini, dan *server* saat teman mengakses file yang kamu
+bagikan.
+
 ## Jenis jaringan berdasarkan cakupan
 
 | Jenis | Kepanjangan | Cakupan | Contoh |
@@ -59,6 +99,25 @@ ketahanan terhadap kegagalan, dan kemudahan menambah perangkat.
 | Star | Semua perangkat terhubung ke satu titik pusat (switch) | Mudah dikelola, gagal satu kabel hanya memutus satu perangkat | Titik pusat jadi *single point of failure* |
 | Mesh | Setiap perangkat terhubung ke banyak perangkat lain | Sangat tahan gagal | Mahal, rumit |
 | Tree/Hierarki | Gabungan star bertingkat | Skalabel | Bergantung pada tingkat di atasnya |
+
+```text
+Bus                    Star                   Mesh (penuh)
+A──B──C──D             A   B                  A ─── B
+   (satu kabel          \ /                   │ ╲ ╱ │
+    bersama)        D──[SW]──C                │ ╱ ╲ │
+                         │                    C ─── D
+Ring                     E
+A──B                                          setiap simpul
+│  │                kegagalan 1 kabel         terhubung ke
+D──C                hanya memutus             semua simpul
+                    1 perangkat               lain
+```
+
+Cara membaca tabel di atas dalam praktik: pertanyaannya selalu **"kalau titik
+ini mati, siapa yang ikut mati?"**. Pada star, matinya satu kabel hanya
+memutus satu perangkat — tapi matinya switch pusat memutus semuanya. Pada mesh,
+hampir tidak ada titik yang kematiannya fatal — itulah kenapa topologi inti
+internet (dan konstelasi satelit) memilihnya walau mahal.
 
 Jaringan modern hampir selalu **star** di tingkat akses (semua komputer ke
 switch) dan **mesh parsial** di tingkat inti (antar-router, antar-ISP). Internet
@@ -123,6 +182,43 @@ latensi    = lama perjalanan satu mobil dari gerbang ke gerbang
 Ketiganya independen. Link satelit GEO bisa punya bandwidth ratusan Mbps tetapi
 latensi RTT ±500 ms — karena sinyal harus naik-turun 35.786 km dua kali. Inilah
 alasan bab [Komunikasi Satelit](/satelit/komunikasi) membahas TCP secara khusus.
+
+### Dua ukuran pelengkap: jitter dan packet loss
+
+- **Jitter** — variasi latensi antar-paket. Latensi 100 ms yang *stabil* masih
+  nyaman untuk telepon; latensi 50 ms yang melonjak-lonjak ke 200 ms membuat
+  suara terputus-putus. Musuh utama VoIP dan video call.
+- **Packet loss** — persentase paket yang hilang di jalan (antrean penuh,
+  interferensi radio, kabel buruk). Loss 1% terdengar kecil, tapi cukup untuk
+  membuat TCP menurunkan kecepatannya drastis.
+
+### Contoh dikerjakan: berapa lama unduhan 100 MB?
+
+Link 100 Mbps, file 100 MB (megabyte, bukan megabit):
+
+1. 100 MB = 800 megabit (1 byte = 8 bit — jebakan klasik!).
+2. Waktu ideal = 800 Mb ÷ 100 Mbps = **8 detik**.
+3. Kenyataan: overhead header TCP/IP (±3–5%), jeda *slow start*, dan antrean
+   membuat throughput riil mungkin 90 Mbps → ±9 detik. Di link satelit GEO,
+   tambahkan lagi beberapa detik karena TCP butuh banyak RTT untuk mencapai
+   kecepatan penuh.
+
+Pola pikirnya yang penting: **bandwidth menentukan batas atas; latensi dan
+loss menentukan seberapa dekat kamu ke batas itu**.
+
+## Cek pemahaman
+
+1. Wi-Fi rumahmu termasuk jenis jaringan apa? <br>→ **WLAN** — dan koneksi
+   rumah ke ISP adalah bagian dari **WAN**.
+2. Kenapa jaringan kantor memakai topologi star, bukan mesh? <br>→ Biaya:
+   mesh butuh kabel & port ke setiap perangkat lain. Star cukup satu kabel per
+   perangkat ke switch — kegagalan satu kabel pun hanya memutus satu perangkat.
+3. Perangkat apa yang memisahkan jaringan lokalmu dari internet? <br>→
+   **Router** (gateway) — sering digabung dengan firewall dan modem dalam satu
+   kotak "router rumah".
+4. Link 50 Mbps dengan RTT 600 ms vs link 10 Mbps dengan RTT 20 ms — mana yang
+   lebih nyaman untuk video call? <br>→ Yang kedua: video call butuh latensi
+   rendah dan stabil; bandwidth 10 Mbps sudah jauh lebih dari cukup.
 
 ## Peta modul ini
 

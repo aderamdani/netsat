@@ -17,7 +17,7 @@ Halaman ini merangkai semua bab sebelumnya menjadi satu sistem nyata.
 Arsitektur VSAT klasik adalah [topologi star](/networking/#topologi-jaringan)
 dengan pusatnya di bumi dan "kabelnya" di orbit:
 
-```
+```text
                     ┌──────────┐
                     │ SATELIT  │ GEO / HTS
                     └─▲─────┬──┘
@@ -25,7 +25,7 @@ dengan pusatnya di bumi dan "kabelnya" di orbit:
        (TDM, satu carrier) (MF-TDMA, banyak carrier)
               ┌─────────┘   └──────────┐
       ┌───────┴────────┐      ┌────────┴────────┐
-      │  HUB / GATEWAY │      │ REMOTE  REMOTE… │  (ratusan–ribuan)
+      │  HUB / GATEWAY │      │ REMOTE  REMOTE…  │  (ratusan–ribuan)
       │  antena 7–13 m │      │ antena 0,9–1,8 m│
       └───────┬────────┘      └────────┬────────┘
           internet /               LAN lokal:
@@ -99,6 +99,27 @@ Pengalaman praktis: unduhan besar bisa kencang mendekati kapasitas, tapi
 aplikasi ber-RTT-sensitif (SSH interaktif, video call) tetap terasa "jauh" —
 fisika [GEO](/satelit/orbit#geo-geostationary-orbit) tak bisa di-proxy.
 
+### Mengikuti satu transaksi ATM di pulau kecil
+
+Seluruh modul dalam 2–3 detik kehidupan nyata:
+
+1. Kartu digesek; mesin EDC/ATM membentuk pesan transaksi kecil (ratusan
+   byte) dan membuka koneksi TCP ke server bank.
+2. Paket melewati LAN → modem VSAT. PEP di modem **menjawab handshake secara
+   lokal** — tanpa ini, tiga-empat kali bolak-balik GEO sudah ±2 detik sendiri.
+3. Modem meminta slot [MF-TDMA](#mf-tdma-berbagi-transponder) ke hub,
+   memancar 14 GHz ke satelit ±36.000 km; transponder menggeser & menguatkan;
+   gateway menangkapnya.
+4. Dari gateway, paket berlari lewat serat optik ke server bank — ribuan km
+   dalam belasan milidetik, jauh lebih cepat dari lompatan angkasanya.
+5. Balasan "transaksi disetujui" menempuh jalur sebaliknya. Total ±1,5–3
+   detik — dan nasabah tidak pernah tahu uangnya baru saja ke orbit
+   pulang-pergi.
+
+Perhatikan kuncinya: transaksi kecil dan *bursty* seperti ini adalah pasangan
+sempurna MF-TDMA — ribuan ATM berbagi transponder yang sama, karena
+masing-masing hanya "berbicara" sepersekian detik.
+
 ## Merancang layanan: parameter yang diperjualbelikan
 
 | Istilah | Arti | Dampak harga |
@@ -131,6 +152,24 @@ Jawab pendeknya: keduanya akan hidup berdampingan — LEO merebut pasar
 konsumen yang haus latensi rendah; GEO/HTS bertahan di broadcast, backhaul
 ber-SLA, dan program pemerintah dengan kendali penuh. Konvergensinya pun
 sudah terlihat: terminal *multi-orbit* yang berpindah GEO↔LEO otomatis.
+
+## Cek pemahaman
+
+1. Dua kantor cabang sama-sama pakai VSAT dan saling telepon. Kenapa
+   percakapannya terasa sangat tertunda dibanding menelepon kantor pusat?
+   <br>→ **Double hop**: remote→satelit→hub→satelit→remote ≈ 1 detik RTT,
+   dua kali lipat jalur remote→hub.
+2. Layanan 1:20 contention 10 Mbps vs 1:1 CIR 2 Mbps — mana untuk ATM bank,
+   mana untuk Wi-Fi desa? <br>→ ATM: **CIR 1:1** (transaksi kecil tapi wajib
+   selalu bisa lewat — SLA). Wi-Fi desa: **1:20** (murah; pengguna banyak
+   tapi toleran).
+3. Kenapa antena VSAT melenceng 1° dianggap pelanggaran serius, bukan sekadar
+   "sinyal saya jelek"? <br>→ 1° di sabuk GEO ≈ 600 km — antenamu "berteriak"
+   ke **satelit tetangga** dan mengganggu ratusan terminal orang lain.
+4. Pelanggan komplain: "speedtest kencang, tapi video call patah-patah."
+   Jelaskan. <br>→ Speedtest mengukur throughput (yang diselamatkan PEP+ACM);
+   video call butuh **RTT rendah dan jitter kecil** — dua hal yang tidak bisa
+   dibeli di GEO. Solusinya QoS ketat, atau layanan LEO/teresterial.
 
 ---
 

@@ -22,6 +22,15 @@ Seluruh sejarah komunikasi satelit adalah perjalanan menaiki tangga frekuensi:
 dari C-band yang tahan banting, ke Ku yang lebih padat, ke Ka yang berkapasitas
 raksasa tapi manja terhadap cuaca.
 
+::: info Frekuensi dan panjang gelombang: dua sisi satu koin
+`panjang gelombang = kecepatan cahaya ÷ frekuensi`. Sinyal 3 GHz bergelombang
+10 cm; 30 GHz hanya 1 cm. Dari sini kedua hukum di atas terasa masuk akal:
+gelombang 1 cm berukuran sebanding **tetes hujan** (makanya dihamburkan), dan
+antena parabola efektif bila jauh lebih besar dari panjang gelombangnya
+(makanya frekuensi tinggi cukup piringan kecil, sementara C-band butuh
+parabola raksasa).
+:::
+
 ## Peta band satelit
 
 | Band | Rentang | Karakter | Pemakaian khas |
@@ -36,7 +45,7 @@ raksasa tapi manja terhadap cuaca.
 
 Contoh pasangan uplink/downlink (ingat: [selalu berbeda](/satelit/komunikasi#uplink-dan-downlink)):
 
-```
+```text
 C-band  : uplink ±6 GHz   → downlink ±4 GHz
 Ku-band : uplink ±14 GHz  → downlink ±11–12 GHz
 Ka-band : uplink ±30 GHz  → downlink ±20 GHz
@@ -118,6 +127,23 @@ Istilah yang hampir pasti kamu temui di brosur layanan satelit:
 | VSAT bisnis & TV rumahan | Ku | Antena 0,6–1,2 m, ekonomi terbaik |
 | Internet cepat massal | Ka (HTS) | Kapasitas per Rupiah termurah |
 | Militer | X | Alokasi eksklusif, tahan gangguan |
+
+## Cek pemahaman
+
+1. Layanan internet satelit butuh kapasitas sebesar mungkin. Kenapa tidak
+   semua pindah ke Ka (atau Q/V) saja? <br>→ Kapasitas naik, tapi **redaman
+   hujan** naik lebih cepat — di zona tropis, availability-nya bisa tak layak
+   jual tanpa margin dan trik (ACM, UPC, site diversity) yang mahal.
+2. GPS memilih L-band yang bandwidth-nya sempit. Keputusan buruk? <br>→
+   Tidak — GPS mengirim data kecil (posisi & waktu) tapi harus diterima
+   **chip mungil, tanpa antena terarah, di segala cuaca**. Ketahanan L-band
+   persis yang dibutuhkan.
+3. Kenapa uplink selalu frekuensi yang lebih tinggi dari downlink? <br>→
+   Frekuensi tinggi lebih boros daya untuk melawan redaman — dan stasiun bumi
+   punya listrik PLN; satelit hanya punya panel surya.
+4. Dua carrier bisa memakai frekuensi persis sama di transponder yang sama.
+   Bagaimana caranya? <br>→ **Polarisasi** berbeda (H/V atau RHCP/LHCP) —
+   spektrum efektif berlipat dua, asal instalasi feed-nya presisi.
 
 Dengan peta band di tangan, kita siap membedah sistem yang menggabungkan
 semuanya — jaringan piringan kecil yang menyatukan pelosok:

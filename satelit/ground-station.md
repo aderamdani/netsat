@@ -23,7 +23,7 @@ ukuran.
 
 ## Rantai sinyal
 
-```
+```text
              ┌────────────── ANTENA ──────────────┐
 TERIMA (RX): reflektor → feed → LNA/LNB → down-converter → demodulator → IP
 KIRIM (TX) : IP → modulator → up-converter → HPA → feed → reflektor
@@ -59,6 +59,17 @@ besar "mendengar" lebih baik sekaligus lebih pemilih arah.
 
 Antena harus menghadap satelit dengan presisi — beam antena besar hanya
 selebar sepersekian derajat.
+
+Arah tunjuk dinyatakan dalam dua sudut yang sama dengan cara kita menunjuk
+apa pun di langit:
+
+- **Azimuth** — arah kompas (0° = utara, 90° = timur, 180° = selatan). Dari
+  Indonesia yang duduk di ekuator, satelit GEO Indonesia berada hampir tepat
+  **di atas kepala** hingga condong ke barat/timur sesuai slotnya.
+- **Elevasi** — sudut dari cakrawala (0° = horizon, 90° = tegak lurus).
+  Elevasi tinggi itu berkah: sinyal menembus lapisan atmosfer (dan hujan)
+  yang lebih tipis. Ini keuntungan tersembunyi negara ekuator — antena Eropa
+  memandang GEO landai di elevasi 20–30°, antena Jakarta bisa >80°.
 
 - **GEO**: satelit diam → antena dipasang sekali, selesai. (Antena gateway
   besar tetap melakukan koreksi halus mengikuti "goyangan" kecil satelit di
@@ -119,6 +130,24 @@ lagi membangun stasiun sendiri di lima benua — cukup memesan slot kontak,
 dan data satelitnya muncul langsung di cloud. Pola pikirnya persis
 *infrastructure as a service* yang sudah akrab di dunia
 [jaringan](/networking/) — bukti kedua dunia ini terus menyatu.
+
+## Cek pemahaman
+
+1. Kenapa kualitas LNA/LNB paling menentukan di sisi terima, padahal ia cuma
+   satu dari sekian komponen? <br>→ Ia penguat **pertama**: derau yang ia
+   tambahkan ikut dikuatkan oleh seluruh rantai setelahnya. Derau yang masuk
+   belakangan dampaknya jauh lebih kecil.
+2. Antena makin besar makin bagus — tapi apa harga tersembunyinya selain
+   uang? <br>→ Beam makin **sempit**: menuntut pointing (dan tracking) makin
+   presisi; salah arah sedikit, sinyal hilang.
+3. Kenapa stasiun bumi satelit polar dibangun di Svalbard (78°LU), bukan di
+   ekuator? <br>→ Satelit polar melewati **kutub setiap orbit** — stasiun
+   lintang tinggi melihatnya di setiap lintasan; stasiun ekuator hanya
+   beberapa kali sehari.
+4. Sinyal dari LNB dialirkan ke modem lewat kabel koaksial biasa. Kok bisa,
+   padahal sinyalnya Ku-band 11 GHz? <br>→ LNB sudah **menurunkannya ke
+   L-band** (±1–2 GHz) — cukup rendah untuk kabel koaksial murah puluhan
+   meter.
 
 ---
 

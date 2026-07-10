@@ -25,6 +25,33 @@ Setiap alamat terbagi dua bagian:
 
 Pembatasnya ditentukan oleh **subnet mask** / panjang prefix.
 
+::: info Analogi alamat rumah
+`192.168.10.25/24` ≈ "Jalan Melati **(192.168.10)** No. **25**". Router hanya
+membaca nama jalannya untuk mengantarkan paket ke jalan yang benar; nomor
+rumah baru dipedulikan setelah sampai di jalan itu. Subnet mask adalah garis
+yang memisahkan "nama jalan" dari "nomor rumah".
+:::
+
+### Bekal biner 5 menit
+
+Subnetting jadi mudah begitu kamu hafal **nilai posisi 8 bit**:
+
+```text
+posisi bit : 128  64  32  16   8   4   2   1
+contoh     :   1   1   0   0   0   0   0   0   = 128+64 = 192
+             :   1   1   1   0   0   0   0   0   = 128+64+32 = 224
+```
+
+Dua konversi yang sering muncul:
+
+- **Desimal → biner**: kurangi berulang dari kiri. 25 = 16+8+1 → `00011001`.
+- **Mask → prefix**: hitung bit 1 berurutan dari kiri. `255.255.255.224` =
+  8+8+8+3 = **/27**.
+
+Deret nilai oktet mask hanya ada 9 kemungkinan — hafalkan sekali, pakai
+selamanya: **0, 128, 192, 224, 240, 248, 252, 254, 255**
+(masing-masing = 0–8 bit menyala dari kiri).
+
 ## Notasi CIDR dan subnet mask
 
 `192.168.10.0/24` berarti: 24 bit pertama adalah network, sisanya (8 bit) untuk
@@ -64,6 +91,18 @@ Translation*): router mengganti IP sumber privat dengan IP publiknya dan
 mencatat pemetaannya. Praktis, tapi punya efek samping — koneksi masuk dari
 luar tidak bisa langsung menjangkau perangkat di belakang NAT.
 
+```text
+Laptop 192.168.1.7:51000 ──▶ [NAT router] ──▶ internet melihat: 36.68.x.x:60123
+                              tabel NAT:
+                              192.168.1.7:51000 ⇄ 36.68.x.x:60123
+```
+
+Satu IP publik bisa dipakai ratusan perangkat karena pembedanya bukan IP saja
+tapi **pasangan IP:port**. ISP bahkan menumpuk NAT dua tingkat (**CGNAT**,
+blok `100.64.0.0/10` di tabel atas): pelangganpun tidak mendapat IP publik
+sungguhan — alasan kenapa hosting server dari rumah (atau dari terminal
+Starlink) sering tidak bisa tanpa bantuan tunnel/VPN.
+
 ## Subnetting: membagi satu blok menjadi beberapa
 
 Subnetting = **meminjam bit host untuk dijadikan bit network**. Setiap 1 bit
@@ -95,6 +134,19 @@ Untuk soal "IP `X` ada di subnet mana dengan prefix `/n`?":
 Contoh: `192.168.10.100/26` → kelipatan 64 di bawah 100 adalah 64 →
 network `192.168.10.64`, broadcast `.127`, host valid `.65–.126`. Selesai,
 tanpa konversi biner.
+
+Satu contoh lagi dengan prefix yang "menarik" di oktet ketiga:
+`172.16.37.200/20` → mask `255.255.240.0` → block size di **oktet ketiga**
+= 256 − 240 = 16 → kelipatan 16 di bawah 37 adalah 32 → network
+`172.16.32.0`, broadcast `172.16.47.255`. Aturannya sama, hanya pindah kolom.
+
+::: tip Dua pertanyaan, satu resep
+Semua soal subnetting pada dasarnya hanya dua bentuk: **(a)** "IP ini anggota
+subnet mana?" → resep block size di atas; **(b)** "butuh N subnet / N host,
+prefix berapa?" → cari pangkat 2 terdekat (untuk host ingat −2). Kalau kamu
+bisa menjawab dua bentuk itu tanpa kalkulator, kamu sudah selesai dengan
+subnetting.
+:::
 
 ## VLSM: subnet dengan ukuran berbeda-beda
 
@@ -151,6 +203,11 @@ bagian host praktis tak pernah habis.
    `203.0.113.64`, broadcast `203.0.113.95`
 3. Butuh 6 subnet dari satu /24 — prefix barunya? <br>→ 3 bit (2³ = 8 ≥ 6) → **/27**
 4. Dua router dihubungkan langsung — prefix paling hemat? <br>→ **/30** (atau /31)
+5. `172.16.44.10/20` dan `172.16.50.10/20` — satu subnet atau beda? <br>→
+   Block size 16 di oktet ketiga: 44 jatuh di blok 32–47, 50 jatuh di blok
+   48–63 → **beda subnet**, perlu router untuk saling bicara.
+6. Ponselmu di rumah mendapat IP `100.72.3.9`. Artinya? <br>→ Kamu di belakang
+   **CGNAT** ISP (blok 100.64.0.0/10) — tidak punya IP publik sendiri.
 
 **Praktik:** pasang alamat dan prefix hasil hitunganmu ke router sungguhan di
 [Interface & IP Address (MikroTik)](/mikrotik/interface-ip).

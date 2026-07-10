@@ -67,6 +67,19 @@ Field yang paling sering kamu temui dalam praktik:
 - **DSCP** — penanda prioritas untuk QoS; penting di link satelit yang
   bandwidth-nya mahal.
 
+### MTU dan fragmentasi
+
+Setiap medium punya ukuran frame maksimum — **MTU** (*Maximum Transmission
+Unit*); Ethernet standarnya 1500 byte. Paket yang lebih besar dari MTU jalur
+harus **difragmentasi** (dipecah) oleh router, atau dibuang jika paket
+menyalakan flag DF (*Don't Fragment*). Fragmentasi itu mahal dan rapuh,
+sehingga host modern memakai **Path MTU Discovery**: sengaja mengirim dengan
+DF, membaca pesan ICMP "terlalu besar", lalu mengecilkan paketnya sendiri.
+
+Gejala klasik masalah MTU: *ping kecil jalan, tapi situs tertentu menggantung
+selamanya* — sering muncul saat ada tunnel VPN (yang menambah header dan
+memakan MTU efektif).
+
 ### IPv6 secara singkat
 
 Alamat 128-bit (`2001:db8::1`), header lebih sederhana, tanpa NAT sebagai
@@ -89,6 +102,12 @@ Pembeda aplikasi adalah **nomor port** (16-bit, 0–65535):
 Satu koneksi diidentifikasi unik oleh 4-tuple:
 `(IP sumber, port sumber, IP tujuan, port tujuan)`.
 
+Port 0–1023 disebut *well-known ports* dan dicadangkan untuk layanan baku.
+Sisi klien memakai **ephemeral port** — nomor acak tinggi (±49152–65535) yang
+dipinjam selama koneksi berlangsung lalu dikembalikan. Karena 4-tuple harus
+unik, satu laptop bisa membuka puluhan ribu koneksi sekaligus ke server yang
+sama tanpa saling bertabrakan.
+
 ### TCP: andal, berurutan, kenal kemacetan
 
 TCP membuka koneksi lewat **three-way handshake**:
@@ -102,7 +121,20 @@ Klien                         Server
 ```
 
 Setelah itu setiap byte diberi nomor urut, penerima mengirim ACK, dan data yang
-hilang dikirim ulang. Dua mekanisme kendali membuat TCP "sopan":
+hilang dikirim ulang. Begini wujudnya dalam satu pertukaran kecil:
+
+```text
+Klien mengirim 1000 byte  : seq=1..1000
+Server membalas           : ack=1001   ("sudah kuterima s.d. byte 1000")
+Klien mengirim 1000 lagi  : seq=1001..2000     ✖ hilang di jalan
+Klien mengirim 1000 lagi  : seq=2001..3000
+Server membalas           : ack=1001   (tetap! "aku masih menunggu byte 1001")
+Klien menyadari, kirim ulang seq=1001..2000 → aliran pulih
+```
+
+Pengirim tidak menunggu ACK satu per satu — ia boleh "mengutang" sejumlah byte
+yang belum di-ACK, sebanyak ukuran **window**. Makin besar window, makin penuh
+pipa terisi. Dua mekanisme kendali membuat TCP "sopan":
 
 - **Flow control** (jendela penerima) — jangan membanjiri penerima.
 - **Congestion control** (slow start, AIMD) — jangan membanjiri jaringan.
@@ -154,6 +186,21 @@ Rangkuman seluruh model dalam satu perjalanan — laptop di Jakarta membuka
 Frame berganti-ganti di setiap hop (Ethernet → serat optik ISP → mungkin
 DVB-S2 di link satelit → Ethernet lagi), tapi **paket IP dan segment TCP tetap
 utuh dari ujung ke ujung**. Itulah inti desain internet: *IP over everything*.
+
+## Cek pemahaman
+
+1. IP tidak menjamin paket sampai. Lalu kenapa unduhan file tidak pernah bolong
+   isinya? <br>→ Karena **TCP** di atasnya menomori, meng-ACK, dan mengirim
+   ulang yang hilang. Jaminan dibangun di lapisan transport, bukan di IP.
+2. Field TTL berkurang di mana, dan apa gunanya? <br>→ Berkurang 1 di **setiap
+   router**; saat 0 paket dibuang. Mencegah paket berputar abadi saat ada loop
+   rute — dan menjadi bahan bakar `traceroute`.
+3. VoIP memilih UDP, unduhan memilih TCP. Kenapa tidak dibalik? <br>→ Suara
+   yang telat lebih baik dibuang (UDP: segar > lengkap); potongan file yang
+   hilang wajib dikirim ulang (TCP: lengkap > segar).
+4. Di link GEO (RTT 500 ms), kenapa koneksi TCP baru terasa "lambat panas"?
+   <br>→ Congestion control menaikkan kecepatan **per RTT** — RTT 25× lebih
+   lama berarti akselerasi 25× lebih lambat menuju kecepatan penuh.
 
 ## Lanjut ke mana?
 

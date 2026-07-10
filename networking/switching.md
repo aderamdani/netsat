@@ -55,6 +55,29 @@ Inilah bedanya dengan **hub** zaman dulu yang membabi buta mengulang sinyal ke
 semua port: switch menciptakan jalur privat antar-dua-port, sehingga banyak
 percakapan bisa berlangsung serentak tanpa tabrakan.
 
+::: info Analogi: resepsionis yang menghafal
+Switch adalah resepsionis gedung yang tidak pernah bertanya, hanya
+memperhatikan: setiap kali seseorang keluar dari ruangan tertentu, ia mencatat
+"oh, si A duduk di ruang 3". Surat untuk A langsung diantar ke ruang 3. Surat
+untuk orang yang belum dikenal? Diumumkan ke seluruh gedung (*flooding*) — dan
+begitu orangnya menjawab, ruangannya langsung tercatat. Tidak ada konfigurasi,
+tidak ada database pusat; jaringan "terpetakan sendiri".
+:::
+
+### Collision domain vs broadcast domain
+
+Dua istilah yang sering tertukar:
+
+- **Collision domain** — wilayah tempat dua sinyal bisa bertabrakan. Setiap
+  **port switch** adalah collision domain sendiri (masalah tabrakan praktis
+  sudah mati bersama hub).
+- **Broadcast domain** — wilayah yang mendengar satu frame broadcast. Seluruh
+  switch yang saling tersambung = **satu** broadcast domain, sampai dipecah
+  oleh router atau VLAN.
+
+Jadi: switch memecah collision domain; **router dan VLAN memecah broadcast
+domain**.
+
 ## ARP: jembatan antara IP dan MAC
 
 Komputer berpikir dalam IP, tapi frame butuh MAC. **ARP** (*Address Resolution
@@ -142,6 +165,18 @@ memblokir port-port yang membentuk loop, menyisakan topologi pohon (bebas
 loop). Saat jalur aktif putus, port cadangan dibuka otomatis. Varian modern
 **RSTP** (802.1w) konvergen dalam ±1–2 detik.
 
+```text
+   [SW-A]══════[SW-B]          STP memilih SW-A sebagai root,
+      ║           │            lalu MEMBLOKIR salah satu sisi
+      ║           │ ✖ diblokir segitiga. Kabel tetap terpasang —
+   [SW-C]─────────┘            siaga menggantikan jalur yang putus.
+```
+
+Pelajaran praktisnya dua arah: **(1)** jangan takut memasang kabel redundan —
+STP yang mengurus; **(2)** jangan pernah mematikan STP "biar cepat", karena
+satu kabel yang tak sengaja melingkar (dua ujung dicolok ke switch yang sama!)
+bisa melumpuhkan seluruh gedung.
+
 ::: tip Ringkasan mental: switch vs router
 - Switch: "MAC ini di port mana?" — cepat, satu gedung, plug-and-play.
 - Router: "prefix IP ini lewat mana?" — antar-jaringan, kenal dunia luar.
@@ -157,6 +192,22 @@ data operasional, telepon (VoIP), dan Wi-Fi publik — tiga layanan berbagi satu
 transponder yang sama dengan prioritas QoS berbeda. Semua konsep di halaman
 ini bekerja persis sama; satelit hanya mengganti "kabel antar-gedung" dengan
 lompatan 36.000 km.
+
+## Cek pemahaman
+
+1. Frame tiba dengan MAC tujuan yang tidak ada di tabel switch. Apa yang
+   terjadi? <br>→ **Flooding** — dikirim ke semua port kecuali port asal;
+   begitu tujuan membalas, MAC-nya langsung dipelajari.
+2. Dua PC di VLAN 10 dan VLAN 20 pada switch yang sama saling `ping` — gagal.
+   Normal? <br>→ **Normal.** VLAN memisahkan di layer 2; antar-VLAN harus
+   lewat router / switch L3.
+3. Laptop mau mengirim ke server di subnet lain. Laptop meng-ARP alamat siapa?
+   <br>→ **Gateway**-nya, bukan server tujuan — frame hanya perlu sampai ke
+   router.
+4. Kabel antar-switch dicabut dan trafik VLAN 30 antar-gedung mati, padahal
+   VLAN 10 masih hidup lewat kabel lain. Dugaan? <br>→ Kabel yang tercabut
+   adalah **trunk** yang membawa VLAN 30, sedangkan kabel satunya tidak
+   mengizinkan VLAN 30 — periksa daftar VLAN di konfigurasi trunk.
 
 **Praktik:** bangun bridge, access port, dan trunk 802.1Q dari halaman ini di
 [Bridging & Switching (MikroTik)](/mikrotik/bridging-switching).

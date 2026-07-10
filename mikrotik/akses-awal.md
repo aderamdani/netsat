@@ -33,7 +33,7 @@ tetap bisa masuk. Teorinya ada di [Switching](/networking/switching#alamat-mac).
 
 Kebanyakan RouterBOARD rumahan/kantor keluar pabrik dengan pola yang sama:
 
-```
+```text
 ether1          = WAN  → DHCP client aktif (minta IP ke modem/ISP)
 ether2–etherN   = LAN  → digabung dalam satu bridge
 IP router       = 192.168.88.1/24 di bridge LAN
@@ -48,9 +48,23 @@ Artinya: colok laptop ke `ether2`, dapat IP otomatis, buka WinBox ke
 `192.168.88.1`, masuk sebagai `admin` — dan internet biasanya langsung jalan.
 Konfigurasi bawaan ini bisa dilihat (dan dibaca sebagai bahan belajar!) dengan:
 
-```
+```bash
 /system/default-configuration/print
 ```
+
+### Ritual pertama di WinBox
+
+Buka WinBox → tab **Neighbors**: semua perangkat MikroTik di segmen layer 2
+muncul otomatis (hasil *neighbor discovery*). Di sinilah dua mode masuk
+terlihat jelas:
+
+- Klik kolom **IP** → masuk via layer 3 (normal).
+- Klik kolom **MAC Address** → masuk via layer 2 — tetap bekerja walau IP
+  router kacau balau. Ini WinBox mode MAC yang disebut tabel di atas.
+
+Kebiasaan baik yang murah: begitu berhasil masuk, beri nama kotaknya —
+`/system/identity/set name=rtr-kantor-01` — supaya tab Neighbors (dan log,
+dan prompt CLI) tidak dipenuhi selusin perangkat bernama "MikroTik".
 
 ## Reset: kembali ke titik nol
 
@@ -62,7 +76,7 @@ lebih lama lagi masuk mode Netinstall untuk instal ulang total.)
 
 **Lewat perintah:**
 
-```
+```bash
 /system/reset-configuration no-defaults=yes skip-backup=yes
 ```
 
@@ -87,7 +101,7 @@ selaras dengan halaman [Keamanan Jaringan](/networking/keamanan#kebersihan-dasar
 **1. Ganti identitas admin.** Buat user baru dengan nama tak tertebak, lalu
 hapus `admin`:
 
-```
+```bash
 /user/add name=ns-admin password=KataSandi_Panjang_123! group=full
 /user/remove admin
 ```
@@ -100,7 +114,7 @@ hapus `admin`:
 **2. Matikan layanan yang tidak dipakai** dan batasi sisanya ke subnet
 manajemen:
 
-```
+```bash
 /ip/service/set telnet disabled=yes
 /ip/service/set ftp disabled=yes
 /ip/service/set www disabled=yes
@@ -118,7 +132,7 @@ manajemen:
 instalasi, berbahaya jika dibiarkan — siapa pun di broadcast domain bisa
 mencoba masuk:
 
-```
+```bash
 /tool/mac-server/set allowed-interface-list=none
 /tool/mac-server/mac-winbox/set allowed-interface-list=none
 /ip/neighbor/discovery-settings/set discover-interface-list=none
@@ -130,6 +144,23 @@ mencoba masuk:
 
 **4. Perbarui RouterOS** sebelum perangkat melayani trafik sungguhan — cara
 lengkapnya di [Manajemen Perangkat](/mikrotik/manajemen#upgrade-routeros).
+
+### Checklist menit-menit pertama
+
+Rangkuman yang layak ditempel di dinding — urutan untuk **setiap** kotak baru:
+
+| ✓ | Langkah | Perintah kunci |
+| --- | --- | --- |
+| 1 | Masuk, beri identitas | `/system/identity/set name=...` |
+| 2 | User baru, hapus `admin` | `/user/add ...` → `/user/remove admin` |
+| 3 | Matikan layanan tak terpakai | `/ip/service/set ... disabled=yes` |
+| 4 | Batasi WinBox/SSH ke subnet manajemen | `/ip/service/set ... address=...` |
+| 5 | Tutup MAC-server & discovery | `/tool/mac-server/set ...` |
+| 6 | Upgrade RouterOS + firmware | `/system/package/update/install` |
+| 7 | Backup kondisi bersih | `/system/backup/save` + `/export` |
+
+Tujuh baris, lima menit — dan routermu sudah lebih aman daripada mayoritas
+perangkat yang tersambung ke internet hari ini.
 
 ## Uji pemahaman
 

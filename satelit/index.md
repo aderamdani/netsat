@@ -20,6 +20,16 @@ sehingga lengkungan jatuhnya sejajar dengan lengkungan Bumi. Itulah orbit:
 keseimbangan antara kecepatan dan gravitasi, tanpa mesin yang menyala
 terus-menerus.
 
+::: info Eksperimen pikiran Newton: bola meriam
+Newton sendiri yang pertama menjelaskannya. Tembakkan meriam dari puncak
+gunung: bola jatuh 1 km di depan. Tembak lebih kencang: jatuh 10 km, 100 km —
+lengkungan jatuhnya makin landai. Pada kecepatan tertentu (±7,9 km/s di
+permukaan), lengkungan jatuhnya **tepat sejajar lengkungan Bumi**: bola terus
+jatuh tapi tak pernah mendarat. Selamat — bola meriammu sekarang satelit.
+Itu juga sebabnya astronot "melayang": mereka bukan bebas gravitasi, mereka
+sedang *terjun bebas terus-menerus* bersama stasiunnya.
+:::
+
 Konsekuensinya ada satu hukum yang mengatur segalanya (hukum Kepler ke-3):
 **makin tinggi orbitnya, makin lambat satelit mengelilingi Bumi**.
 
@@ -27,6 +37,20 @@ Konsekuensinya ada satu hukum yang mengatur segalanya (hukum Kepler ke-3):
 - Di ketinggian 35.786 km: sekali keliling tepat **satu hari** — satelit
   tampak diam di langit. Inilah orbit geostasioner (GEO), dibahas tuntas di
   [Orbit](/satelit/orbit).
+
+## Tiga segmen sebuah sistem satelit
+
+Industri membagi sistem satelit menjadi tiga bagian yang akan terus dirujuk
+sepanjang modul:
+
+| Segmen | Isi | Dibahas di |
+| --- | --- | --- |
+| **Space segment** | Satelitnya sendiri (bus + payload) | Halaman ini & [Orbit](/satelit/orbit) |
+| **Ground segment** | Gateway, teleport, stasiun kendali | [Ground Station](/satelit/ground-station) |
+| **User segment** | Terminal pengguna: parabola TV, VSAT, dish Starlink, ponsel satelit | [VSAT](/satelit/vsat) |
+
+Uang dan kerumitan tersebar di ketiganya — satelit paling canggih pun tak
+berguna bila segmen bumi dan terminalnya tidak dirancang seimbang.
 
 ## Anatomi satelit komunikasi
 
@@ -84,7 +108,7 @@ selalu ekonomis.
 
 Gambaran besar yang akan dibedah sepanjang modul:
 
-```
+```text
 [Pengguna] ─ LAN ─ [Terminal VSAT] ~~uplink 14 GHz~~▶ [Satelit GEO]
                                                           │ transponder
 [Internet] ─ fiber ─ [Ground Station / Teleport] ◀~~downlink 11 GHz~~┘
@@ -100,6 +124,22 @@ Bagi [model TCP/IP](/networking/model-tcp-ip), seluruh rantai ini hanyalah
 "lapisan link" — tapi dengan karakter unik: jarak 36.000 km berarti
 [latensi](/satelit/komunikasi#latensi-per-orbit) yang tak bisa ditawar oleh
 teknologi mana pun, karena dibatasi kecepatan cahaya.
+
+## Cek pemahaman
+
+1. Kenapa satelit tidak butuh mesin menyala terus untuk tetap di orbit? <br>→
+   Orbit adalah **jatuh bebas yang terus meleset**: kecepatan ke samping
+   membuat lengkung jatuhnya sejajar lengkung Bumi. Mesin hanya dinyalakan
+   sesekali untuk koreksi (*station-keeping*).
+2. Bagian mana dari satelit yang "menghasilkan uang", dan bagian mana yang
+   "menjaganya tetap hidup"? <br>→ **Payload** (transponder & antena)
+   menghasilkan; **bus** (daya, termal, propulsi, AOCS, TT&C) menjaga.
+3. Transponder *bent pipe* mengerti isi data yang dilewatkannya? <br>→ Tidak —
+   ia hanya menggeser frekuensi dan menguatkan. Baginya paket TCP, siaran TV,
+   dan telepon sama saja: gelombang radio.
+4. Kenapa Indonesia sangat bergantung pada satelit dibanding banyak negara
+   lain? <br>→ Geografi: ±17.000 pulau bergunung dan berlaut membuat kabel
+   tidak selalu ekonomis — satelit menjangkau semuanya dari satu titik orbit.
 
 ## Peta modul ini
 

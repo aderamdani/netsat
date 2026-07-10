@@ -20,6 +20,15 @@ Semua kontrol keamanan bermuara pada tiga tujuan:
 Tambahan yang sering disebut: **autentikasi** (kamu benar-benar kamu) dan
 **non-repudiation** (tidak bisa menyangkal telah mengirim).
 
+::: info Prinsip payung: defense in depth
+Tidak ada satu pun kontrol yang sempurna, jadi keamanan disusun **berlapis** —
+seperti kastil abad pertengahan: parit, tembok luar, tembok dalam, penjaga di
+tiap pintu. Firewall bisa ditembus, maka ada segmentasi; segmentasi bisa
+dilewati, maka ada autentikasi; kredensial bisa dicuri, maka ada MFA dan
+pemantauan. Pertanyaan desainnya selalu: *"kalau lapisan ini jebol, apa yang
+menahan berikutnya?"*
+:::
+
 ## Peta ancaman per lapisan
 
 Cara berpikir yang rapi: petakan serangan ke
@@ -50,8 +59,19 @@ terdistribusinya dari ribuan mesin bot disebut **DDoS**.
 sehingga `bank.example` diarahkan ke server penyerang. Obat strukturalnya
 DNSSEC (tanda tangan digital pada rekaman DNS).
 
-**Phishing** — serangan pada lapisan paling rentan: manusia. Tidak ada
-firewall yang menolong kalau penggunanya sendiri yang menyerahkan kata sandi.
+**Phishing** — serangan pada lapisan paling rentan: manusia. Email/situs
+palsu yang meniru layanan asli, memancing korban menyerahkan kredensial
+sendiri. Varian modernnya makin terarah (*spear phishing* menyasar orang
+spesifik dengan konteks yang meyakinkan). Tidak ada firewall yang menolong
+kalau penggunanya sendiri yang menyerahkan kata sandi — pertahanannya:
+pelatihan, dan **MFA** (*multi-factor authentication*) supaya kata sandi yang
+bocor saja belum cukup untuk masuk.
+
+**Serangan kata sandi** — *brute force* (mencoba semua kombinasi) dan
+*credential stuffing* (mencoba pasangan email+sandi hasil kebocoran situs
+lain). Obatnya: sandi unik per layanan (password manager), MFA, dan
+pembatasan percobaan login. Router yang SSH-nya terbuka ke internet menerima
+ribuan percobaan per hari — bukan "kalau", tapi "sedang".
 
 ## Pertahanan
 
@@ -155,6 +175,24 @@ Daftar minimum untuk jaringan apa pun, dari lab sekolah sampai kantor:
 5. Enkripsi di mana-mana: HTTPS, WPA3, VPN untuk akses remote.
 6. Backup teruji (offline/immutable) — pertahanan terakhir terhadap ransomware.
 7. Catat dan pantau (logging + NTP yang akur, supaya log bisa dipercaya).
+
+## Cek pemahaman
+
+1. Enkripsi HTTPS melindungi pilar CIA yang mana? <br>→ **Confidentiality**
+   dan **integrity** (plus autentikasi server lewat sertifikat). Ia *tidak*
+   menolong availability.
+2. Korban ARP spoofing membuka situs ber-HTTPS. Apa yang bisa dan tidak bisa
+   dilihat penyerang? <br>→ Bisa: ke mana korban terhubung (IP/nama situs),
+   kapan, seberapa banyak. Tidak bisa: **isi** trafiknya — TLS tetap
+   mengunci. Lapisan pertahanan bekerja walau satu lapis jebol.
+3. Kenapa firewall stateful lebih aman daripada packet filter murni? <br>→ Ia
+   hanya meloloskan balasan dari koneksi yang **memang dibuka dari dalam** —
+   paket masuk yang tidak diundang otomatis tertolak tanpa perlu aturan
+   khusus.
+4. Kantormu memisahkan VLAN karyawan, tamu, dan CCTV. Serangan apa yang
+   dilemahkan desain ini? <br>→ *Lateral movement*: penyerang yang menguasai
+   satu segmen (mis. kamera CCTV murah yang tak pernah di-update) tidak
+   otomatis bisa menjangkau komputer karyawan.
 
 ---
 

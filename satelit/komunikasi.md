@@ -43,7 +43,21 @@ Link budget adalah neraca daya dari pemancar sampai penerima — penentu apakah
 link akan hidup, dan dengan kecepatan berapa. Semua dihitung dalam **dB**
 (logaritmik: +3 dB = ×2, +10 dB = ×10) supaya perkalian menjadi penjumlahan.
 
-```
+Contekan dB yang membuat semua angka di bawah terbaca:
+
+| dB | Artinya (kali lipat) |
+| --- | --- |
+| +3 dB | ×2 |
+| +10 dB | ×10 |
+| +20 dB | ×100 |
+| +30 dB | ×1.000 |
+| −3 dB | ÷2 (setengahnya) |
+| −205 dB | ÷ 10²⁰·⁵ — skala rugi lintasan GEO |
+
+(`dBW` = dB relatif terhadap 1 watt; `dBi` = penguatan antena relatif
+terhadap antena ideal tanpa arah.)
+
+```text
 EIRP (daya pancar efektif)
   − FSPL (rugi lintasan ruang bebas)
   − rugi atmosfer & hujan
@@ -70,6 +84,30 @@ fokus (antena besar), telinga yang lebih peka (G/T↑), atau berbicara lebih
 lambat dan jelas (modulasi lebih rendah). Desain link = menyeimbangkan
 keempatnya dengan biaya.
 :::
+
+### Contoh dikerjakan: neraca mini sebuah downlink Ku
+
+Angka disederhanakan, tapi bentuk hitungannya persis praktik nyata:
+
+```text
+EIRP satelit di lokasimu           : +50 dBW
+FSPL GEO @ 11 GHz                  : −205 dB
+Rugi atmosfer (cerah)              :   −1 dB
+G/T antena 1,2 m                   : +21 dB/K
+konstanta Boltzmann & bandwidth    : (dihitung sistem)
+──────────────────────────────────────────────
+C/N hasil                          : ±14 dB
+C/N minimum utk 8PSK ¾             : ±10 dB
+──────────────────────────────────────────────
+Link margin                        :  +4 dB   ✓ link hidup
+```
+
+Margin 4 dB itulah "tabungan" menghadapi hujan: gerimis memakan 2 dB → masih
+aman; hujan deras memakan 12 dB → C/N jatuh di bawah minimum → modem
+[ACM](#modulasi-dan-coding) turun ke QPSK yang butuh C/N lebih rendah — atau,
+bila tetap kurang, link putus sampai hujan reda. Sekarang tabel redaman hujan
+di [Frekuensi & Band](/satelit/frekuensi-band#redaman-hujan-isu-nomor-satu-di-indonesia)
+terasa nyata konsekuensinya.
 
 ## Modulasi dan coding
 
@@ -114,7 +152,7 @@ paling keras.
 **1. Throughput dibatasi jendela.** TCP hanya boleh mengirim satu *window*
 data per RTT sebelum menunggu ACK:
 
-```
+```text
 throughput maks = window / RTT
 
 Window 64 KB, RTT 0,5 s  →  64×8 / 0,5  ≈ 1 Mbps
@@ -152,6 +190,22 @@ Satelit klasik memancarkan **wide beam** — satu pancaran menutup satu kawasan.
 jaringan seluler) — kapasitas total naik puluhan kali lipat dengan spektrum
 yang sama. Konsekuensinya: kapasitas bisa diarahkan persis ke wilayah yang
 membutuhkan.
+
+## Cek pemahaman
+
+1. Kenapa uplink dan downlink tak boleh memakai frekuensi yang sama? <br>→
+   Pemancar satelit akan menulikan penerimanya sendiri — seperti berbisik
+   sambil meniup terompet di telinga sendiri.
+2. Hujan deras turun; kecepatan internet VSAT turun dari 20 Mbps ke 4 Mbps
+   tapi tidak putus. Mekanisme apa yang sedang bekerja? <br>→ **ACM**: modem
+   turun dari modulasi rapat ke QPSK + FEC kuat — mengorbankan kecepatan demi
+   mempertahankan link.
+3. Kenapa FEC lebih penting di satelit daripada di LAN kabel? <br>→ Minta
+   kirim ulang lewat GEO berarti +500 ms per percobaan; lebih murah membawa
+   bit redundansi agar error diperbaiki **di tempat**.
+4. Link 50 Mbps, RTT 500 ms, window TCP 64 KB tanpa scaling. Berapa
+   throughput maksimum satu koneksi? <br>→ 64 KB × 8 ÷ 0,5 s ≈ **1 Mbps** —
+   bukti kenapa window scaling dan PEP wajib di dunia GEO.
 
 ---
 

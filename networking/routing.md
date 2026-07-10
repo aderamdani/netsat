@@ -9,6 +9,14 @@ lain. Setiap router memegang **tabel routing** — daftar "untuk tujuan X,
 kirim lewat pintu Y" — dan setiap paket diputuskan **hop demi hop**: router
 hanya menentukan langkah berikutnya, bukan seluruh perjalanan.
 
+::: info Analogi: papan petunjuk di persimpangan
+Tidak ada satu pun papan petunjuk jalan yang memuat rute lengkap ke tujuanmu —
+tiap persimpangan hanya menunjuk arah *berikutnya*: "Bandung → kiri". Kamu
+sampai karena **setiap** persimpangan menunjuk arah yang konsisten. Router
+bekerja persis begitu; dan seperti papan jalan, kalau ada satu persimpangan
+yang salah tunjuk, paket bisa nyasar atau berputar-putar.
+:::
+
 ## Cara router mengambil keputusan
 
 Saat paket tiba, router:
@@ -55,6 +63,27 @@ ip route 172.16.0.0 255.255.0.0 192.0.2.1
 
 Sederhana dan bisa diprediksi, tapi tidak beradaptasi: kalau link putus, rute
 statis tetap menunjuk ke jurang. Untuk itu ada routing dinamis.
+
+### Kalau dua sumber mengklaim rute yang sama?
+
+Longest prefix match membandingkan rute ke tujuan **berbeda spesifisitasnya**.
+Tapi bila dua *sumber* (mis. rute statis dan OSPF) menawarkan prefix yang
+**persis sama**, router memilih berdasarkan tingkat kepercayaan pada sumbernya
+— disebut **administrative distance** (istilah Cisco; MikroTik & lainnya
+menyebutnya *distance*). Makin kecil makin dipercaya:
+
+| Sumber | Distance (umum) |
+| --- | --- |
+| Connected | 0 |
+| Static | 1 |
+| OSPF | 110 |
+| RIP | 120 |
+
+Urutan lengkap pengambilan keputusan: **(1)** longest prefix match dulu;
+**(2)** jika prefix sama, distance terkecil; **(3)** jika masih seri di dalam
+satu protokol, metric terkecil. Trik `distance` ini pula yang dipakai untuk
+**failover**: rute cadangan dipasang dengan distance lebih besar, dan baru
+"muncul" saat rute utama hilang.
 
 ## Protokol routing dinamis
 
@@ -144,6 +173,12 @@ Dua titik temu yang menarik:
 2. Kenapa link satelit diberi OSPF cost tinggi? → Agar dipilih hanya ketika
    jalur teresterial mati (cadangan).
 3. Protokol apa yang merutekan **antar**-ISP? → **BGP**.
+4. Rute statis `10.0.0.0/8 distance 1` dan rute OSPF `10.0.0.0/8 distance 110`
+   ada bersamaan — mana yang dipakai? → **Statis** (prefix sama, distance
+   lebih kecil menang).
+5. `traceroute` berhenti di hop ke-5 dan tidak pernah sampai. Apa dugaan
+   pertamamu? → Router hop-5 tidak punya rute lanjutan (atau memblokir ICMP)
+   — mulai periksa tabel routing di sana.
 
 **Praktik:** rute statis, failover dua WAN, OSPF, dan BGP dikonfigurasi nyata
 di [Routing di RouterOS (MikroTik)](/mikrotik/routing).

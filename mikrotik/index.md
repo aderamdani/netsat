@@ -36,12 +36,27 @@ lisensi — cukup untuk belajar). Seluruh perintah di modul ini bisa dicoba di
 lab virtual sebelum menyentuh perangkat produksi.
 :::
 
+### Menyiapkan lab CHR dalam lima langkah
+
+1. Unduh *image* CHR (format `.vdi`/`.vmdk`/`.img`) dari halaman unduhan
+   mikrotik.com.
+2. Buat VM baru di VirtualBox/Proxmox; pakai image tadi sebagai disk (tidak
+   ada proses instal — RouterOS langsung boot).
+3. Beri VM **dua adapter jaringan**: satu NAT (jadi "WAN"), satu host-only
+   atau internal (jadi "LAN" tempat laptopmu berperan sebagai klien).
+4. Nyalakan; login `admin` tanpa password di konsol VM.
+5. Ulangi untuk router kedua bila bab [Routing](/mikrotik/routing) atau
+   [VPN](/mikrotik/vpn) butuh dua kotak yang saling bicara.
+
+Ingin lebih nyaman lagi, jalankan beberapa CHR dalam satu topologi visual
+dengan **GNS3** atau **EVE-NG** — dua alat standar untuk lab jaringan.
+
 ## Arsitektur menu: konfigurasi sebagai pohon
 
 Seluruh konfigurasi RouterOS tersusun sebagai **pohon menu** — di CLI, WinBox,
 maupun WebFig, strukturnya sama persis:
 
-```
+```text
 /
 ├── interface/        ← semua antarmuka: ethernet, bridge, vlan, wifi, wireguard
 │   ├── bridge/
@@ -99,7 +114,7 @@ Supaya semua contoh konsisten dan aman ditiru:
 
 Contoh formatnya:
 
-```
+```bash
 /ip/address/add address=192.0.2.1/24 interface=ether2 comment="LAN utama"
 ```
 
@@ -127,6 +142,19 @@ Contoh formatnya:
 Referensi utama modul ini adalah dokumentasi resmi
 [manual.mikrotik.com](https://manual.mikrotik.com) — struktur topiknya sengaja
 kami ikuti agar mudah memperdalam ke sumber aslinya.
+
+## Cara belajar yang kami sarankan
+
+1. **Baca teorinya dulu** (kolom kanan tabel di atas) — sepuluh menit teori
+   menghemat satu jam kebingungan di terminal.
+2. **Ketik, jangan tempel.** Mengetik perintah memaksa kamu membaca tiap
+   parameter; di situlah pemahaman menempel.
+3. **Rusak lalu perbaiki.** Setelah konfigurasi jalan, sengaja matikan satu
+   bagian (`disable`), amati gejalanya, hidupkan lagi. Gejala yang pernah
+   kamu buat sendiri adalah gejala yang akan langsung kamu kenali di
+   produksi.
+4. **`/export` setiap selesai bab** — bandingkan hasil ekspormu dengan contoh
+   di halaman; perbedaan kecil sering mengungkap pemahaman yang meleset.
 
 Mulai dari yang paling awal: kotak baru datang, [bagaimana masuk ke
 dalamnya?](/mikrotik/akses-awal)

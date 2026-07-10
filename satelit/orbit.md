@@ -11,7 +11,7 @@ orbit istimewa.
 
 ## Peta ketinggian
 
-```
+```text
 GEO   ── 35.786 km ─────────────── ● (diam relatif thd bumi)
                                         periode: 23 j 56 m
 MEO   ── ±20.200 km ──────── ●          periode: ±12 jam (GPS)
@@ -36,6 +36,24 @@ Di ketinggian tepat **35.786 km** di atas ekuator, periode orbit satelit sama
 dengan rotasi Bumi — satelit "menggantung" di titik langit yang sama selamanya.
 Konsep ini dipopulerkan Arthur C. Clarke pada 1945, sehingga sabuk GEO kadang
 disebut *Clarke Belt*.
+
+Angka 35.786 km bukan pilihan manusia, melainkan **jawaban tunggal dari
+fisika**: hanya ada satu ketinggian yang periode orbitnya tepat satu hari
+sideris (23 j 56 m — rotasi Bumi terhadap bintang, bukan 24 jam terhadap
+matahari). Lebih rendah → satelit mendahului Bumi; lebih tinggi → tertinggal.
+Dan orbitnya *harus* tepat di atas ekuator: orbit miring dengan periode sama
+(disebut geo**sinkron**, bukan geo**stasioner**) tampak berayun membentuk
+angka 8 di langit.
+
+::: info Gerhana dan matahari yang "menyilaukan"
+Dua ritme musiman kehidupan satelit GEO: sekitar ekuinoks (Maret &
+September), satelit melintasi bayangan Bumi hingga ±70 menit per hari —
+seluruh daya berpindah ke baterai (*eclipse season*). Pada musim yang sama,
+matahari tepat berada **di belakang satelit** dilihat dari antena bumi
+beberapa menit sehari: derau matahari menenggelamkan sinyal (*sun outage*) —
+TV satelit "kresek-kresek" beberapa menit, lalu normal sendiri. Operator
+mengumumkan jadwalnya seperti jadwal gerhana.
+:::
 
 **Keunggulan yang membuatnya legendaris:**
 
@@ -139,6 +157,23 @@ dikerjakan perangkat lunak pelacak di [ground station](/satelit/ground-station#m
 | Navigasi global | MEO | Geometri & jumlah satelit optimal |
 | Backhaul terpencil dengan CAPEX kecil | GEO ([VSAT](/satelit/vsat)) | Terminal murah, ekosistem matang |
 | Komunikasi wilayah kutub | HEO / LEO polar | GEO tak menjangkau |
+
+## Cek pemahaman
+
+1. Kenapa parabola TV tidak butuh motor, sedangkan dish Starlink "hidup"?
+   <br>→ TV memakai satelit **GEO** yang diam relatif terhadap Bumi; Starlink
+   di **LEO** melintas cepat sehingga beam harus terus dipindah (phased
+   array) dan berpindah satelit tiap beberapa menit.
+2. Kalau LEO latensinya jauh lebih baik, kenapa broadcast TV tetap di GEO?
+   <br>→ Broadcast tidak peduli latensi; yang dibutuhkan **satu pancaran
+   menutup satu benua** dan antena penerima semurah mungkin — definisi GEO.
+3. Satelit GEO kehabisan bahan bakar. Apa langkah terakhirnya, dan kenapa?
+   <br>→ Naik ±300 km ke **graveyard orbit** dengan sisa bahan bakar. Slot
+   GEO langka dan diatur ITU — harus dikosongkan untuk penggantinya, dan
+   bangkai yang melayang di sabuk GEO membahayakan tetangga.
+4. Kenapa GPS butuh minimal 4 satelit terlihat, bukan 3? <br>→ Tiga untuk
+   posisi 3D (x, y, z), satu lagi untuk **koreksi jam** penerima — jam ponsel
+   jauh dari presisi jam atom satelit.
 
 Ketinggian sudah dipilih — sekarang bagaimana sinyal benar-benar menempuh
 jarak itu? Lanjut ke [Komunikasi Satelit](/satelit/komunikasi).

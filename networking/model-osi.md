@@ -22,6 +22,23 @@ gelombang radio. OSI memecah pekerjaan itu menjadi 7 lapisan, dengan aturan main
 - Lapisan yang sama di dua komputer berbeda "berbicara" satu sama lain lewat
   protokol — seolah-olah langsung, padahal melalui semua lapisan di bawahnya.
 
+::: info Analogi: dua CEO berkirim dokumen
+CEO Jakarta ingin mengirim dokumen ke CEO Singapura. Ia tidak mengurus amplop —
+ia menyerahkannya ke sekretaris (presentation: merapikan format), yang
+menyerahkan ke ekspedisi internal (session/transport: mencatat dan memastikan
+sampai), yang menyerahkan ke kurir (network: memilih rute antar-kota), yang
+menyetir lewat jalan raya (data link + physical). Di Singapura proses berjalan
+terbalik ke atas. **Kedua CEO merasa berbicara langsung** — padahal pesan
+menuruni dan menaiki seluruh tumpukan. Setiap peran hanya perlu memahami
+pekerjaannya sendiri dan antarmuka dengan peran di atas/bawahnya. Persis itulah
+pelapisan.
+:::
+
+Manfaat praktis pembagian ini: **setiap lapisan bisa diganti tanpa mengubah
+yang lain**. Wi-Fi bisa diganti kabel (L1–2 berubah) tanpa aplikasi sadar;
+HTTP bisa diganti protokol lain tanpa menyentuh kabel. Inilah alasan internet
+bisa berevolusi selama 50 tahun tanpa pernah "diinstal ulang".
+
 ## Tujuh lapisan
 
 | # | Lapisan | Satuan data (PDU) | Tanggung jawab | Contoh protokol/perangkat |
@@ -41,6 +58,9 @@ Jembatan keledai populer (dari lapisan 7 ke 1):
 
 Segala hal yang bisa kamu sentuh atau ukur dengan alat: konektor, kabel,
 level tegangan, panjang gelombang cahaya, frekuensi radio, teknik modulasi.
+Pertanyaan khas layer 1: *berapa volt mewakili bit 1? berapa lama satu bit
+"menyala"? konektornya RJ45 atau LC?* Masalah khasnya pun fisik: kabel putus,
+konektor longgar, interferensi, sinyal melemah karena jarak.
 Di dunia satelit, hampir seluruh isi bab
 [Frekuensi & Band](/satelit/frekuensi-band) dan sebagian
 [Komunikasi Satelit](/satelit/komunikasi) (modulasi, coding) adalah urusan
@@ -102,6 +122,21 @@ Kekuatan terbesar OSI adalah sebagai metode debugging — periksa dari bawah:
 4. **L4** — Port tujuan terbuka? Firewall meloloskan?
 5. **L5–7** — Aplikasi/layanannya sendiri sehat? Sertifikat TLS valid? DNS benar?
 
+### Studi kasus mini: "internetnya mati!"
+
+Laporan pengguna hampir selalu berbunyi layer 7 ("situs tidak bisa dibuka"),
+tapi akarnya bisa di lapisan mana pun. Jalankan tangga dari bawah:
+
+| Pemeriksaan | Hasil | Kesimpulan |
+| --- | --- | --- |
+| Lampu port switch | Menyala | L1 aman — kabel & sinyal ada |
+| `ip addr` | Dapat IP `169.254.x.x` | **Tersangka ketemu**: DHCP gagal (L2/L3) |
+| Cek switch | Port ternyata dipindah ke VLAN lain | Akar masalah: L2 |
+
+Tanpa metode ini orang cenderung "restart semuanya dan berdoa". Dengan metode
+ini kamu berhenti tepat di lapisan yang bermasalah — hemat waktu, dan kamu
+tahu *kenapa* solusinya berhasil.
+
 ```bash
 # alat bantu cepat per lapisan
 ip link          # L1/L2: status antarmuka
@@ -128,6 +163,20 @@ dan beberapa teknologi menolak dikotakkan (MPLS sering disebut "layer 2,5";
 tunneling menumpuk lapisan di atas lapisan). Gunakan OSI sebagai **peta**,
 bukan sebagai kitab suci — dan lanjutkan ke model yang benar-benar dipakai:
 [Model TCP/IP](/networking/model-tcp-ip).
+
+## Cek pemahaman
+
+1. Switch membaca alamat apa, dan router membaca alamat apa? <br>→ Switch:
+   **MAC** (layer 2). Router: **IP** (layer 3).
+2. `ping` ke gateway berhasil tapi situs tetap tidak terbuka. Lapisan mana yang
+   sudah terbukti sehat, dan ke mana pemeriksaan berikutnya? <br>→ L1–L3 sampai
+   gateway sehat. Berikutnya: rute ke luar, DNS, lalu L4–L7 (port, TLS,
+   aplikasi).
+3. TLS bekerja di lapisan mana? <br>→ Di wilayah abu-abu L5–L6 — contoh nyata
+   bahwa batas lapisan atas OSI kabur; model TCP/IP meleburnya ke Application.
+4. Mengganti Wi-Fi dengan kabel LAN mengubah lapisan berapa saja? <br>→ Hanya
+   **L1–L2**. IP, TCP, dan aplikasimu tidak berubah sama sekali — bukti nyata
+   manfaat pelapisan.
 
 ---
 

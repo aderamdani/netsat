@@ -49,6 +49,20 @@ Kamu → resolver (ISP/publik) ── 1 ──▶ root      : "tanya server .id"
 Resolver menyimpan jawaban di *cache* selama TTL rekaman — karena itulah
 perubahan DNS "butuh waktu menyebar".
 
+Perhatikan pembagian kerjanya: komputermu hanya bertanya sekali ke resolver
+(**query rekursif** — "carikan sampai dapat"), dan resolver-lah yang rajin
+menelusuri pohon dari root ke bawah (**query iteratif** — tiap server hanya
+menjawab "tanya yang di bawah sana"). Resolver bisa milik ISP, atau publik
+seperti `8.8.8.8` (Google), `1.1.1.1` (Cloudflare), `9.9.9.9` (Quad9).
+
+::: tip DNS di link satelit
+Satu resolusi DNS bisa memakan beberapa RTT. Di link
+[GEO](/satelit/orbit#geo-geostationary-orbit) itu berarti *detik*, dirasakan
+sebagai "loading" sebelum situs mulai terbuka. Karena itu jaringan VSAT hampir
+selalu menaruh **DNS cache lokal** di sisi remote — praktiknya di
+[DNS router MikroTik](/mikrotik/dhcp-dns-nat#dns-router-sebagai-cache).
+:::
+
 ### Jenis rekaman penting
 
 | Rekaman | Isi | Contoh |
@@ -84,6 +98,20 @@ Klien                                   Server DHCP
 Alamat bersifat **sewa** (*lease*); klien memperpanjang di tengah masa sewa.
 Kalau tidak ada server DHCP yang menjawab, perangkat memberi dirinya alamat
 darurat `169.254.x.x` — tanda klasik "jaringan bermasalah" saat troubleshooting.
+
+Dua praktik lapangan yang perlu dikenal:
+
+- **Static lease / reservation** — MAC tertentu selalu diberi IP yang sama.
+  Cara terbaik memberi "alamat tetap" untuk printer, kamera, dan server kecil
+  tanpa mengetik konfigurasi manual di tiap perangkat.
+- **DHCP hanya bekerja di broadcast domain-nya.** DISCOVER adalah broadcast,
+  jadi tidak melewati router. Jaringan ber-VLAN banyak memakai **DHCP relay**
+  di tiap segmen yang meneruskan permintaan ke satu server pusat.
+
+Dan satu jebakan klasik: **dua server DHCP di satu jaringan** (misalnya ada
+yang iseng mencolok router rumah ke LAN kantor) membuat sebagian perangkat
+mendapat konfigurasi yang salah — gejalanya acak dan menyebalkan; obatnya
+*DHCP snooping* di switch atau disiplin di lapangan.
 
 ## HTTP dan HTTPS
 
@@ -152,6 +180,34 @@ ss -tunap                     # koneksi TCP/UDP yang sedang hidup
 Untuk menyelam lebih dalam, **Wireshark** menampilkan isi tiap paket lapis per
 lapis — ARP, DHCP DORA, TCP handshake, semua yang dibahas modul ini terlihat
 telanjang di sana. Sangat dianjurkan dicoba minimal sekali.
+
+## Contekan port yang wajib hafal
+
+| Port | Protokol | Layanan |
+| --- | --- | --- |
+| 22 | TCP | SSH |
+| 25 / 465 / 587 | TCP | SMTP (kirim email) |
+| 53 | UDP+TCP | DNS |
+| 67/68 | UDP | DHCP (server/klien) |
+| 80 / 443 | TCP (443 juga QUIC/UDP) | HTTP / HTTPS |
+| 123 | UDP | NTP |
+| 143 / 993 | TCP | IMAP / IMAPS |
+| 3389 | TCP | RDP (remote desktop Windows) |
+
+## Cek pemahaman
+
+1. Kamu mengganti rekaman A domainmu, tapi sebagian pengunjung masih diarahkan
+   ke server lama selama beberapa jam. Kenapa? <br>→ **Cache resolver** masih
+   menyimpan jawaban lama sampai TTL-nya habis.
+2. Laptop mendapat IP `169.254.100.7`. Apa artinya dan apa langkah pertamamu?
+   <br>→ DHCP gagal. Periksa: server DHCP hidup? kabel/VLAN benar? (broadcast
+   DISCOVER tidak menyeberangi router.)
+3. Kenapa DNS memakai UDP, padahal jawabannya penting? <br>→ Satu pertanyaan
+   satu jawaban kecil — handshake TCP hanya menambah RTT. Kalau jawaban tidak
+   datang, klien cukup bertanya ulang. (Jawaban besar/transfer zona memakai TCP.)
+4. `curl -v https://situs` menunjukkan handshake TLS sukses tapi respons HTTP
+   `503`. Masalahnya di lapisan mana? <br>→ **Aplikasi (L7)** — jaringan,
+   TCP, dan TLS sudah terbukti sehat; server/aplikasinya yang sedang bermasalah.
 
 **Praktik:** DHCP server, DNS cache, dan NAT dari halaman ini dipasang langkah
 demi langkah di [DHCP, DNS & NAT (MikroTik)](/mikrotik/dhcp-dns-nat).
