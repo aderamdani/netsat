@@ -141,6 +141,7 @@ export default defineConfig({
             { text: 'VPN', link: '/mikrotik/vpn' },
             { text: 'Wireless & Satelit', link: '/mikrotik/wireless-dan-satelit' },
             { text: 'Operasi & Monitoring', link: '/mikrotik/monitoring' },
+            { text: 'Glosari', link: '/mikrotik/glosari' },
           ],
         },
       ],

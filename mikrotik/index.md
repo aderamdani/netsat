@@ -140,6 +140,7 @@ Contoh formatnya:
 | 9 | [VPN](/mikrotik/vpn) | [Keamanan](/networking/keamanan#vpn-terowongan-terenkripsi) |
 | 10 | [Wireless & Satelit](/mikrotik/wireless-dan-satelit) | [VSAT](/satelit/vsat), [Komunikasi Satelit](/satelit/komunikasi) |
 | 11 | [Operasi & Monitoring](/mikrotik/monitoring) | [Manajemen Perangkat](/mikrotik/manajemen) (bekal) |
+| 12 | [Glosari](/mikrotik/glosari) | — (referensi cepat) |
 
 Referensi utama modul ini adalah dokumentasi resmi
 [manual.mikrotik.com](https://manual.mikrotik.com) — struktur topiknya sengaja
