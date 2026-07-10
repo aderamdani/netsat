@@ -1,0 +1,253 @@
+/* ============================================================
+   NetSat — tema kustom
+   Konsep: "telemetri stasiun bumi"
+   Palet : deep-space indigo + emas MLI (foil isolasi satelit)
+   Type  : Bricolage Grotesque (display) / Inter (body) / IBM Plex Mono (telemetri)
+   ============================================================ */
+
+:root {
+  /* palet inti */
+  --ns-gold: #9a6700;
+  --ns-gold-strong: #7a5200;
+  --ns-gold-soft: rgba(154, 103, 0, 0.1);
+  --ns-ink: #10161f;
+  --ns-paper: #fbfaf7;
+  --ns-line: #e4e1d8;
+
+  --ns-font-display: 'Bricolage Grotesque Variable', 'Inter Variable', sans-serif;
+  --ns-font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* VitePress overrides — brand */
+  --vp-c-brand-1: var(--ns-gold);
+  --vp-c-brand-2: var(--ns-gold-strong);
+  --vp-c-brand-3: var(--ns-gold);
+  --vp-c-brand-soft: var(--ns-gold-soft);
+
+  /* permukaan mode terang: kertas hangat-netral, bukan putih steril */
+  --vp-c-bg: var(--ns-paper);
+  --vp-c-bg-alt: #f4f2ec;
+  --vp-c-bg-soft: #f4f2ec;
+  --vp-c-bg-elv: #ffffff;
+  --vp-c-divider: var(--ns-line);
+  --vp-c-gutter: var(--ns-line);
+
+  --vp-c-text-1: var(--ns-ink);
+  --vp-c-text-2: #4b5263;
+  --vp-c-text-3: #767d8d;
+
+  --vp-font-family-base: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --vp-font-family-mono: var(--ns-font-mono);
+
+  --vp-nav-height: 60px;
+
+  --vp-button-brand-bg: var(--ns-ink);
+  --vp-button-brand-border: var(--ns-ink);
+  --vp-button-brand-text: var(--ns-paper);
+  --vp-button-brand-hover-bg: #232c3b;
+  --vp-button-brand-hover-border: #232c3b;
+  --vp-button-brand-hover-text: var(--ns-paper);
+  --vp-button-brand-active-bg: var(--ns-ink);
+  --vp-button-brand-active-border: var(--ns-ink);
+  --vp-button-brand-active-text: var(--ns-paper);
+
+  --vp-code-color: #7a5200;
+  --vp-code-bg: rgba(154, 103, 0, 0.08);
+
+  --vp-custom-block-tip-border: transparent;
+  --vp-custom-block-tip-text: var(--vp-c-text-1);
+  --vp-custom-block-tip-bg: var(--ns-gold-soft);
+  --vp-custom-block-tip-code-bg: rgba(154, 103, 0, 0.12);
+}
+
+.dark {
+  /* malam di stasiun bumi: indigo dalam, bukan hitam pekat */
+  --ns-gold: #e3b35e;
+  --ns-gold-strong: #f0c87e;
+  --ns-gold-soft: rgba(227, 179, 94, 0.12);
+
+  --vp-c-brand-1: var(--ns-gold);
+  --vp-c-brand-2: var(--ns-gold-strong);
+  --vp-c-brand-3: var(--ns-gold);
+  --vp-c-brand-soft: var(--ns-gold-soft);
+
+  --vp-c-bg: #0c111d;
+  --vp-c-bg-alt: #090d16;
+  --vp-c-bg-soft: #131a2a;
+  --vp-c-bg-elv: #131a2a;
+  --vp-c-divider: #222b3d;
+  --vp-c-gutter: #090d16;
+
+  --vp-c-text-1: #e8e6df;
+  --vp-c-text-2: #a3a89f;
+  --vp-c-text-3: #6f7580;
+
+  --vp-button-brand-bg: var(--ns-gold);
+  --vp-button-brand-border: var(--ns-gold);
+  --vp-button-brand-text: #0c111d;
+  --vp-button-brand-hover-bg: var(--ns-gold-strong);
+  --vp-button-brand-hover-border: var(--ns-gold-strong);
+  --vp-button-brand-hover-text: #0c111d;
+  --vp-button-brand-active-bg: var(--ns-gold);
+  --vp-button-brand-active-border: var(--ns-gold);
+  --vp-button-brand-active-text: #0c111d;
+
+  --vp-code-color: #e3b35e;
+  --vp-code-bg: rgba(227, 179, 94, 0.1);
+}
+
+/* ---------- tipografi dokumen ---------- */
+
+.VPDoc h1,
+.VPDoc h2,
+.VPDoc h3,
+.VPNavBarTitle .title {
+  font-family: var(--ns-font-display);
+  letter-spacing: -0.015em;
+}
+
+.VPDoc h1 {
+  font-size: 2.35rem;
+  font-weight: 640;
+  line-height: 1.12;
+}
+
+.VPDoc h2 {
+  font-weight: 600;
+  border-top: none;
+  padding-top: 32px;
+  position: relative;
+}
+
+/* garis telemetri: rule pendek emas di atas tiap H2, pengganti border penuh */
+.VPDoc h2::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 0;
+  width: 42px;
+  height: 2px;
+  background: var(--ns-gold);
+}
+
+.vp-doc p {
+  line-height: 1.75;
+}
+
+.vp-doc a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* ---------- navbar & sidebar ---------- */
+
+.VPNavBarTitle .title {
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.VPSidebarItem.level-0 > .item .text {
+  font-family: var(--ns-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--vp-c-text-3);
+}
+
+.VPSidebarItem.level-1 .text {
+  font-size: 13.5px;
+}
+
+/* penanda aktif: titik sinyal emas */
+.VPSidebarItem.level-1.is-active > .item .text {
+  position: relative;
+}
+
+.VPSidebarItem.level-1.is-active > .item .text::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: var(--ns-gold);
+}
+
+/* ---------- blok kode & tabel ---------- */
+
+.vp-doc div[class*='language-'] {
+  border-radius: 6px;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.vp-doc table {
+  font-size: 14px;
+  width: 100%;
+  display: table;
+}
+
+.vp-doc th {
+  font-family: var(--ns-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--vp-c-text-2);
+}
+
+.vp-doc tr:nth-child(2n) {
+  background-color: transparent;
+}
+
+.vp-doc td {
+  border-color: var(--vp-c-divider);
+}
+
+/* wadah scroll horizontal untuk tabel lebar di mobile */
+@media (max-width: 640px) {
+  .vp-doc table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+/* ---------- custom blocks ---------- */
+
+.vp-doc .custom-block {
+  border-radius: 6px;
+  border-left: 2px solid var(--ns-gold);
+}
+
+.vp-doc .custom-block-title {
+  font-family: var(--ns-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* ---------- utilitas telemetri (dipakai komponen & konten) ---------- */
+
+.ns-eyebrow {
+  font-family: var(--ns-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ns-gold);
+}
+
+/* ---------- aksesibilitas ---------- */
+
+:focus-visible {
+  outline: 2px solid var(--ns-gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ns-orbit-anim,
+  .ns-orbit-anim * {
+    animation: none !important;
+  }
+}
