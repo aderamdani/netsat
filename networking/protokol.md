@@ -39,7 +39,7 @@ angka.
 DNS adalah basis data terdistribusi berbentuk pohon: **root** → **TLD**
 (`.id`, `.com`) → **domain** (`web.id`, `aderamdani.web.id`) → seterusnya.
 
-```
+```text
 Kamu → resolver (ISP/publik) ── 1 ──▶ root      : "tanya server .id"
                               ── 2 ──▶ .id/web.id: "tanya NS aderamdani.web.id"
                               ── 3 ──▶ NS domain : "netsat = 203.0.113.5"
@@ -73,7 +73,7 @@ DHCP (*Dynamic Host Configuration Protocol*) memberi perangkat konfigurasi
 jaringan secara otomatis: alamat IP, subnet mask, gateway, dan server DNS.
 Prosesnya empat langkah — **DORA**:
 
-```
+```text
 Klien                                   Server DHCP
   │ ── DISCOVER (broadcast: ada server?) ──▶
   │ ◀─ OFFER    (tawaran: 192.168.1.50)  ──

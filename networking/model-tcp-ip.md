@@ -42,7 +42,7 @@ sumber ke alamat tujuan, **melintasi jaringan apa pun di tengahnya**. Sifatnya:
 
 ### Anatomi header IPv4
 
-```
+```text
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-------+-------+---------------+-------------------------------+
@@ -93,7 +93,7 @@ Satu koneksi diidentifikasi unik oleh 4-tuple:
 
 TCP membuka koneksi lewat **three-way handshake**:
 
-```
+```text
 Klien                         Server
   │ ── SYN  (seq=x) ────────────▶ │
   │ ◀─ SYN-ACK (seq=y, ack=x+1) ─ │

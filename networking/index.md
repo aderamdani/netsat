@@ -113,7 +113,7 @@ Selalu ≤ bandwidth karena ada overhead protokol, antrean, dan retransmisi.
 Diukur dalam milidetik; sering dinyatakan sebagai RTT (*round-trip time*,
 pergi-pulang).
 
-```
+```text
 Analogi jalan tol:
 bandwidth  = jumlah lajur
 throughput = mobil yang benar-benar lolos per jam (macet ikut dihitung)

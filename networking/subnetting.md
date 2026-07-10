@@ -12,7 +12,7 @@ VLSM — lengkap dengan resep hitung cepat yang bisa dikerjakan di kepala.
 
 Alamat IPv4 adalah bilangan **32-bit**, ditulis sebagai empat oktet desimal:
 
-```
+```text
 192.168.10.25
 ↓ dalam biner (per oktet, 8 bit)
 11000000.10101000.00001010.00011001

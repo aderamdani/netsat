@@ -24,7 +24,7 @@ Saat paket tiba, router:
 
 Tabel berisi tiga entri berikut, dan paket menuju `10.1.5.20` tiba:
 
-```
+```text
 10.0.0.0/8      via 192.0.2.1     ← cocok (8 bit)
 10.1.0.0/16     via 192.0.2.5     ← cocok (16 bit)
 10.1.5.0/24     via 192.0.2.9     ← cocok (24 bit)  ✔ dipilih

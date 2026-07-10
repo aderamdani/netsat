@@ -14,7 +14,7 @@ di [layer 2](/networking/model-osi#layer-2-—-data-link), berbicara dalam bahas
 Alamat MAC (*Media Access Control*) adalah identitas 48-bit yang tertanam di
 setiap kartu jaringan, ditulis heksadesimal:
 
-```
+```text
 3C:5A:B4:12:34:56
 └───┬────┘└───┬───┘
     OUI      NIC-specific
@@ -42,7 +42,7 @@ Cara kerjanya elegan karena sepenuhnya otomatis:
    dikirim ke **semua** port kecuali port asal.
 4. **Aging** — entri yang lama tidak terdengar (default ±300 detik) dihapus.
 
-```
+```text
 Frame masuk dari port 3, sumber AA:..:01, tujuan BB:..:02
 
 MAC table:                      Keputusan:
@@ -60,7 +60,7 @@ percakapan bisa berlangsung serentak tanpa tabrakan.
 Komputer berpikir dalam IP, tapi frame butuh MAC. **ARP** (*Address Resolution
 Protocol*) menerjemahkannya:
 
-```
+```text
 Host 192.168.1.7 ingin mengirim ke 192.168.1.20:
 
 1. Broadcast : "Siapa yang punya 192.168.1.20? Beri tahu 192.168.1.7"
@@ -93,7 +93,7 @@ VLAN (*Virtual LAN*) membagi satu switch fisik menjadi beberapa jaringan logis
 yang saling terisolasi. Port yang berbeda VLAN tidak bisa saling bicara di
 layer 2 — seolah-olah berada di switch yang berbeda.
 
-```
+```text
 Switch 24 port, tiga VLAN:
 
 VLAN 10 (Karyawan) : port 1–8
@@ -112,7 +112,7 @@ Bagaimana VLAN 10 di switch A tersambung ke VLAN 10 di switch B? Lewat **trunk
 port** — satu kabel yang membawa banyak VLAN sekaligus. Setiap frame di trunk
 diberi **tag 802.1Q**: 4 byte tambahan berisi VLAN ID (1–4094).
 
-```
+```text
 Frame biasa : [MAC tujuan|MAC sumber|      Type|data|FCS]
 Frame tagged: [MAC tujuan|MAC sumber|802.1Q|Type|data|FCS]
                                       └─ VLAN ID di sini

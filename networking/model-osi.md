@@ -79,7 +79,7 @@ Saat data dikirim, setiap lapisan **membungkus** data dari lapisan di atasnya
 dengan header miliknya (layer 2 juga menambah *trailer*). Proses sebaliknya —
 membuka bungkus lapis demi lapis — terjadi di penerima.
 
-```
+```text
 PENGIRIM                                        PENERIMA
 Aplikasi   [data]                               [data]         Aplikasi
 Transport  [TCP|data]                           [TCP|data]     Transport
