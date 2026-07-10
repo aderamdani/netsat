@@ -11,18 +11,44 @@ export default defineConfig({
 
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
-    ['meta', { name: 'theme-color', content: '#0c111d' }],
+    ['link', { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    ['link', { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }],
+    ['meta', { name: 'theme-color', content: '#0B0E14' }],
+    [
+      'meta',
+      {
+        name: 'description',
+        content:
+          'Dokumentasi dan pembelajaran lengkap seputar jaringan komputer dan komunikasi satelit dalam bahasa Indonesia — dari model OSI, subnetting, dan routing hingga orbit LEO/MEO/GEO, ground station, dan VSAT.',
+      },
+    ],
+    ['meta', { property: 'og:site_name', content: 'NetSat' }],
     ['meta', { property: 'og:title', content: 'NetSat — Networking & Satelit' }],
     [
       'meta',
       {
         property: 'og:description',
         content:
-          'Dokumentasi dan pembelajaran lengkap seputar jaringan komputer dan komunikasi satelit.',
+          'Dokumentasi dan pembelajaran lengkap seputar jaringan komputer dan komunikasi satelit dalam bahasa Indonesia.',
       },
     ],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:url', content: 'https://netsat.aderamdani.web.id' }],
+    ['meta', { property: 'og:image', content: 'https://netsat.aderamdani.web.id/og-image.png' }],
+    ['meta', { property: 'og:image:width', content: '1200' }],
+    ['meta', { property: 'og:image:height', content: '630' }],
+    ['meta', { property: 'og:locale', content: 'id_ID' }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:title', content: 'NetSat — Networking & Satelit' }],
+    [
+      'meta',
+      {
+        name: 'twitter:description',
+        content:
+          'Dokumentasi dan pembelajaran lengkap seputar jaringan komputer dan komunikasi satelit dalam bahasa Indonesia.',
+      },
+    ],
+    ['meta', { name: 'twitter:image', content: 'https://netsat.aderamdani.web.id/og-image.png' }],
   ],
 
   sitemap: {
@@ -106,7 +132,14 @@ export default defineConfig({
 
     docFooter: { prev: 'Sebelumnya', next: 'Selanjutnya' },
 
-    lastUpdated: { text: 'Diperbarui' },
+    lastUpdated: {
+      text: 'Diperbarui',
+      formatOptions: {
+        dateStyle: 'long',
+        timeStyle: 'short',
+        forceLocale: true,
+      },
+    },
 
     darkModeSwitchLabel: 'Tampilan',
     lightModeSwitchTitle: 'Ganti ke mode terang',
