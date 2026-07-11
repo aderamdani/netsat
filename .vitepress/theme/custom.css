@@ -176,6 +176,16 @@
 
 /* ---------- blok kode & tabel ---------- */
 
+/* override VitePress edge-to-edge code blocks on mobile (<640px) —
+   konsisten dengan padding konten 24px di semua ukuran */
+.vp-doc div[class*='language-'] {
+  margin: 16px 0;
+}
+.vp-code-group .tabs {
+  margin-left: 0;
+  margin-right: 0;
+}
+
 .vp-doc div[class*='language-'] {
   border-radius: 6px;
   border: 1px solid var(--vp-c-divider);
