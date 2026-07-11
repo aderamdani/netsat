@@ -100,18 +100,39 @@ ketahanan terhadap kegagalan, dan kemudahan menambah perangkat.
 | Mesh | Setiap perangkat terhubung ke banyak perangkat lain | Sangat tahan gagal | Mahal, rumit |
 | Tree/Hierarki | Gabungan star bertingkat | Skalabel | Bergantung pada tingkat di atasnya |
 
-```text
-Bus                    Star                   Mesh (penuh)
-A──B──C──D             A   B                  A ─── B
-   (satu kabel          \ /                   │ ╲ ╱ │
-    bersama)        D──[SW]──C                │ ╱ ╲ │
-                         │                    C ─── D
-Ring                     E
-A──B                                          setiap simpul
-│  │                kegagalan 1 kabel         terhubung ke
-D──C                hanya memutus             semua simpul
-                    1 perangkat               lain
+```mermaid
+flowchart TD
+    subgraph Topologi Bus
+        direction LR
+        B_A((A)) --- B_B((B)) --- B_C((C)) --- B_D((D))
+    end
+    
+    subgraph Topologi Ring
+        R_A((A)) --- R_B((B))
+        R_B --- R_C((C))
+        R_C --- R_D((D))
+        R_D --- R_A
+    end
+
+    subgraph Topologi Star
+        S_SW[Switch]
+        S_A((A)) --- S_SW
+        S_B((B)) --- S_SW
+        S_C((C)) --- S_SW
+        S_D((D)) --- S_SW
+        S_E((E)) --- S_SW
+    end
+    
+    subgraph Topologi Mesh Penuh
+        M_A((A)) --- M_B((B))
+        M_B --- M_C((C))
+        M_C --- M_D((D))
+        M_D --- M_A
+        M_A --- M_C
+        M_B --- M_D
+    end
 ```
+*Keterangan singkat: Pada topologi Star, matinya 1 kabel hanya memutus 1 perangkat. Pada topologi Bus & Ring, putusnya kabel utama bisa berakibat fatal. Pada topologi Mesh, setiap simpul terhubung ke semua simpul lain sehingga sangat tahan terhadap kegagalan.*
 
 Cara membaca tabel di atas dalam praktik: pertanyaannya selalu **"kalau titik
 ini mati, siapa yang ikut mati?"**. Pada star, matinya satu kabel hanya
