@@ -111,38 +111,16 @@ cloud:
 
 ### Alur packet (packet flow)
 
-```text
-         ┌─────────────────────────────────────┐
-         │          Paket masuk                 │
-         └────────────┬────────────────────────┘
-                      │
-                      ▼
-         ┌──────────────────────┐   YA   ┌──────────────┐
-         │ Ada di conntrack?   │────────▶│    Accept     │
-         │ (ESTABLISHED/RELATED)│        └──────────────┘
-         └──────────┬───────────┘
-                    │ TIDAK
-                    ▼
-         ┌──────────────────────┐
-         │  connection-state    │
-         │  = INVALID?          │──YA──▶ Drop
-         └──────────┬───────────┘
-                    │ TIDAK
-                    ▼
-         ┌──────────────────────────────────┐
-         │  Cocokkan aturan firewall        │
-         │  (filter rules) satu per satu    │
-         │  dari atas ke bawah              │
-         └──────────┬───────────────────────┘
-                    │
-          ┌─────────┴──────────┐
-          ▼                    ▼
-    Ada yang match      Tidak ada yang match
-          │                    │
-          ▼                    ▼
-     Action (accept,      Action default
-     drop, reject,        (biasanya drop)
-     jump, log)
+```mermaid
+flowchart TD
+    A[Paket masuk] --> B{"Ada di conntrack?<br/>(ESTABLISHED/RELATED)"}
+    B -- YA --> C[Accept]
+    B -- TIDAK --> D{"connection-state<br/>= INVALID?"}
+    D -- YA --> E[Drop]
+    D -- TIDAK --> F["Cocokkan aturan firewall (filter rules)<br/>satu per satu dari atas ke bawah"]
+    F --> G{"Ada yang match?"}
+    G -- YA --> H["Action<br/>(accept, drop, reject, jump, log)"]
+    G -- TIDAK --> I["Action default<br/>(biasanya drop)"]
 ```
 
 ### Connection tracking (conntrack)

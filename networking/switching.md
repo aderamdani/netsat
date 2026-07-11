@@ -14,12 +14,10 @@ di [layer 2](/networking/model-osi#layer-2-—-data-link), berbicara dalam bahas
 Alamat MAC (*Media Access Control*) adalah identitas 48-bit yang tertanam di
 setiap kartu jaringan, ditulis heksadesimal:
 
-```text
-3C:5A:B4:12:34:56
-└───┬────┘└───┬───┘
-    OUI      NIC-specific
- (vendor)   (nomor seri)
-```
+| Bagian | Contoh Nilai | Penjelasan |
+| :--- | :---: | :--- |
+| **OUI** *(24 bit)* | `3C:5A:B4` | Mengidentifikasi *vendor* pabrik perangkat (misal: Cisco, Apple) |
+| **NIC-specific** *(24 bit)* | `12:34:56` | Nomor seri perangkat yang unik dari pabrik tersebut |
 
 24 bit pertama (OUI) mengidentifikasi vendor; sisanya nomor urut perangkat.
 Berbeda dengan IP yang **logis dan hierarkis** (bisa dipindah, menunjukkan
@@ -42,14 +40,13 @@ Cara kerjanya elegan karena sepenuhnya otomatis:
    dikirim ke **semua** port kecuali port asal.
 4. **Aging** — entri yang lama tidak terdengar (default ±300 detik) dihapus.
 
-```text
-Frame masuk dari port 3, sumber AA:..:01, tujuan BB:..:02
+**Kondisi Awal**: Masuk sebuah frame dari **port 3** dengan `Sumber: AA:..:01` dan `Tujuan: BB:..:02`.
 
-MAC table:                      Keputusan:
-AA:..:01 → port 3  (baru dicatat)
-BB:..:02 → port 7  (sudah ada)   → kirim hanya ke port 7
-CC:..:03 → port 1
-```
+| Alamat MAC | Berada di Port | Status Catatan Switch |
+| :--- | :---: | :--- |
+| **`AA:..:01`** | **`3`** | *(Baru dicatat dari sumber)* |
+| `BB:..:02` | `7` | *(Sudah ada)* → **Keputusan:** Kirim frame hanya ke port 7 |
+| `CC:..:03` | `1` | *(Sudah ada di memori)* |
 
 Inilah bedanya dengan **hub** zaman dulu yang membabi buta mengulang sinyal ke
 semua port: switch menciptakan jalur privat antar-dua-port, sehingga banyak
@@ -83,13 +80,11 @@ domain**.
 Komputer berpikir dalam IP, tapi frame butuh MAC. **ARP** (*Address Resolution
 Protocol*) menerjemahkannya:
 
-```text
-Host 192.168.1.7 ingin mengirim ke 192.168.1.20:
-
-1. Broadcast : "Siapa yang punya 192.168.1.20? Beri tahu 192.168.1.7"
-2. Jawaban   : "192.168.1.20 ada di BB:CC:DD:11:22:33"
-3. Disimpan di ARP cache, frame pun bisa dikirim.
-```
+| Langkah | Jenis Pesan | Isi Percakapan | Keterangan |
+| :---: | :--- | :--- | :--- |
+| **1** | `Broadcast` | "Siapa yang punya `192.168.1.20`? Tolong beri tahu `192.168.1.7`" | Permintaan (*ARP Request*) |
+| **2** | `Unicast` | "`192.168.1.20` ada di MAC `BB:CC:DD:11:22:33`" | Balasan (*ARP Reply*) |
+| **3** | *Internal* | Disimpan di *ARP Cache* memori PC | Frame siap dibungkus dan dikirimkan |
 
 ```bash
 ip neigh show          # lihat ARP cache di Linux
@@ -116,15 +111,13 @@ VLAN (*Virtual LAN*) membagi satu switch fisik menjadi beberapa jaringan logis
 yang saling terisolasi. Port yang berbeda VLAN tidak bisa saling bicara di
 layer 2 — seolah-olah berada di switch yang berbeda.
 
-```text
-Switch 24 port, tiga VLAN:
+| ID VLAN | Nama / Peruntukan | Anggota Port |
+| :---: | :--- | :---: |
+| **`10`** | Karyawan | `1 - 8` |
+| **`20`** | Tamu | `9 - 16` |
+| **`30`** | CCTV | `17 - 24` |
 
-VLAN 10 (Karyawan) : port 1–8
-VLAN 20 (Tamu)     : port 9–16
-VLAN 30 (CCTV)     : port 17–24
-
-CCTV tidak bisa mengendus trafik karyawan; tamu terisolasi dari keduanya.
-```
+> *CCTV tidak bisa mengendus trafik karyawan; dan perangkat Tamu terisolasi dari keduanya. Mereka hanya bisa berkomunikasi jika diizinkan oleh Router.*
 
 Manfaatnya: segmentasi keamanan, membatasi broadcast, dan pengelompokan
 berdasarkan fungsi tanpa peduli lokasi fisik.
@@ -165,12 +158,13 @@ memblokir port-port yang membentuk loop, menyisakan topologi pohon (bebas
 loop). Saat jalur aktif putus, port cadangan dibuka otomatis. Varian modern
 **RSTP** (802.1w) konvergen dalam ±1–2 detik.
 
-```text
-   [SW-A]══════[SW-B]          STP memilih SW-A sebagai root,
-      ║           │            lalu MEMBLOKIR salah satu sisi
-      ║           │ ✖ diblokir segitiga. Kabel tetap terpasang —
-   [SW-C]─────────┘            siaga menggantikan jalur yang putus.
+```mermaid
+flowchart TD
+    A[SW-A<br/>Root Bridge] === B[SW-B]
+    A === C[SW-C]
+    B -- "Jalur ✖ Diblokir oleh STP" --- C
 ```
+*STP memilih SW-A sebagai root, lalu memblokir salah satu sisi segitiga (port menuju SW-C). Kabel tersebut tetap terpasang secara fisik, berstatus "siaga" menggantikan jika jalur utama putus.*
 
 Pelajaran praktisnya dua arah: **(1)** jangan takut memasang kabel redundan —
 STP yang mengurus; **(2)** jangan pernah mematikan STP "biar cepat", karena

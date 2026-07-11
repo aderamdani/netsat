@@ -39,11 +39,22 @@ angka.
 DNS adalah basis data terdistribusi berbentuk pohon: **root** → **TLD**
 (`.id`, `.com`) → **domain** (`web.id`, `aderamdani.web.id`) → seterusnya.
 
-```text
-Kamu → resolver (ISP/publik) ── 1 ──▶ root      : "tanya server .id"
-                              ── 2 ──▶ .id/web.id: "tanya NS aderamdani.web.id"
-                              ── 3 ──▶ NS domain : "netsat = 203.0.113.5"
-       ◀── jawaban (di-cache sesuai TTL) ──┘
+```mermaid
+sequenceDiagram
+    participant Kamu
+    participant Resolver as Resolver (ISP/Publik)
+    participant Root as Root Server
+    participant TLD as Server .id / web.id
+    participant NS as NS Domain
+    
+    Kamu->>Resolver: Tanya netsat.aderamdani.web.id
+    Resolver->>Root: 1. Tanya
+    Root-->>Resolver: "tanya server .id"
+    Resolver->>TLD: 2. Tanya
+    TLD-->>Resolver: "tanya NS aderamdani.web.id"
+    Resolver->>NS: 3. Tanya
+    NS-->>Resolver: "netsat = 203.0.113.5"
+    Resolver-->>Kamu: Jawaban (di-cache sesuai TTL)
 ```
 
 Resolver menyimpan jawaban di *cache* selama TTL rekaman — karena itulah
@@ -87,13 +98,12 @@ DHCP (*Dynamic Host Configuration Protocol*) memberi perangkat konfigurasi
 jaringan secara otomatis: alamat IP, subnet mask, gateway, dan server DNS.
 Prosesnya empat langkah — **DORA**:
 
-```text
-Klien                                   Server DHCP
-  │ ── DISCOVER (broadcast: ada server?) ──▶
-  │ ◀─ OFFER    (tawaran: 192.168.1.50)  ──
-  │ ── REQUEST  (saya ambil yang itu)    ──▶
-  │ ◀─ ACK      (sah, sewa 24 jam)       ──
-```
+| Singkatan | Pesan | Arah | Keterangan |
+| :---: | :--- | :---: | :--- |
+| **D** | `DISCOVER` | Klien ──▶ Server | *Broadcast*: "Apakah ada server DHCP di jaringan ini?" |
+| **O** | `OFFER` | Server ──▶ Klien | Tawaran IP (misal: `192.168.1.50`) |
+| **R** | `REQUEST` | Klien ──▶ Server | "Saya terima tawaran IP tersebut" |
+| **A** | `ACK` | Server ──▶ Klien | Konfirmasi sah (berisi durasi sewa / *lease time*) |
 
 Alamat bersifat **sewa** (*lease*); klien memperpanjang di tengah masa sewa.
 Kalau tidak ada server DHCP yang menjawab, perangkat memberi dirinya alamat

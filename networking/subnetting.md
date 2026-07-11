@@ -89,11 +89,9 @@ Translation*): router mengganti IP sumber privat dengan IP publiknya dan
 mencatat pemetaannya. Praktis, tapi punya efek samping — koneksi masuk dari
 luar tidak bisa langsung menjangkau perangkat di belakang NAT.
 
-```text
-Laptop 192.168.1.7:51000 ──▶ [NAT router] ──▶ internet melihat: 36.68.x.x:60123
-                              tabel NAT:
-                              192.168.1.7:51000 ⇄ 36.68.x.x:60123
-```
+| Sumber (Private) | | Router NAT | | Tujuan (Internet) |
+| :--- | :---: | :---: | :---: | :--- |
+| **`Laptop`**<br>`192.168.1.7:51000` | ──▶ | **Tabel NAT:**<br>`192.168.1.7:51000 ⇄ 36.68.x.x:60123` | ──▶ | **Internet melihat:**<br>`36.68.x.x:60123` |
 
 Satu IP publik bisa dipakai ratusan perangkat karena pembedanya bukan IP saja
 tapi **pasangan IP:port**. ISP bahkan menumpuk NAT dua tingkat (**CGNAT**,

@@ -32,12 +32,12 @@ Saat paket tiba, router:
 
 Tabel berisi tiga entri berikut, dan paket menuju `10.1.5.20` tiba:
 
-```text
-10.0.0.0/8      via 192.0.2.1     ← cocok (8 bit)
-10.1.0.0/16     via 192.0.2.5     ← cocok (16 bit)
-10.1.5.0/24     via 192.0.2.9     ← cocok (24 bit)  ✔ dipilih
-0.0.0.0/0       via 192.0.2.13    ← default route
-```
+| Subnet / Prefix | Next Hop (via) | Status Pencocokan | Kesimpulan |
+| :--- | :--- | :--- | :--- |
+| `10.0.0.0/8` | `192.0.2.1` | Cocok *(8 bit)* | |
+| `10.1.0.0/16` | `192.0.2.5` | Cocok *(16 bit)* | |
+| **`10.1.5.0/24`** | **`192.0.2.9`** | **Cocok *(24 bit)*** | **✔ Dipilih (paling spesifik)** |
+| `0.0.0.0/0` | `192.0.2.13` | - | *Default route* |
 
 Entri `/24` menang karena paling spesifik. Entri `0.0.0.0/0` — **default
 route** — adalah jaring pengaman: "kalau tidak ada yang cocok, lempar ke sini".

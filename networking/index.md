@@ -172,12 +172,13 @@ Selalu ≤ bandwidth karena ada overhead protokol, antrean, dan retransmisi.
 Diukur dalam milidetik; sering dinyatakan sebagai RTT (*round-trip time*,
 pergi-pulang).
 
-```text
-Analogi jalan tol:
-bandwidth  = jumlah lajur
-throughput = mobil yang benar-benar lolos per jam (macet ikut dihitung)
-latensi    = lama perjalanan satu mobil dari gerbang ke gerbang
-```
+**Analogi jalan tol:**
+
+| Istilah Jaringan | Padanan di Jalan Tol |
+| :--- | :--- |
+| **Bandwidth** | Jumlah lajur jalan |
+| **Throughput** | Mobil yang benar-benar lolos per jam (jika macet, throughput turun meski lajur banyak) |
+| **Latensi** | Waktu tempuh satu mobil dari gerbang asal ke gerbang tujuan |
 
 Ketiganya independen. Link satelit GEO bisa punya bandwidth ratusan Mbps tetapi
 latensi RTT ±500 ms — karena sinyal harus naik-turun 35.786 km dua kali. Inilah

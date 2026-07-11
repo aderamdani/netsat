@@ -74,11 +74,12 @@ Bukan soal **apakah** akan terjadi, tapi **kapan**. Miliki rencana:
 - *Post-mortem*: apa yang terjadi, apa yang bekerja, apa yang tidak.
 - Perbaiki prosedur, perketat kontrol.
 
-```text
-┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
-│ Persiapan │──▶│  Deteksi │──▶│ Penangan │──▶│ Pemulihan│──▶│ Pasca-   │
-│          │    │          │    │ & Eradik │    │          │    │ insiden  │
-└──────────┘    └──────────┘    └──────────┘    └──────────┘    └──────────┘
+```mermaid
+flowchart LR
+    A[Persiapan] --> B[Deteksi]
+    B --> C["Penanganan<br/>& Eradikasi"]
+    C --> D[Pemulihan]
+    D --> E[Pasca-insiden]
 ```
 
 ## Keamanan surel: SPF, DKIM, DMARC
