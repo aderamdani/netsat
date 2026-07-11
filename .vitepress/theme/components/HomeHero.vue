@@ -193,6 +193,7 @@ const orbitData: Record<string, { alt: string, speed: string, latency: string }>
 .ns-btn-solid:hover {
   background: var(--vp-button-brand-hover-bg);
   border-color: var(--vp-button-brand-hover-border);
+  color: var(--vp-button-brand-hover-text);
 }
 
 .ns-btn-ghost {
