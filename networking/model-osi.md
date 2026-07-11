@@ -91,14 +91,7 @@ Saat data dikirim, setiap lapisan **membungkus** data dari lapisan di atasnya
 dengan <TermTooltip term="header" def="Informasi kendali tambahan yang dipasang di bagian depan data, berisi alamat tujuan, asal, dan protokol." /> miliknya (layer 2 juga menambah *trailer*). Proses <TermTooltip term="Enkapsulasi" def="Proses membungkus data dengan header dari setiap lapisan sebelum dikirimkan ke jaringan." /> —
 serta sebaliknya, membuka bungkus lapis demi lapis — terjadi di penerima.
 
-```text
-PENGIRIM                                        PENERIMA
-Aplikasi   [data]                               [data]         Aplikasi
-Transport  [TCP|data]                           [TCP|data]     Transport
-Network    [IP|TCP|data]                        [IP|TCP|data]  Network
-Data Link  [ETH|IP|TCP|data|FCS]  ──medium──▶  [ETH|IP|TCP|data|FCS]
-Physical   101101110101... ──────────────────▶ 101101110101...
-```
+<EncapsulationDemo />
 
 Perhatikan konsekuensinya: **switch** hanya membuka bungkus sampai layer 2
 (cukup untuk membaca MAC tujuan), **router** membuka sampai layer 3 (membaca IP

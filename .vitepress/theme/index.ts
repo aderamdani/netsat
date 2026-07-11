@@ -14,6 +14,7 @@ import TelemetryStrip from './components/TelemetryStrip.vue'
 import QuizBox from './components/QuizBox.vue'
 import TermTooltip from './components/TermTooltip.vue'
 import OsiInteractive from './components/OsiInteractive.vue'
+import EncapsulationDemo from './components/EncapsulationDemo.vue'
 
 export default {
   extends: DefaultTheme,
@@ -24,6 +25,7 @@ export default {
     app.component('QuizBox', QuizBox)
     app.component('TermTooltip', TermTooltip)
     app.component('OsiInteractive', OsiInteractive)
+    app.component('EncapsulationDemo', EncapsulationDemo)
 
     // View Transitions API
     if (typeof window !== 'undefined' && 'startViewTransition' in document) {
