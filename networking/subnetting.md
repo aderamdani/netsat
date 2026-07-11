@@ -12,11 +12,10 @@ VLSM — lengkap dengan resep hitung cepat yang bisa dikerjakan di kepala.
 
 Alamat IPv4 adalah bilangan **32-bit**, ditulis sebagai empat oktet desimal:
 
-```text
-192.168.10.25
-↓ dalam biner (per oktet, 8 bit)
-11000000.10101000.00001010.00011001
-```
+| Oktet 1 | Oktet 2 | Oktet 3 | Oktet 4 |
+| :---: | :---: | :---: | :---: |
+| **`192`** | **`168`** | **`10`** | **`25`** |
+| `11000000` | `10101000` | `00001010` | `00011001` |
 
 Setiap alamat terbagi dua bagian:
 
@@ -36,11 +35,10 @@ yang memisahkan "nama jalan" dari "nomor rumah".
 
 Subnetting jadi mudah begitu kamu hafal **nilai posisi 8 bit**:
 
-```text
-posisi bit : 128  64  32  16   8   4   2   1
-contoh     :   1   1   0   0   0   0   0   0   = 128+64 = 192
-             :   1   1   1   0   0   0   0   0   = 128+64+32 = 224
-```
+| Posisi Bit | `128` | `64` | `32` | `16` | `8` | `4` | `2` | `1` | Hasil Akhir |
+| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | --- |
+| **Contoh 1** | `1` | `1` | `0` | `0` | `0` | `0` | `0` | `0` | 128 + 64 = **192** |
+| **Contoh 2** | `1` | `1` | `1` | `0` | `0` | `0` | `0` | `0` | 128 + 64 + 32 = **224** |
 
 Dua konversi yang sering muncul:
 
