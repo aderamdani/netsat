@@ -15,6 +15,7 @@ import QuizBox from './components/QuizBox.vue'
 import TermTooltip from './components/TermTooltip.vue'
 import OsiInteractive from './components/OsiInteractive.vue'
 import EncapsulationDemo from './components/EncapsulationDemo.vue'
+import IpHeaderInteractive from './components/IpHeaderInteractive.vue'
 
 export default {
   extends: DefaultTheme,
@@ -26,6 +27,7 @@ export default {
     app.component('TermTooltip', TermTooltip)
     app.component('OsiInteractive', OsiInteractive)
     app.component('EncapsulationDemo', EncapsulationDemo)
+    app.component('IpHeaderInteractive', IpHeaderInteractive)
 
     // View Transitions API
     if (typeof window !== 'undefined' && 'startViewTransition' in document) {

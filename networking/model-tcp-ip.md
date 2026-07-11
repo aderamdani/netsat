@@ -42,21 +42,7 @@ sumber ke alamat tujuan, **melintasi jaringan apa pun di tengahnya**. Sifatnya:
 
 ### Anatomi header IPv4
 
-```text
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-------+-------+---------------+-------------------------------+
-|Versi  | IHL   |    DSCP/ECN   |        Total Length           |
-+-------+-------+---------------+-----+-------------------------+
-|         Identification        |Flags|    Fragment Offset      |
-+---------------+---------------+-----+-------------------------+
-|      TTL      |   Protocol    |       Header Checksum         |
-+---------------+---------------+-------------------------------+
-|                     Source IP Address                         |
-+---------------------------------------------------------------+
-|                  Destination IP Address                       |
-+---------------------------------------------------------------+
-```
+<IpHeaderInteractive />
 
 Field yang paling sering kamu temui dalam praktik:
 
@@ -189,18 +175,33 @@ utuh dari ujung ke ujung**. Itulah inti desain internet: *IP over everything*.
 
 ## Cek pemahaman
 
-1. IP tidak menjamin paket sampai. Lalu kenapa unduhan file tidak pernah bolong
-   isinya? <br>→ Karena **TCP** di atasnya menomori, meng-ACK, dan mengirim
-   ulang yang hilang. Jaminan dibangun di lapisan transport, bukan di IP.
-2. Field TTL berkurang di mana, dan apa gunanya? <br>→ Berkurang 1 di **setiap
-   router**; saat 0 paket dibuang. Mencegah paket berputar abadi saat ada loop
-   rute — dan menjadi bahan bakar `traceroute`.
-3. VoIP memilih UDP, unduhan memilih TCP. Kenapa tidak dibalik? <br>→ Suara
-   yang telat lebih baik dibuang (UDP: segar > lengkap); potongan file yang
-   hilang wajib dikirim ulang (TCP: lengkap > segar).
-4. Di link GEO (RTT 500 ms), kenapa koneksi TCP baru terasa "lambat panas"?
-   <br>→ Congestion control menaikkan kecepatan **per RTT** — RTT 25× lebih
-   lama berarti akselerasi 25× lebih lambat menuju kecepatan penuh.
+<QuizBox 
+  question="IP tidak menjamin paket sampai. Lalu kenapa unduhan file tidak pernah bolong isinya?"
+  :options="['Karena internet kabel sudah sangat andal', 'Karena router menyimpan cadangan paket', 'Karena ada TCP di atasnya yang meminta kirim ulang', 'Karena DNS otomatis memperbaikinya']"
+  :correctIndex="2"
+  explanation="TCP menomori paket, meng-ACK, dan mengirim ulang yang hilang. Jaminan kelengkapan dibangun di lapisan Transport, bukan di lapisan Internet (IP)."
+/>
+
+<QuizBox 
+  question="Apa fungsi dari field TTL (Time To Live) pada header IP?"
+  :options="['Menentukan waktu kedaluwarsa data', 'Mencegah paket berputar abadi di jaringan saat ada loop routing', 'Menghitung waktu ping (latency)', 'Mengatur kecepatan transmisi (QoS)']"
+  :correctIndex="1"
+  explanation="TTL akan berkurang 1 setiap kali paket melewati router. Jika nilainya mencapai 0, router akan membuang paket tersebut agar tidak berputar selamanya di jaringan."
+/>
+
+<QuizBox 
+  question="VoIP (telepon internet) menggunakan UDP, sedangkan unduhan menggunakan TCP. Mengapa tidak dibalik?"
+  :options="['Karena UDP lebih aman untuk suara', 'Karena suara yang telat lebih baik dibuang (UDP), sedangkan file yang hilang wajib dikirim ulang (TCP)', 'Karena TCP tidak bisa membawa suara', 'Keduanya bisa ditukar tanpa masalah']"
+  :correctIndex="1"
+  explanation="Aplikasi real-time seperti VoIP mementingkan kecepatan/kesegaran data; jika ada data hilang lebih baik dibiarkan daripada menunggu retransmisi yang membuat suara jeda. Sebaliknya, unduhan file wajib 100% lengkap."
+/>
+
+<QuizBox 
+  question="Di link satelit GEO (RTT 500 ms), kenapa koneksi TCP baru terasa 'lambat panas'?"
+  :options="['Karena sinyal satelit lemah di awal', 'Karena proses enkripsi butuh waktu lama', 'Karena congestion control TCP menaikkan kecepatan per RTT, sehingga butuh waktu lebih lama mencapai kecepatan penuh', 'Karena router butuh waktu pemanasan']"
+  :correctIndex="2"
+  explanation="Mekanisme Congestion Control pada TCP (seperti Slow Start) menaikkan jendela transmisi (window) setiap kali menerima ACK (satu RTT). Jika RTT-nya lama (500ms), maka akselerasinya pun ikut lambat."
+/>
 
 ## Lanjut ke mana?
 
