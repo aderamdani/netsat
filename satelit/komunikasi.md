@@ -89,18 +89,16 @@ keempatnya dengan biaya.
 
 Angka disederhanakan, tapi bentuk hitungannya persis praktik nyata:
 
-```text
-EIRP satelit di lokasimu           : +50 dBW
-FSPL GEO @ 11 GHz                  : −205 dB
-Rugi atmosfer (cerah)              :   −1 dB
-G/T antena 1,2 m                   : +21 dB/K
-konstanta Boltzmann & bandwidth    : (dihitung sistem)
-──────────────────────────────────────────────
-C/N hasil                          : ±14 dB
-C/N minimum utk 8PSK ¾             : ±10 dB
-──────────────────────────────────────────────
-Link margin                        :  +4 dB   ✓ link hidup
-```
+| Komponen neraca | Nilai |
+| --- | --- |
+| EIRP satelit di lokasimu | +50 dBW |
+| FSPL GEO @ 11 GHz | −205 dB |
+| Rugi atmosfer (cerah) | −1 dB |
+| G/T antena 1,2 m | +21 dB/K |
+| Konstanta Boltzmann & bandwidth | (dihitung sistem) |
+| **C/N hasil** | **±14 dB** |
+| C/N minimum untuk 8PSK ¾ | ±10 dB |
+| **Link margin** | **+4 dB — ✓ link hidup** |
 
 Margin 4 dB itulah "tabungan" menghadapi hujan: gerimis memakan 2 dB → masih
 aman; hujan deras memakan 12 dB → C/N jatuh di bawah minimum → modem

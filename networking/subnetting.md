@@ -210,7 +210,7 @@ Secara default, alamat IPv6 standar untuk pengguna akhir (LAN) adalah **/64**. A
 
 * **Network Prefix (64 bit pertama):** Digunakan untuk proses routing di internet dan lokal.
   * **Global Routing Prefix (biasanya 48 bit pertama):** Blok alamat yang diberikan oleh ISP ke organisasi/pelanggan.
-  * **Subnet ID (16 bit berikutnya):** Digunakan oleh internal administrator untuk membagi segmen jaringan (menghasilkan hingga $2^{16} = 65.536$ subnet /64).
+  * **Subnet ID (16 bit berikutnya):** Digunakan oleh internal administrator untuk membagi segmen jaringan (menghasilkan hingga 2¹⁶ = 65.536 subnet /64).
 * **Interface ID (64 bit terakhir):** Identitas unik fisik host (seperti MAC Address yang diubah dengan metode EUI-64 atau diacak demi privasi).
 
 ---
@@ -228,7 +228,7 @@ Secara default, alamat IPv6 standar untuk pengguna akhir (LAN) adalah **/64**. A
 ---
 
 ### 4. Perencanaan Subnetting IPv6
-Karena jumlah alamat host dalam satu prefix `/64` adalah $2^{64} \approx 18$ triliun host, kita **tidak pernah melakukan subnetting di bawah /64** (seperti membuat /70 atau /80) untuk jaringan LAN. Hal ini dikarenakan fitur otomatisasi seperti **SLAAC (Stateless Address Autoconfiguration)** membutuhkan prefix tepat `/64` untuk bekerja.
+Karena jumlah alamat host dalam satu prefix `/64` adalah 2⁶⁴ ≈ 18 triliun host, kita **tidak pernah melakukan subnetting di bawah /64** (seperti membuat /70 atau /80) untuk jaringan LAN. Hal ini dikarenakan fitur otomatisasi seperti **SLAAC (Stateless Address Autoconfiguration)** membutuhkan prefix tepat `/64` untuk bekerja.
 
 Subnetting IPv6 dilakukan dengan membagi blok besar (biasanya `/48` atau `/56` dari ISP) pada blok 16-bit Subnet ID.
 

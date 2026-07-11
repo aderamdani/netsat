@@ -15,13 +15,11 @@ dengan QoS.
 Firewall filter RouterOS memilah paket berdasarkan arah relatifnya terhadap
 router:
 
-```text
-            ┌────────────────────────────┐
- masuk ───▶ │  input    → ke router ini  │  (SSH/WinBox ke router, ping router)
-            │  forward  → numpang lewat  │  (LAN ↔ internet — mayoritas trafik)
-            │  output   → dari router    │  (router bertanya DNS, NTP)
-            └────────────────────────────┘
-```
+| Chain | Arah paket | Contoh trafik |
+| --- | --- | --- |
+| **input** | Menuju **ke router ini** | SSH/WinBox ke router, ping ke router |
+| **forward** | **Numpang lewat** router | LAN ↔ internet — mayoritas trafik |
+| **output** | Berasal **dari router** | Router bertanya DNS, sinkronisasi NTP |
 
 Aturan dibaca **berurutan dari atas**; eksekusi berhenti di aturan pertama
 yang cocok. Urutan = segalanya.

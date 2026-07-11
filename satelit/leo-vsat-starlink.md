@@ -14,44 +14,20 @@ Halaman ini membahas perbandingan mendalam arsitektur, cara kerja, serta implika
 
 Berdasarkan ketinggian orbitnya di atas permukaan bumi, satelit komunikasi terbagi menjadi tiga kategori utama:
 
-```text
-                  Orbit Geostasioner (GEO) ~ 35.786 km
-                 ┌────────────────────────────────────────────────────────┐
-                 │  ● [Satelit GEO] (Tetap di atas satu titik ekuator)    │
-                 └────────┬───────────────────────────────────────────────┘
-                          │ Latensi tinggi (RTT ~ 500-600 ms)
-                          │
-            Orbit Menengah (MEO) ~ 8.000 - 20.000 km
-           ┌──────────────────────────────────────────────────────┐
-           │  ● [Satelit MEO] (Bergerak lambat, RTT ~ 120-180 ms) │
-           └────────┬─────────────────────────────────────────────┘
-                    │
-      Orbit Rendah (LEO) ~ 500 - 1.200 km
-     ┌────────────────────────────────────────────────────┐
-     │  ● [Satelit LEO] (Bergerak sangat cepat, 27.000 km/h)
-     │  RTT rendah (~ 25-45 ms)                           │
-     └──────┬─────────────────────────────────────────────┘
-            │
-         ┌──▼──┐
-         │BUMI │
-         └─────┘
-```
+| Orbit | Ketinggian | RTT | Karakteristik |
+| --- | --- | --- | --- |
+| **GEO** (Geostationary Earth Orbit) | ±35.786 km, tepat di atas ekuator | ±500–600 ms | Periode orbit = rotasi bumi → tampak "diam" dari bumi; cukup **3 satelit** untuk hampir seluruh bumi |
+| **MEO** (Medium Earth Orbit) | ±8.000–20.000 km | ±120–180 ms | Bergerak lambat; dipakai navigasi (GPS, GLONASS) dan broadband khusus (SES O3b) |
+| **LEO** (Low Earth Orbit) | ±500–1.200 km | ±25–45 ms | Melesat ±27.000 km/jam, satu putaran bumi tiap ±90–120 menit; latensi setara kabel |
 
-1.  **GEO (Geostationary Earth Orbit):** 
-    *   **Ketinggian:** $\approx 35.786\text{ km}$ di atas ekuator.
-    *   **Karakteristik:** Kecepatan orbit satelit sama persis dengan kecepatan rotasi bumi, sehingga satelit tampak "diam" jika dilihat dari bumi. Cukup **3 satelit** untuk mencakup hampir seluruh bumi.
-2.  **MEO (Medium Earth Orbit):**
-    *   **Ketinggian:** $\approx 8.000 - 20.000\text{ km}$.
-    *   **Karakteristik:** Digunakan oleh sistem navigasi (GPS, GLONASS) dan satelit broadband khusus (seperti SES O3b). Latensi berada di titik tengah ($\approx 120 - 180\text{ ms}$).
-3.  **LEO (Low Earth Orbit):**
-    *   **Ketinggian:** $\approx 500 - 1.200\text{ km}$.
-    *   **Karakteristik:** Satelit bergerak sangat cepat ($\approx 27.000\text{ km/jam}$) mengitari bumi dalam waktu $\approx 90 - 120$ menit. Karena dekat, latensinya sangat rendah ($\approx 25 - 45\text{ ms}$), setara koneksi kabel.
+Teori lengkap tiap orbit — kenapa 35.786 km "diam", graveyard orbit, sun
+outage — ada di [Orbit: LEO, MEO, GEO](/satelit/orbit).
 
 ---
 
 ## Teknologi Kunci LEO: Phased Array & Beamforming
 
-Pada VSAT GEO tradisional, antena remote berupa piringan parabola parabola statis yang diarahkan sekali pada satu satelit. Pada sistem LEO (seperti Starlink), satelit terus meluncur melintasi langit dan menghilang di balik cakrawala setiap beberapa menit. 
+Pada VSAT GEO tradisional, antena remote berupa piringan parabola statis yang diarahkan sekali pada satu satelit. Pada sistem LEO (seperti Starlink), satelit terus meluncur melintasi langit dan menghilang di balik cakrawala setiap beberapa menit. 
 
 Bagaimana antena remote bisa mengikuti satelit tanpa ada motor penggerak mekanis yang berputar cepat setiap saat?
 
@@ -81,9 +57,9 @@ Karena satelit LEO bergerak cepat, terminal remote harus melakukan **handover** 
 
 | Parameter | VSAT GEO Tradisional | Starlink (LEO Enterprise) |
 | --- | --- | --- |
-| **Ketinggian Orbit** | $35.786\text{ km}$ | $\approx 550\text{ km}$ |
-| **Latensi (RTT)** | $500 - 650\text{ ms}$ | $25 - 45\text{ ms}$ |
-| **Throughput (Speed)** | Terbatas (khas $2 - 20\text{ Mbps}$) | Tinggi ($100 - 220\text{ Mbps}$ downlink) |
+| **Ketinggian Orbit** | 35.786 km | ≈550 km |
+| **Latensi (RTT)** | 500–650 ms | 25–45 ms |
+| **Throughput (Speed)** | Terbatas (khas 2–20 Mbps) | Tinggi (100–220 Mbps downlink) |
 | **Pengaruh Cuaca** | C-band sangat tahan hujan. Ku/Ka rentan. | Ku-band rentan, diimbangi kekuatan sinyal LEO yang besar. |
 | **Jaminan SLA / CIR** | Sangat matang (kontrak dedicated 1:1, QoS terjamin) | Umumnya *best effort* (Prioritas Bisnis/Enterprise) |
 | **Instalasi** | Rumit (pointing manual presisi, sertifikasi teknisi) | Mandiri / *Self-aligning* (Phased Array) |
@@ -93,11 +69,11 @@ Karena satelit LEO bergerak cepat, terminal remote harus melakukan **handover** 
 
 ## Dampak Latensi LEO vs GEO pada Protokol Jaringan
 
-Perbedaan latensi antara GEO ($\approx 600\text{ ms}$) dan LEO ($\approx 30\text{ ms}$) memiliki implikasi besar bagi protokol jaringan:
+Perbedaan latensi antara GEO (≈600 ms) dan LEO (≈30 ms) memiliki implikasi besar bagi protokol jaringan:
 
 *   **TCP Windowing:** Pada link GEO, TCP membutuhkan fitur PEP (Performance Enhancing Proxy) untuk menghindari *window starvation* akibat waktu tunggu ACK yang lama. Di LEO, TCP bawaan OS biasa (seperti BBR atau Cubic) dapat bekerja maksimal tanpa bantuan proxy khusus.
 *   **Real-time Applications:** Aplikasi interaktif seperti VoIP, VPN IPsec, game online, dan protokol transaksi perbankan berkinerja buruk di GEO karena jeda suara atau waktu respons yang lama. Di LEO, aplikasi ini berjalan lancar seperti di jaringan kabel.
-*   **Routing Dynamic (OSPF/BGP):** Timer protokol routing dinamis di GEO harus dilonggarkan (misal *Hello Interval* $\ge 10$ detik) agar tidak memvonis link terputus karena keterlambatan transmisi. Di LEO, timer default dapat digunakan dengan aman.
+*   **Routing Dynamic (OSPF/BGP):** Timer protokol routing dinamis di GEO harus dilonggarkan (misal *Hello Interval* ≥10 detik) agar tidak memvonis link terputus karena keterlambatan transmisi. Di LEO, timer default dapat digunakan dengan aman.
 
 ---
 
@@ -117,7 +93,7 @@ Pada jaringan Starlink:
 Salah satu skenario penggunaan satelit LEO terpopuler adalah untuk konektivitas di atas kendaraan yang bergerak aktif (kapal laut, yacht, pesawat terbang, kereta api, dan kendaraan operasional tambang).
 
 ### Tantangan Satelit Bergerak di atas Kendaraan Bergerak
-Ketika antena penerima berada di atas kapal yang terombang-ambing ombak (*rolling and pitching*), dan satelit LEO di atasnya meluncur dengan kecepatan $27.000\text{ km/jam}$, mempertahankan kestabilan sinyal menjadi sangat kompleks.
+Ketika antena penerima berada di atas kapal yang terombang-ambing ombak (*rolling and pitching*), dan satelit LEO di atasnya meluncur dengan kecepatan 27.000 km/jam, mempertahankan kestabilan sinyal menjadi sangat kompleks.
 
 Untuk kebutuhan mobilitas ini, Starlink menggunakan antena tipe **Flat High Performance**:
 *   **Tanpa Motor Mekanis:** Antena dipasang mendatar (flat) secara permanen pada struktur kapal/kendaraan.
@@ -129,7 +105,7 @@ Untuk kebutuhan mobilitas ini, Starlink menggunakan antena tipe **Flat High Perf
 ## Cek Pemahaman
 
 1.  Mengapa Starlink tidak memerlukan perangkat PEP (akselerator TCP) eksternal seperti halnya VSAT GEO?
-    <br>→ Karena latensi Starlink sangat rendah ($\approx 30\text{ ms}$). Dengan latensi sekecil itu, mekanisme konfirmasi paket TCP (ACK) diterima dengan cepat, sehingga jendela pengiriman TCP tidak mengalami kemacetan (*window starvation*) dan kecepatan tinggi bisa dicapai secara native.
+    <br>→ Karena latensi Starlink sangat rendah (≈30 ms). Dengan latensi sekecil itu, mekanisme konfirmasi paket TCP (ACK) diterima dengan cepat, sehingga jendela pengiriman TCP tidak mengalami kemacetan (*window starvation*) dan kecepatan tinggi bisa dicapai secara native.
 2.  Apa yang dimaksud dengan teknologi *Phased Array* pada antena Starlink dan apa fungsinya?
     <br>→ Teknologi antena larik berfase yang memungkinkan antena mengarahkan dan memfokuskan gelombang sinyal secara elektronik. Fungsinya untuk melacak dan berpindah (*handover*) antar satelit LEO yang meluncur cepat di langit tanpa membutuhkan gerakan fisik motorik antena.
 3.  Mengapa handover satelit pada sistem LEO bisa menjadi titik kritis terjadinya packet loss jika konfigurasi tidak optimal?

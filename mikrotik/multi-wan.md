@@ -7,8 +7,8 @@ title: Failover & Multi-WAN Satelit
 Di area operasional remote (seperti site pertambangan, perkebunan, atau kapal laut), bergantung pada satu jalur koneksi sangat berisiko. Arsitektur jaringan modern di lokasi tersebut umumnya menggunakan skema **Hybrid WAN** yang memadukan beberapa jenis koneksi sekaligus:
 
 1.  **Jalur Utama (Terrestrial):** Link Fiber Optik atau Radio Wireless Point-to-Point (jika terjangkau). Latensi rendah, bandwidth stabil.
-2.  **Jalur Cadangan 1 (LEO Satelit - Starlink):** Latensi rendah ($\approx 30\text{ ms}$), bandwidth besar, tetapi tidak memiliki jaminan SLA penuh.
-3.  **Jalur Cadangan 2 / Bulk Data (GEO Satelit - VSAT):** Latensi tinggi ($\approx 600\text{ ms}$), bandwidth sempit, tetapi sangat andal terhadap cuaca jika menggunakan C-band dan memiliki jaminan SLA (CIR).
+2.  **Jalur Cadangan 1 (LEO Satelit - Starlink):** Latensi rendah (≈30 ms), bandwidth besar, tetapi tidak memiliki jaminan SLA penuh.
+3.  **Jalur Cadangan 2 / Bulk Data (GEO Satelit - VSAT):** Latensi tinggi (≈600 ms), bandwidth sempit, tetapi sangat andal terhadap cuaca jika menggunakan C-band dan memiliki jaminan SLA (CIR).
 
 Materi praktik ini membahas konfigurasi **Recursive Routing** untuk failover otomatis yang cerdas dan **Policy-Based Routing (PBR)** di RouterOS v7.
 
@@ -59,7 +59,7 @@ add dst-address=0.0.0.0/0 gateway=1.1.1.1 check-gateway=ping distance=2 target-s
 *   Router akan mengirim ping ke `8.8.8.8` secara berkala melalui gateway `192.0.2.1` (Terrestrial).
 *   Selama ping ke `8.8.8.8` berhasil, Rute Default Utama (`distance=1`) tetap aktif.
 *   Jika jalur Terrestrial mati di tengah jalan (ping ke `8.8.8.8` gagal), rute utama dinonaktifkan, dan lalu lintas otomatis berpindah ke rute cadangan Starlink (`distance=2` yang memantau ping ke `1.1.1.1`).
-*   `target-scope=30` memaksa router mencari rute gateway rekursif dengan nilai `scope` yang lebih kecil atau sama dengan $30$.
+*   `target-scope=30` memaksa router mencari rute gateway rekursif dengan nilai `scope` yang lebih kecil atau sama dengan 30.
 
 ---
 
@@ -118,4 +118,4 @@ Jika kamu menggunakan **FastTrack** pada firewall rule IPv4, paket yang di-FastT
 2.  Apa fungsi dari parameter `scope` dan `target-scope` dalam konfigurasi *Recursive Routing*?
     <br>→ Parameter `scope` menetapkan tingkat prioritas atau cakupan identifikasi suatu rute, sedangkan `target-scope` digunakan oleh rute rekursif untuk mencari gateway tidak langsung (IP publik di internet) dengan mencocokkan rute lain yang memiliki nilai `scope` di bawah atau sama dengan target-scope tersebut.
 3.  Mengapa trafik VoIP direkomendasikan untuk diarahkan lewat link Terrestrial atau Starlink dibanding VSAT GEO pada konfigurasi PBR?
-    <br>→ Karena VoIP sangat sensitif terhadap latensi. Latensi VSAT GEO yang tinggi ($\approx 600\text{ ms}$) akan menyebabkan jeda suara yang sangat terasa mengganggu percakapan dua arah, sedangkan Starlink/Terrestrial memiliki latensi jauh lebih rendah ($<50\text{ ms}$).
+    <br>→ Karena VoIP sangat sensitif terhadap latensi. Latensi VSAT GEO yang tinggi (≈600 ms) akan menyebabkan jeda suara yang sangat terasa mengganggu percakapan dua arah, sedangkan Starlink/Terrestrial memiliki latensi jauh lebih rendah (<50 ms).

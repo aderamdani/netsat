@@ -33,16 +33,15 @@ tetap bisa masuk. Teorinya ada di [Switching](/networking/switching#alamat-mac).
 
 Kebanyakan RouterBOARD rumahan/kantor keluar pabrik dengan pola yang sama:
 
-```text
-ether1          = WAN  → DHCP client aktif (minta IP ke modem/ISP)
-ether2–etherN   = LAN  → digabung dalam satu bridge
-IP router       = 192.168.88.1/24 di bridge LAN
-DHCP server     = membagikan 192.168.88.10–254 ke LAN
-NAT masquerade  = LAN → WAN
-Firewall dasar  = blokir akses masuk dari WAN
-User            = admin (password kosong, atau tercetak di stiker
-                  perangkat pada unit keluaran baru)
-```
+| Komponen | Nilai bawaan |
+| --- | --- |
+| `ether1` | WAN — DHCP client aktif (minta IP ke modem/ISP) |
+| `ether2`–`etherN` | LAN — digabung dalam satu bridge |
+| IP router | `192.168.88.1/24` di bridge LAN |
+| DHCP server | Membagikan `192.168.88.10–254` ke LAN |
+| NAT | Masquerade LAN → WAN |
+| Firewall dasar | Blokir akses masuk dari WAN |
+| User | `admin` (password kosong, atau tercetak di stiker perangkat pada unit keluaran baru) |
 
 Artinya: colok laptop ke `ether2`, dapat IP otomatis, buka WinBox ke
 `192.168.88.1`, masuk sebagai `admin` — dan internet biasanya langsung jalan.

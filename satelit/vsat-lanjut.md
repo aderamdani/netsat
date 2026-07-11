@@ -75,16 +75,13 @@ harus dihitung.
 
 Hitung kebutuhan tiap remote lalu jumlahkan:
 
-```text
-Jenis remote:           Jumlah      CIR per remote    Total CIR
-──────────────────────────────────────────────────────────────
-ATM/EDC                  300            128 Kbps       38,4 Mbps
-Kantor cabang             50              2 Mbps      100   Mbps
-Puskesmas (data ringan)  100            256 Kbps       25,6 Mbps
-VoIP                      50            128 Kbps        6,4 Mbps
-──────────────────────────────────────────────────────────────
-Total CIR dibutuhkan:                               ~170,4 Mbps
-```
+| Jenis remote | Jumlah | CIR per remote | Total CIR |
+| --- | --- | --- | --- |
+| ATM/EDC | 300 | 128 Kbps | 38,4 Mbps |
+| Kantor cabang | 50 | 2 Mbps | 100 Mbps |
+| Puskesmas (data ringan) | 100 | 256 Kbps | 25,6 Mbps |
+| VoIP | 50 | 128 Kbps | 6,4 Mbps |
+| **Total CIR dibutuhkan** | | | **±170,4 Mbps** |
 
 ### 2. Oversubscription
 
@@ -97,11 +94,11 @@ Transponder tidak perlu total CIR = total bandwidth. Gunakan rasio
 | Kantor cabang aktif | 1:2 s.d. 1:4 | Rata-rata tidak semua remote kirim penuh bersamaan |
 | Internet konsumen / desa | 1:10 s.d. 1:50 | Trafik browsing sangat bursty |
 
-```text
-Total CIR dibutuhkan: 170,4 Mbps
-Rata-rata contention: 1:3 (kantor + puskesmas + ATM campur)
-Bandwidth transponder perlu: 170,4 / 3 ≈ 57 Mbps
-```
+| Perhitungan | Nilai |
+| --- | --- |
+| Total CIR dibutuhkan | 170,4 Mbps |
+| Rata-rata contention | 1:3 (kantor + puskesmas + ATM campur) |
+| **Bandwidth transponder perlu** | **170,4 ÷ 3 ≈ 57 Mbps** |
 
 ### 3. Overhead transponder
 
@@ -120,12 +117,12 @@ Bandwidth digital ≠ bandwidth RF. Hitung overhead:
 Transponder HTS tipikal 36–54 MHz per *beam*. Satu beam bisa menampung
 beberapa carrier. Dari hitungan di atas:
 
-```text
-Payload:       57 Mbps
-Dengan DVB-S2 8PSK 3/4: 57 × 1,5 × 1,2 ≈ 103 MHz dibutuhkan
-→ ±2–3 transponder 36 MHz, atau ±1 transponder 72 MHz
-→ Bagi jadi beberapa carrier SCPC (kantor) + satu pool MF-TDMA (ATM/Puskesmas)
-```
+| Langkah | Hasil |
+| --- | --- |
+| Payload | 57 Mbps |
+| Dengan DVB-S2 8PSK ¾ (×1,5) + roll-off (×1,2) | 57 × 1,5 × 1,2 ≈ **103 MHz** |
+| Kebutuhan transponder | ±2–3 transponder 36 MHz, atau ±1 transponder 72 MHz |
+| Pembagian carrier | Beberapa carrier SCPC (kantor) + satu pool MF-TDMA (ATM/puskesmas) |
 
 ## Link budget praktis
 
@@ -158,12 +155,12 @@ layanan yang andal. Margin < 0 dB = sering putus saat hujan.
 Jika link budget kurang, opsi termudah: **perbesar antena**. Setiap dua kali
 lipat diameter → +6 dB gain.
 
-```text
-Antena 0,9 m:  gain 35 dBi (Ku)
-Antena 1,2 m:  gain 37 dBi
-Antena 1,8 m:  gain 41 dBi
-Antena 2,4 m:  gain 44 dBi
-```
+| Diameter antena | Gain (Ku-band) |
+| --- | --- |
+| 0,9 m | 35 dBi |
+| 1,2 m | 37 dBi |
+| 1,8 m | 41 dBi |
+| 2,4 m | 44 dBi |
 
 Dari 0,9 m ke 1,8 m = +6 dB = bisa tembus hujan 2× lebih deras.
 
@@ -226,15 +223,13 @@ pedoman jarak feed ke reflektor.
 
 Ini langkah paling kritis:
 
-```text
 1. Atur elevasi antena ke sudut target (gunakan inclinometer).
 2. Atur azimuth ke kiri/kanan target ±5°.
 3. Pantau level sinyal di modem (Rx level / C/N).
-4. Gerakkan azimuth perlahan sampil amati level sinyal — cari puncak.
+4. Gerakkan azimuth perlahan sambil amati level sinyal — cari puncak.
 5. Ulangi untuk elevasi: naik/turun 1–2°.
 6. Cross-check: antena di puncak level sinyal = azimuth dan elevasi optimal.
 7. Kencangkan baut — sinyal bisa turun sedikit, koreksi ulang.
-```
 
 Rule of thumb: **Rx level > -70 dBm** untuk Ku-band; C/N > 12 dB untuk
 QPSK.
@@ -657,12 +652,11 @@ Regulasi ITU dan Kominfo mewajibkan setiap carrier VSAT menyematkan
 **Carrier ID** — "plat nomor" digital yang mengidentifikasi operator
 dan terminal. CID membantu melacak sumber interferensi.
 
-```text
 Jika ada carrier liar yang mengganggu frekuensi, NOC bisa:
-1. Cek spectrum, lihat interferensi.
-2. Demodulasi carrier, baca Carrier ID.
+
+1. Cek spectrum analyzer, lihat interferensinya.
+2. Demodulasi carrier tersebut, baca Carrier ID-nya.
 3. Langsung ketahuan: remote siapa, milik operator apa.
-```
 
 Pastikan modem VSAT mengirim CID — jika tidak, terminal bisa di-off-kan
 oleh regulator.

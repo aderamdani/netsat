@@ -88,12 +88,13 @@ Penyaring trafik berdasarkan aturan. Evolusinya:
 Prinsip emas konfigurasinya: **default deny** — tolak semuanya, lalu buka
 hanya yang dibutuhkan.
 
-```text
-# sketsa kebijakan khas server web
-allow  tcp/443  dari mana saja        # layanan publik
-allow  tcp/22   dari IP kantor saja   # pintu admin dibatasi
-deny   semua lainnya                  # default deny
-```
+Sketsa kebijakan khas sebuah server web:
+
+| Aksi | Trafik | Alasan |
+| --- | --- | --- |
+| **allow** | `tcp/443` dari mana saja | Layanan publik (HTTPS) |
+| **allow** | `tcp/22` dari IP kantor saja | Pintu admin dibatasi |
+| **deny** | Semua lainnya | Default deny |
 
 ### IDS/IPS
 

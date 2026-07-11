@@ -45,11 +45,11 @@ parabola raksasa).
 
 Contoh pasangan uplink/downlink (ingat: [selalu berbeda](/satelit/komunikasi#uplink-dan-downlink)):
 
-```text
-C-band  : uplink ±6 GHz   → downlink ±4 GHz
-Ku-band : uplink ±14 GHz  → downlink ±11–12 GHz
-Ka-band : uplink ±30 GHz  → downlink ±20 GHz
-```
+| Band | Uplink | Downlink |
+| --- | --- | --- |
+| C | ±6 GHz | ±4 GHz |
+| Ku | ±14 GHz | ±11–12 GHz |
+| Ka | ±30 GHz | ±20 GHz |
 
 Frekuensi uplink selalu yang lebih tinggi: stasiun bumi lebih mudah
 menyediakan daya ekstra untuk melawan redaman daripada satelit yang dayanya

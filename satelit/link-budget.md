@@ -4,95 +4,117 @@ title: Simulasi Link Budget
 
 # Simulasi Link Budget
 
-Link Budget adalah "akuntansi daya" dalam komunikasi nirkabel. Sederhananya, ini adalah perhitungan matematika untuk memastikan sinyal yang dipancarkan dari pemancar (uplink) masih memiliki kekuatan yang cukup saat diterima oleh penerima (downlink) setelah menempuh perjalanan puluhan ribu kilometer melintasi atmosfer dan ruang hampa.
+Link budget adalah "akuntansi daya" komunikasi nirkabel: perhitungan untuk
+memastikan sinyal yang dipancarkan masih cukup kuat saat tiba di penerima,
+setelah menempuh puluhan ribu kilometer atmosfer dan ruang hampa. Halaman ini
+melanjutkan [teori dasarnya](/satelit/komunikasi#link-budget-akuntansi-desibel)
+dengan hitungan yang benar-benar dikerjakan.
 
-Jika perhitungan link budget meleset, sinyal akan tenggelam dalam derau (noise), menyebabkan paket data hilang (*packet loss*), bit error rate (BER) melonjak, atau koneksi terputus total.
+Jika link budget meleset, sinyal tenggelam dalam derau: *packet loss*, BER
+melonjak, atau koneksi putus total.
 
----
+## Anggaran daya: ke mana perginya sinyal?
 
-## Anggaran Daya: Ke mana perginya sinyal?
+Perjalanan sinyal adalah penjumlahan penguatan (gain) dan pengurangan redaman
+(loss). Dalam unit logaritmik (desibel), perkalian menjadi tambah-kurang biasa:
 
-Bayangkan kamu memancarkan sinyal dari stasiun bumi. Perjalanan sinyal ini dapat digambarkan sebagai penambahan kekuatan (gain) dan pengurangan kekuatan (loss/redaman):
+```text
+Daya diterima = Daya pancar + Gain antena − Redaman perjalanan − Redaman cuaca
 
-$$\text{Daya Diterima} = \text{Daya Pancar} + \text{Keuntungan Antena} - \text{Redaman Perjalanan} - \text{Redaman Cuaca}$$
+P_rx = P_tx + G_tx + G_rx − L_fs − L_alt
+```
 
-Dalam unit logaritmik (Desibel/dB), kita cukup melakukan tambah-kurang biasa:
+| Simbol | Arti | Satuan |
+| --- | --- | --- |
+| `P_rx` | Daya sinyal yang diterima di ujung sana | dBW / dBm |
+| `P_tx` | Daya pemancar (BUC di remote, HPA di hub) | dBW |
+| `G_tx` | Gain antena pengirim | dBi |
+| `G_rx` | Gain antena penerima | dBi |
+| `L_fs` | *Free space path loss* (redaman ruang bebas) | dB |
+| `L_alt` | Redaman tambahan: hujan, atmosfer, pointing melenceng | dB |
 
-$$P_{rx} = P_{tx} + G_{tx} + G_{rx} - L_{fs} - L_{alt}$$
+## Musuh terbesar: Free Space Path Loss (FSPL)
 
-Di mana:
-*   $P_{rx}$: Daya sinyal yang diterima di ujung sana ($dBW$ atau $dBm$).
-*   $P_{tx}$: Daya pemancar (BUC di remote, atau HPA di hub) ($dBW$).
-*   $G_{tx}$: *Gain* antena pengirim ($dBi$).
-*   $G_{rx}$: *Gain* antena penerima ($dBi$).
-*   $L_{fs}$: *Free Space Path Loss* (Redaman Ruang Hampa) ($dB$).
-*   $L_{alt}$: Redaman tambahan (hujan, atmosfer, pointing melenceng) ($dB$).
+Sinyal radio menyebar seperti bola yang membesar — makin jauh merambat, makin
+encer energinya di satu titik. Rumusnya (d dalam km, f dalam MHz):
 
----
+```text
+FSPL = 20 × log10(d) + 20 × log10(f) + 32,44
+```
 
-## Musuh Terbesar: Free Space Path Loss (FSPL)
+### Contoh kasus: bandingkan LEO vs GEO
 
-Sinyal radio menyebar seperti bola yang membesar. Semakin jauh ia merambat, semakin encer energinya di satu titik. Redaman ini disebut **Free Space Path Loss (FSPL)** dan dihitung dengan rumus:
+FSPL pada frekuensi Ku-band downlink (12 GHz = 12.000 MHz):
 
-$$FSPL = 20 \log_{10}(d) + 20 \log_{10}(f) + 32.44$$
+| Orbit | Jarak | Perhitungan | FSPL |
+| --- | --- | --- | --- |
+| **GEO** | ±36.000 km | 91,12 + 81,58 + 32,44 | **±205,1 dB** |
+| **LEO** | ±550 km | 54,80 + 81,58 + 32,44 | **±168,8 dB** |
 
-Di mana:
-*   $d$: Jarak antara stasiun bumi dan satelit ($\text{km}$).
-*   $f$: Frekuensi kerja ($\text{MHz}$).
-
-### Contoh Kasus: Bandingkan LEO vs GEO
-Mari kita hitung FSPL pada frekuensi **Ku-band downlink (12 GHz atau 12.000 MHz)** untuk dua orbit yang berbeda:
-
-1.  **Satelit GEO (Jarak $d \approx 36.000\text{ km}$):**
-    $$FSPL = 20 \log_{10}(36000) + 20 \log_{10}(12000) + 32.44$$
-    $$FSPL \approx 91.12 + 81.58 + 32.44 = 205.14\text{ dB}$$
-2.  **Satelit LEO (Jarak $d \approx 550\text{ km}$):**
-    $$FSPL = 20 \log_{10}(550) + 20 \log_{10}(12000) + 32.44$$
-    $$FSPL \approx 54.80 + 81.58 + 32.44 = 168.82\text{ dB}$$
-
-::: tip Selisih Desibel = Perbedaan Daya Nyata
-Selisih antara GEO dan LEO pada frekuensi yang sama adalah sekitar **$36.3\text{ dB}$**. Karena skala desibel bersifat logaritmik, perbedaan $36\text{ dB}$ berarti sinyal dari satelit LEO diterima sekitar **4.000 kali lebih kuat** daripada satelit GEO. Inilah mengapa antena penerima Starlink (LEO) bisa berukuran sangat kecil dibanding parabola VSAT GEO untuk throughput yang setara!
+::: tip Selisih desibel = perbedaan daya nyata
+Selisih GEO−LEO ±36,3 dB. Karena desibel logaritmik, 36 dB berarti sinyal
+dari satelit LEO tiba sekitar **4.000 kali lebih kuat** daripada dari GEO.
+Itulah kenapa dish Starlink bisa sekecil kotak pizza, sementara VSAT GEO
+butuh parabola — untuk throughput yang setara.
 :::
 
----
+## Akuntansi desibel: Eb/No dan C/N
 
-## Akuntansi Decibel: Eb/No dan C/N
+Modem penerima tidak hanya melihat seberapa *kuat* sinyal, tapi seberapa
+*bersih* dibanding derau di sekitarnya:
 
-Di sisi penerima, modem tidak hanya melihat seberapa kuat sinyal yang masuk, melainkan seberapa bersih sinyal tersebut dibanding derau di sekitarnya. Metrik ini dinyatakan dalam:
+- **C/N** (*carrier-to-noise ratio*) — perbandingan daya sinyal pembawa
+  terhadap daya derau pada bandwidth tertentu.
+- **Eb/No** (*energy per bit / noise density*) — kebersihan sinyal per bit
+  data; metrik utama penentu apakah modem bisa mendemodulasi tanpa error.
 
-*   **$C/N$ (Carrier-to-Noise Ratio):** Perbandingan daya sinyal pembawa dengan daya derau pada lebar pita (bandwidth) tertentu.
-*   **$Eb/No$ (Energy per Bit to Noise Power Spectral Density):** Ukuran kebersihan sinyal per bit data. Ini adalah metrik utama yang menentukan apakah modem bisa mendemodulasi paket data tanpa error.
+Jika Eb/No jatuh di bawah ambang (*threshold*) modem untuk modulasi yang
+dipakai (misalnya QPSK), modem kehilangan sinkronisasi (*carrier loss*) dan
+link terputus.
 
-Jika $Eb/No$ berada di bawah batas ambang (*threshold*) modem untuk jenis modulasi tertentu (misalnya $QPSK$), modem akan kehilangan sinkronisasi (*carrier loss*) dan link terputus.
+## Rain fade: musuh tropis di frekuensi tinggi
 
----
+Air hujan menyerap dan menghamburkan gelombang mikro. Ketika panjang
+gelombang sinyal mendekati ukuran tetesan hujan, energinya diserap menjadi
+panas — **rain fade**. Makin tinggi frekuensi, makin pendek gelombangnya,
+makin parah dampak hujan:
 
-## Rain Fade: Musuh Tropis di Frekuensi Tinggi
-
-Air hujan adalah penyerap dan penyebar gelombang mikro yang sangat efektif. Ketika panjang gelombang sinyal mendekati ukuran tetesan air hujan, energi sinyal akan diserap dan diubah menjadi panas. Fenomena ini disebut **Rain Fade (Redaman Hujan)**.
-
-Semakin tinggi frekuensi, semakin pendek panjang gelombangnya, dan semakin parah pengaruh hujan:
-
-| Band | Frekuensi | Panjang Gelombang ($\lambda$) | Karakteristik Rain Fade | Ketahanan di Indonesia |
+| Band | Frekuensi | Panjang gelombang | Karakter rain fade | Ketahanan di Indonesia |
 | --- | --- | --- | --- | --- |
-| **C-band** | $4 - 6\text{ GHz}$ | $\approx 5.0\text{ cm}$ | Sangat kecil, gelombang melewati tetesan air hujan tanpa terganggu | **Sangat Tinggi** (Sinyal tetap stabil meski hujan lebat) |
-| **Ku-band** | $11 - 14\text{ GHz}$ | $\approx 2.3\text{ cm}$ | Menengah, terjadi redaman nyata saat hujan deras | **Sedang** (Butuh margin daya tambahan pada antena) |
-| **Ka-band** | $20 - 30\text{ GHz}$ | $\approx 1.2\text{ cm}$ | Sangat parah, bahkan mendung tebal pun bisa memicu redaman besar | **Rendah** (Memerlukan fitur mitigasi canggih seperti ACM) |
+| **C** | 4–6 GHz | ±5,0 cm | Sangat kecil — gelombang melewati tetesan hujan | **Sangat tinggi** (stabil meski hujan lebat) |
+| **Ku** | 11–14 GHz | ±2,3 cm | Menengah — redaman nyata saat hujan deras | **Sedang** (butuh margin daya tambahan) |
+| **Ka** | 20–30 GHz | ±1,2 cm | Sangat parah — mendung tebal pun terasa | **Rendah** (wajib mitigasi seperti ACM) |
 
-### Mitigasi Rain Fade: ACM (Adaptive Coding and Modulation)
-Modem satelit modern menggunakan fitur **ACM** untuk melawan cuaca buruk secara dinamis:
-1.  **Cuaca Cerah:** Satelit memancarkan data dengan modulasi tinggi (misal *32APSK*) untuk memaksimalkan throughput.
-2.  **Hujan Mulai Turun:** Sinyal melemah. Modem melaporkan penurunan $Eb/No$ ke hub.
-3.  **Adaptasi Otomatis:** Hub menurunkan tingkat modulasi secara dinamis (misal turun ke *16APSK*, lalu *QPSK*) dan memperbanyak bit koreksi error (*FEC - Forward Error Correction*).
-4.  **Hasil:** Kecepatan internet menurun demi mencegah koneksi terputus total (*drop connection*).
+Peta band lengkap beserta regulasinya ada di
+[Frekuensi & Band](/satelit/frekuensi-band#redaman-hujan-isu-nomor-satu-di-indonesia).
 
----
+### Mitigasi rain fade: ACM (Adaptive Coding and Modulation)
+
+Modem satelit modern melawan cuaca secara dinamis:
+
+1. **Cuaca cerah** — modulasi tinggi (mis. 32APSK) untuk throughput maksimum.
+2. **Hujan mulai turun** — sinyal melemah; modem melaporkan penurunan Eb/No
+   ke hub.
+3. **Adaptasi otomatis** — hub menurunkan modulasi (16APSK → QPSK) dan
+   memperbanyak bit koreksi error (FEC).
+4. **Hasil** — kecepatan turun demi mencegah koneksi putus total.
+
+Detail modulasi & coding-nya di
+[Komunikasi Satelit](/satelit/komunikasi#modulasi-dan-coding).
 
 ## Cek Pemahaman
 
-1.  Kenapa satelit GEO membutuhkan antena stasiun bumi yang jauh lebih besar (diameter $>1.2\text{ m}$) daripada penerima Starlink LEO ($0.3\text{ m}$)?
-    <br>→ Karena satelit GEO berjarak $36.000\text{ km}$, mengalami redaman ruang hampa (FSPL) yang jauh lebih besar ($\approx 36\text{ dB}$ lebih besar). Antena besar berfungsi mengumpulkan lebih banyak energi sinyal (memiliki *gain* lebih tinggi) untuk mengompensasi kehilangan daya tersebut.
-2.  Jika layanan VSAT menggunakan frekuensi Ka-band di daerah dengan curah hujan tinggi seperti Bogor atau Kalimantan, apa yang harus disiapkan dalam rancangan link budget?
-    <br>→ Harus disiapkan **Link Margin (cadangan daya)** yang besar (antena remote lebih besar atau daya BUC lebih tinggi), serta mengaktifkan fitur ACM agar link tidak putus total saat hujan deras melanda.
-3.  Mengapa frekuensi C-band masih menjadi pilihan utama untuk jaringan ATM perbankan di Indonesia meskipun bandwidth-nya lebih sempit?
-    <br>→ Karena keandalannya terhadap cuaca (*availability*). Panjang gelombang C-band cukup besar sehingga tidak terganggu oleh tetesan air hujan tropis, memastikan transaksi ATM tetap berjalan tanpa hambatan dalam kondisi cuaca ekstrem sekalipun.
+1. Kenapa satelit GEO butuh antena stasiun bumi jauh lebih besar (diameter
+   >1,2 m) daripada penerima Starlink LEO (±0,3 m)?
+   <br>→ Jarak GEO ±36.000 km membuat FSPL-nya ±36 dB lebih besar. Antena
+   besar mengumpulkan lebih banyak energi (gain lebih tinggi) untuk
+   mengompensasi kehilangan daya itu.
+2. Layanan VSAT Ka-band di daerah curah hujan tinggi (Bogor, Kalimantan) —
+   apa yang harus disiapkan di link budget-nya?
+   <br>→ **Link margin** besar (antena lebih besar atau daya BUC lebih
+   tinggi) plus ACM aktif, agar link bertahan saat hujan deras.
+3. Kenapa C-band masih jadi pilihan utama jaringan ATM perbankan Indonesia
+   meski bandwidth-nya sempit?
+   <br>→ **Availability**: panjang gelombang C-band cukup besar sehingga
+   nyaris tak terganggu tetesan hujan tropis — transaksi tetap jalan di
+   cuaca ekstrem sekalipun.

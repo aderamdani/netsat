@@ -30,7 +30,7 @@ Ketika data dikirim melalui VPN, paket data asli dibungkus (*kapsulasi*) dengan 
 2.  **Fragmentasi:** Jika ukuran paket VPN yang dibungkus melebihi `1500 byte`, paket tersebut harus dipecah menjadi dua bagian (fragmentasi) oleh router pengirim agar bisa lewat, dan dirakit kembali di router penerima.
 3.  **Dampak pada Latensi Satelit:** 
     *   Jika salah satu pecahan paket hilang di tengah jalan, seluruh paket gabungan dianggap rusak dan harus dikirim ulang (*retransmission*).
-    *   Pada link satelit GEO dengan RTT $\approx 600\text{ ms}$, pengiriman ulang satu pecahan paket ini membutuhkan waktu tambahan minimal $600\text{ ms}$. 
+    *   Pada link satelit GEO dengan RTT ≈600 ms, pengiriman ulang satu pecahan paket ini membutuhkan waktu tambahan minimal 600 ms. 
     *   Hal ini memicu algoritma kontrol kemacetan TCP (*TCP Congestion Control*) mengasumsikan terjadi kemacetan parah di jaringan, sehingga kecepatan transfer langsung dipangkas secara drastis (*drop throughput*).
 
 ---
@@ -43,10 +43,10 @@ Berikut adalah rekomendasi nilai MTU untuk beberapa protokol VPN populer di atas
 
 | Protokol VPN | Estimasi Overhead | Rekomendasi MTU | Rekomendasi MSS |
 | --- | --- | --- | --- |
-| **WireGuard** | $60 - 80\text{ byte}$ | **`1420`** | **`1380`** |
-| **L2TP / IPsec** | $60 - 80\text{ byte}$ | **`1410`** | **`1370`** |
-| **IPsec (IKEv2 murni)**| $50 - 70\text{ byte}$ | **`1400`** | **`1360`** |
-| **SSTP** (TCP-based) | $40\text{ byte}$ + TCP | **`1400`** | **`1360`** |
+| **WireGuard** | 60–80 byte | **`1420`** | **`1380`** |
+| **L2TP / IPsec** | 60–80 byte | **`1410`** | **`1370`** |
+| **IPsec (IKEv2 murni)**| 50–70 byte | **`1400`** | **`1360`** |
+| **SSTP** (TCP-based) | 40 byte + TCP | **`1400`** | **`1360`** |
 
 ---
 
@@ -75,7 +75,7 @@ add chain=forward action=change-mss new-mss=1360 passthrough=no \
 
 ### Penjelasan Parameter:
 *   `tcp-flags=syn`: Aturan ini hanya bekerja pada paket inisiasi koneksi (SYN), sehingga tidak membebani kinerja CPU router untuk paket data setelahnya.
-*   `new-mss=clamp-to-pmtu`: RouterOS secara otomatis akan menghitung nilai MSS terbaik berdasarkan MTU jalur keluar (biasanya MTU dikurangi $40$ byte untuk header IP/TCP).
+*   `new-mss=clamp-to-pmtu`: RouterOS secara otomatis akan menghitung nilai MSS terbaik berdasarkan MTU jalur keluar (biasanya MTU dikurangi 40 byte untuk header IP/TCP).
 *   `out-interface-list=WAN` atau `out-interface=wg-kantor`: Membatasi aturan ini hanya untuk paket yang keluar menuju internet satelit atau interface VPN agar lalu lintas LAN lokal tetap berjalan di kecepatan penuh.
 
 ---
@@ -83,8 +83,8 @@ add chain=forward action=change-mss new-mss=1360 passthrough=no \
 ## Cek Pemahaman
 
 1.  Mengapa satu paket data yang terfragmentasi (terpecah) memiliki dampak penurunan performa yang jauh lebih buruk pada link satelit GEO dibanding link serat optik biasa?
-    <br>→ Karena jika salah satu pecahan paket hilang, proses kirim ulang (*retransmission*) pada link satelit GEO memakan waktu RTT sangat tinggi ($\approx 600\text{ ms}$). Jeda waktu yang lama ini memicu mekanisme pencegahan kemacetan TCP untuk memotong kecepatan transfer data, membuat VPN terasa sangat lambat.
+    <br>→ Karena jika salah satu pecahan paket hilang, proses kirim ulang (*retransmission*) pada link satelit GEO memakan waktu RTT sangat tinggi (≈600 ms). Jeda waktu yang lama ini memicu mekanisme pencegahan kemacetan TCP untuk memotong kecepatan transfer data, membuat VPN terasa sangat lambat.
 2.  Apa perbedaan antara MTU (Maximum Transmission Unit) dan MSS (Maximum Segment Size)?
-    <br>→ MTU adalah ukuran maksimal dari **seluruh paket** (termasuk IP header, TCP header, dan muatan data) yang dapat dilewati oleh interface jaringan. Sedangkan MSS adalah batas ukuran maksimal **muatan data saja** (payload) yang dapat ditampung di dalam segmen TCP (biasanya nilai MTU dikurangi $40$ byte).
+    <br>→ MTU adalah ukuran maksimal dari **seluruh paket** (termasuk IP header, TCP header, dan muatan data) yang dapat dilewati oleh interface jaringan. Sedangkan MSS adalah batas ukuran maksimal **muatan data saja** (payload) yang dapat ditampung di dalam segmen TCP (biasanya nilai MTU dikurangi 40 byte).
 3.  Mengapa aturan *change-mss* pada firewall mangle hanya menargetkan paket dengan bendera/flag `tcp-flags=syn`?
     <br>→ Karena penentuan ukuran paket (MSS) disepakati oleh pengirim dan penerima di awal koneksi saat proses jabat tangan (*handshake*) TCP menggunakan paket SYN. Mengubah nilai MSS pada paket SYN sudah cukup untuk membatasi ukuran paket sepanjang sesi koneksi tersebut berjalan, sehingga menghemat daya pemrosesan CPU router.
