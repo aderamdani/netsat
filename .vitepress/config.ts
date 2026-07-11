@@ -67,6 +67,7 @@ export default defineConfig({
       { text: 'Networking', link: '/networking/', activeMatch: '^/networking/' },
       { text: 'Satelit', link: '/satelit/', activeMatch: '^/satelit/' },
       { text: 'MikroTik', link: '/mikrotik/', activeMatch: '^/mikrotik/' },
+      { text: 'Starlink', link: '/starlink/', activeMatch: '^/starlink/' },
       { text: 'Tentang', link: '/tentang' },
     ],
 
@@ -97,6 +98,11 @@ export default defineConfig({
           collapsed: true,
           items: [{ text: 'Buka Modul MikroTik →', link: '/mikrotik/' }],
         },
+        {
+          text: 'MODUL 04 — STARLINK',
+          collapsed: true,
+          items: [{ text: 'Buka Modul Starlink →', link: '/starlink/' }],
+        },
       ],
       '/satelit/': [
         {
@@ -112,6 +118,8 @@ export default defineConfig({
             { text: 'Komunikasi Satelit', link: '/satelit/komunikasi' },
             { text: 'Ground Station', link: '/satelit/ground-station' },
             { text: 'Frekuensi & Band', link: '/satelit/frekuensi-band' },
+            { text: 'Simulasi Link Budget', link: '/satelit/link-budget' },
+            { text: 'LEO vs VSAT vs Starlink', link: '/satelit/leo-vsat-starlink' },
             { text: 'VSAT', link: '/satelit/vsat' },
             { text: 'VSAT — Operasional & Perencanaan', link: '/satelit/vsat-lanjut' },
           ],
@@ -120,6 +128,11 @@ export default defineConfig({
           text: 'MODUL 03 — MIKROTIK',
           collapsed: true,
           items: [{ text: 'Buka Modul MikroTik →', link: '/mikrotik/' }],
+        },
+        {
+          text: 'MODUL 04 — STARLINK',
+          collapsed: true,
+          items: [{ text: 'Buka Modul Starlink →', link: '/starlink/' }],
         },
       ],
       '/mikrotik/': [
@@ -148,9 +161,45 @@ export default defineConfig({
             { text: 'PPPoE', link: '/mikrotik/pppoe' },
             { text: 'VPN', link: '/mikrotik/vpn' },
             { text: 'Wireless & Satelit', link: '/mikrotik/wireless-dan-satelit' },
+            { text: 'Failover & Multi-WAN Satelit', link: '/mikrotik/multi-wan' },
+            { text: 'Optimasi VPN & MTU/MSS', link: '/mikrotik/vpn-optimization' },
+            { text: 'QoS Dinamis', link: '/mikrotik/dynamic-qos' },
             { text: 'Operasi & Monitoring', link: '/mikrotik/monitoring' },
             { text: 'Scripting & Otomatisasi', link: '/mikrotik/scripting-otomatisasi' },
             { text: 'Glosari', link: '/mikrotik/glosari' },
+          ],
+        },
+        {
+          text: 'MODUL 04 — STARLINK',
+          collapsed: true,
+          items: [{ text: 'Buka Modul Starlink →', link: '/starlink/' }],
+        },
+      ],
+      '/starlink/': [
+        {
+          text: 'MODUL 01 — NETWORKING',
+          collapsed: true,
+          items: [{ text: 'Buka Modul Networking →', link: '/networking/' }],
+        },
+        {
+          text: 'MODUL 02 — SATELIT',
+          collapsed: true,
+          items: [{ text: 'Buka Modul Satelit →', link: '/satelit/' }],
+        },
+        {
+          text: 'MODUL 03 — MIKROTIK',
+          collapsed: true,
+          items: [{ text: 'Buka Modul MikroTik →', link: '/mikrotik/' }],
+        },
+        {
+          text: 'MODUL 04 — STARLINK',
+          items: [
+            { text: 'Pengantar Starlink', link: '/starlink/' },
+            { text: 'Arsitektur Jaringan', link: '/starlink/arsitektur' },
+            { text: 'Perangkat Keras', link: '/starlink/hardware' },
+            { text: 'Jenis Layanan & Paket', link: '/starlink/layanan' },
+            { text: 'Praktik Integrasi RouterOS', link: '/starlink/praktik-mikrotik' },
+            { text: 'Troubleshooting & Diagnostik', link: '/starlink/troubleshooting' },
           ],
         },
       ],

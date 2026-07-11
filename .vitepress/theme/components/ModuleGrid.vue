@@ -19,6 +19,13 @@ import {
   BrickWall,
   Lock,
   Wifi,
+  // New icons for Starlink Module
+  BookOpen,
+  Network,
+  Cpu,
+  Package,
+  Sliders,
+  AlertTriangle,
 } from '@lucide/vue'
 
 const modules = [
@@ -64,6 +71,20 @@ const modules = [
       { icon: Wifi, text: 'Wireless & Satelit', link: '/mikrotik/wireless-dan-satelit' },
     ],
   },
+  {
+    code: 'MODUL 04',
+    title: 'Starlink',
+    desc: 'Teknologi satelit LEO SpaceX: dari arsitektur laser luar angkasa, hardware dish, jenis paket, hingga praktik integrasi RouterOS.',
+    link: '/starlink/',
+    topics: [
+      { icon: BookOpen, text: 'Pengantar Starlink', link: '/starlink/' },
+      { icon: Network, text: 'Arsitektur Jaringan', link: '/starlink/arsitektur' },
+      { icon: Cpu, text: 'Perangkat Keras & PoE', link: '/starlink/hardware' },
+      { icon: Package, text: 'Jenis Layanan & Paket', link: '/starlink/layanan' },
+      { icon: Sliders, text: 'Integrasi RouterOS', link: '/starlink/praktik-mikrotik' },
+      { icon: AlertTriangle, text: 'Troubleshooting & Diagnostik', link: '/starlink/troubleshooting' },
+    ],
+  },
 ]
 </script>
 
@@ -94,7 +115,7 @@ const modules = [
 <style scoped>
 .ns-modules {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 20px;
   padding: 40px 0 8px;
 }
@@ -174,7 +195,13 @@ const modules = [
   color: var(--ns-gold-strong);
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1200px) {
+  .ns-modules {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
   .ns-modules {
     grid-template-columns: 1fr;
   }

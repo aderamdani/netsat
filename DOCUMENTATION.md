@@ -53,6 +53,13 @@ netsat/
 │   ├── wireless-dan-satelit.md # Konfigurasi Wireless & Optimasi Link Satelit
 │   ├── monitoring.md       # Monitoring Bandwidth & Logging (Netwatch/Graphing)
 │   └── glosari.md          # Glosari Istilah Jaringan & Satelit
+├── starlink/                # Modul 04 — Ekosistem Starlink (Markdown)
+│   ├── index.md            # Pengantar Starlink
+│   ├── arsitektur.md       # Arsitektur Jaringan (Laser ISL, Gateway, POP)
+│   ├── hardware.md         # Spesifikasi Hardware & Catu Daya PoE
+│   ├── layanan.md          # Jenis Layanan (Residensial, Roam, Bisnis, Maritim)
+│   ├── praktik-mikrotik.md # Konfigurasi Praktis RouterOS untuk Starlink
+│   └── troubleshooting.md  # Troubleshooting, Hambatan Sinyal, & Diagnostik
 ├── public/                 # Aset statis (ikon, logo, favicon, gambar)
 ├── package.json            # Daftar dependensi dan script build
 └── vercel.json             # Konfigurasi deployment untuk Vercel
