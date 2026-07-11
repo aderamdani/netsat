@@ -41,15 +41,7 @@ bisa berevolusi selama 50 tahun tanpa pernah "diinstal ulang".
 
 ## Tujuh lapisan
 
-| # | Lapisan | Satuan data (PDU) | Tanggung jawab | Contoh protokol/perangkat |
-| --- | --- | --- | --- | --- |
-| 7 | Application | Data | Antarmuka layanan jaringan untuk aplikasi | HTTP, DNS, SMTP, FTP |
-| 6 | Presentation | Data | Format, enkripsi, kompresi | TLS, JPEG, ASCII/UTF-8 |
-| 5 | Session | Data | Membuka, menjaga, menutup sesi dialog | NetBIOS, RPC, sesi TLS |
-| 4 | Transport | Segment | Pengiriman ujung-ke-ujung antar-proses, kendali aliran | TCP, UDP |
-| 3 | Network | Packet | Pengalamatan logis & pemilihan jalur antar-jaringan | IP, ICMP; **router** |
-| 2 | Data Link | Frame | Pengiriman antar-tetangga di satu medium, alamat fisik | Ethernet, Wi-Fi (MAC); **switch** |
-| 1 | Physical | Bit | Transmisi bit di medium: tegangan, cahaya, gelombang radio | UTP, serat optik, **RF satelit** |
+<OsiInteractive />
 
 Jembatan keledai populer (dari lapisan 7 ke 1):
 **A**njing **P**intar **S**uka **T**idur **N**yenyak **D**i **P**ojokan.
@@ -69,7 +61,7 @@ layer 1.
 ### Layer 2 — Data Link
 
 Mengantarkan *frame* antar-perangkat yang berada di **medium yang sama** —
-komputer ke switch, ponsel ke access point. Di sinilah alamat **MAC** (48-bit,
+komputer ke switch, ponsel ke access point. Di sinilah alamat <TermTooltip term="MAC" def="Media Access Control, identitas fisik unik pada kartu jaringan yang dipakai berkomunikasi dalam satu segmen jaringan." /> (48-bit,
 ditulis `AA:BB:CC:DD:EE:FF`) bekerja. Layer 2 juga mengatur siapa boleh
 "berbicara" kapan (*media access control*) dan mendeteksi frame rusak lewat
 FCS/CRC. Dibahas tuntas di [Switching & VLAN](/networking/switching).
@@ -96,8 +88,8 @@ TCP/IP melebur ketiganya menjadi satu lapisan Application.
 ## Enkapsulasi: perjalanan turun dan naik
 
 Saat data dikirim, setiap lapisan **membungkus** data dari lapisan di atasnya
-dengan header miliknya (layer 2 juga menambah *trailer*). Proses sebaliknya —
-membuka bungkus lapis demi lapis — terjadi di penerima.
+dengan <TermTooltip term="header" def="Informasi kendali tambahan yang dipasang di bagian depan data, berisi alamat tujuan, asal, dan protokol." /> miliknya (layer 2 juga menambah *trailer*). Proses <TermTooltip term="Enkapsulasi" def="Proses membungkus data dengan header dari setiap lapisan sebelum dikirimkan ke jaringan." /> —
+serta sebaliknya, membuka bungkus lapis demi lapis — terjadi di penerima.
 
 ```text
 PENGIRIM                                        PENERIMA
@@ -166,17 +158,26 @@ bukan sebagai kitab suci — dan lanjutkan ke model yang benar-benar dipakai:
 
 ## Cek pemahaman
 
-1. Switch membaca alamat apa, dan router membaca alamat apa? <br>→ Switch:
-   **MAC** (layer 2). Router: **IP** (layer 3).
-2. `ping` ke gateway berhasil tapi situs tetap tidak terbuka. Lapisan mana yang
-   sudah terbukti sehat, dan ke mana pemeriksaan berikutnya? <br>→ L1–L3 sampai
-   gateway sehat. Berikutnya: rute ke luar, DNS, lalu L4–L7 (port, TLS,
-   aplikasi).
-3. TLS bekerja di lapisan mana? <br>→ Di wilayah abu-abu L5–L6 — contoh nyata
-   bahwa batas lapisan atas OSI kabur; model TCP/IP meleburnya ke Application.
-4. Mengganti Wi-Fi dengan kabel LAN mengubah lapisan berapa saja? <br>→ Hanya
-   **L1–L2**. IP, TCP, dan aplikasimu tidak berubah sama sekali — bukti nyata
-   manfaat pelapisan.
+<QuizBox 
+  question="Perangkat apakah yang bekerja di Layer 2 (Data Link) dan membaca alamat MAC?"
+  :options="['Router', 'Switch', 'Hub', 'Kabel UTP']"
+  :correctIndex="1"
+  explanation="Switch beroperasi di Layer 2 dan menggunakan alamat MAC untuk meneruskan frame. Router berada di Layer 3 (IP), sedangkan Hub dan Kabel ada di Layer 1."
+/>
+
+<QuizBox 
+  question="Jika kamu mengganti koneksi laptop dari Wi-Fi menjadi kabel LAN, lapisan manakah yang berubah?"
+  :options="['Hanya Layer 1 dan 2', 'Layer 3 dan 4', 'Semua lapisan berubah', 'Hanya Layer 7']"
+  :correctIndex="0"
+  explanation="Mengubah medium fisik (Wi-Fi ke kabel) hanya mengubah Layer 1 (Physical) dan Layer 2 (Data Link). Alamat IP (Layer 3) dan ke atas tetap tidak sadar ada perubahan."
+/>
+
+<QuizBox 
+  question="Di wilayah mana batas model OSI paling kabur pada implementasi modern (seperti protokol TLS)?"
+  :options="['Antara Layer 1 dan 2', 'Antara Layer 3 dan 4', 'Layer 5, 6, dan 7', 'Tidak ada yang kabur']"
+  :correctIndex="2"
+  explanation="TLS mengerjakan urusan sesi (L5) dan enkripsi (L6) sekaligus. Karena sering menyatu dalam aplikasi, model TCP/IP melebur Layer 5-7 menjadi satu lapisan Application."
+/>
 
 ---
 

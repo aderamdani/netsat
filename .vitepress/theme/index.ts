@@ -11,6 +11,9 @@ import './custom.css'
 import HomeHero from './components/HomeHero.vue'
 import ModuleGrid from './components/ModuleGrid.vue'
 import TelemetryStrip from './components/TelemetryStrip.vue'
+import QuizBox from './components/QuizBox.vue'
+import TermTooltip from './components/TermTooltip.vue'
+import OsiInteractive from './components/OsiInteractive.vue'
 
 export default {
   extends: DefaultTheme,
@@ -18,6 +21,9 @@ export default {
     app.component('HomeHero', HomeHero)
     app.component('ModuleGrid', ModuleGrid)
     app.component('TelemetryStrip', TelemetryStrip)
+    app.component('QuizBox', QuizBox)
+    app.component('TermTooltip', TermTooltip)
+    app.component('OsiInteractive', OsiInteractive)
 
     // View Transitions API
     if (typeof window !== 'undefined' && 'startViewTransition' in document) {
