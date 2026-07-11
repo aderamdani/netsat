@@ -1,9 +1,21 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { ArrowRight, BookOpen } from '@lucide/vue'
+import ParticleNetwork from './ParticleNetwork.vue'
+
+const hoveredOrbit = ref<string | null>(null)
+
+const orbitData: Record<string, { alt: string, speed: string, latency: string }> = {
+  leo: { alt: '500 - 2.000 km', speed: '≈ 7,8 km/s', latency: '20 - 40 ms' },
+  meo: { alt: '≈ 20.200 km', speed: '≈ 3,9 km/s', latency: '150 - 180 ms' },
+  geo: { alt: '35.786 km', speed: '≈ 3,1 km/s', latency: '≈ 600 ms' }
+}
 </script>
 
 <template>
   <section class="ns-hero">
+    <ParticleNetwork />
+    
     <div class="ns-hero-text">
       <p class="ns-eyebrow">LINK ▸ ESTABLISHED — DOKUMENTASI TERBUKA</p>
       <h1 class="ns-hero-title">
@@ -29,11 +41,15 @@ import { ArrowRight, BookOpen } from '@lucide/vue'
     </div>
 
     <!-- diagram orbit: LEO / MEO / GEO mengelilingi Bumi -->
-    <div class="ns-hero-orbit ns-orbit-anim" aria-hidden="true">
+    <div 
+      class="ns-hero-orbit ns-orbit-anim" 
+      :class="hoveredOrbit ? `has-hover hover-${hoveredOrbit}` : ''"
+      aria-hidden="true"
+    >
       <svg viewBox="0 0 420 420" class="ns-orbit-svg">
         <!-- cincin orbit -->
-        <circle cx="210" cy="210" r="88" class="ns-ring" />
-        <circle cx="210" cy="210" r="138" class="ns-ring" />
+        <circle cx="210" cy="210" r="88" class="ns-ring ns-ring-leo" />
+        <circle cx="210" cy="210" r="138" class="ns-ring ns-ring-meo" />
         <circle cx="210" cy="210" r="192" class="ns-ring ns-ring-geo" />
 
         <!-- bumi -->
@@ -44,32 +60,68 @@ import { ArrowRight, BookOpen } from '@lucide/vue'
         />
 
         <!-- satelit di tiap orbit -->
-        <g class="ns-sat ns-sat-leo">
+        <g 
+          class="ns-sat ns-sat-leo"
+          @mouseenter="hoveredOrbit = 'leo'"
+          @mouseleave="hoveredOrbit = null"
+        >
           <g transform="translate(210 122)">
+            <rect x="-6" y="-6" width="12" height="12" fill="transparent" class="ns-sat-hitbox" />
             <rect x="-4" y="-4" width="8" height="8" class="ns-sat-body" />
             <rect x="-14" y="-2.4" width="8" height="4.8" class="ns-sat-panel" />
             <rect x="6" y="-2.4" width="8" height="4.8" class="ns-sat-panel" />
           </g>
         </g>
-        <g class="ns-sat ns-sat-meo">
+        <g 
+          class="ns-sat ns-sat-meo"
+          @mouseenter="hoveredOrbit = 'meo'"
+          @mouseleave="hoveredOrbit = null"
+        >
           <g transform="translate(210 72)">
+            <rect x="-6" y="-6" width="12" height="12" fill="transparent" class="ns-sat-hitbox" />
             <rect x="-4" y="-4" width="8" height="8" class="ns-sat-body" />
             <rect x="-14" y="-2.4" width="8" height="4.8" class="ns-sat-panel" />
             <rect x="6" y="-2.4" width="8" height="4.8" class="ns-sat-panel" />
           </g>
         </g>
-        <g class="ns-sat ns-sat-geo">
+        <g 
+          class="ns-sat ns-sat-geo"
+          @mouseenter="hoveredOrbit = 'geo'"
+          @mouseleave="hoveredOrbit = null"
+        >
           <g transform="translate(210 18)">
+            <rect x="-7" y="-7" width="14" height="14" fill="transparent" class="ns-sat-hitbox" />
             <rect x="-5" y="-5" width="10" height="10" class="ns-sat-body" />
             <rect x="-17" y="-3" width="10" height="6" class="ns-sat-panel" />
             <rect x="7" y="-3" width="10" height="6" class="ns-sat-panel" />
           </g>
         </g>
       </svg>
+      
       <div class="ns-orbit-labels">
-        <span>LEO&nbsp;·&nbsp;&lt;2.000&nbsp;km</span>
-        <span>MEO&nbsp;·&nbsp;~20.200&nbsp;km</span>
-        <span>GEO&nbsp;·&nbsp;35.786&nbsp;km</span>
+        <span 
+          @mouseenter="hoveredOrbit = 'leo'" 
+          @mouseleave="hoveredOrbit = null"
+          :class="{ active: hoveredOrbit === 'leo' }"
+        >LEO</span>
+        <span 
+          @mouseenter="hoveredOrbit = 'meo'" 
+          @mouseleave="hoveredOrbit = null"
+          :class="{ active: hoveredOrbit === 'meo' }"
+        >MEO</span>
+        <span 
+          @mouseenter="hoveredOrbit = 'geo'" 
+          @mouseleave="hoveredOrbit = null"
+          :class="{ active: hoveredOrbit === 'geo' }"
+        >GEO</span>
+      </div>
+
+      <div class="ns-orbit-tooltip" :class="{ visible: hoveredOrbit }">
+        <template v-if="hoveredOrbit">
+          <div class="tt-row"><span>Ketinggian</span><strong>{{ orbitData[hoveredOrbit].alt }}</strong></div>
+          <div class="tt-row"><span>Kecepatan</span><strong>{{ orbitData[hoveredOrbit].speed }}</strong></div>
+          <div class="tt-row"><span>Latensi</span><strong>{{ orbitData[hoveredOrbit].latency }}</strong></div>
+        </template>
       </div>
     </div>
   </section>
@@ -77,11 +129,17 @@ import { ArrowRight, BookOpen } from '@lucide/vue'
 
 <style scoped>
 .ns-hero {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: 48px;
   align-items: center;
   padding: 56px 0 24px;
+}
+
+.ns-hero-text {
+  position: relative;
+  z-index: 1;
 }
 
 .ns-hero-title {
@@ -226,13 +284,92 @@ import { ArrowRight, BookOpen } from '@lucide/vue'
 .ns-orbit-labels {
   display: flex;
   justify-content: center;
-  gap: 18px;
+  gap: 24px;
   margin-top: 10px;
   font-family: var(--ns-font-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
+  font-size: 11px;
+  letter-spacing: 0.1em;
   color: var(--vp-c-text-3);
 }
+
+.ns-orbit-labels span {
+  cursor: default;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.ns-orbit-labels span:hover,
+.ns-orbit-labels span.active {
+  color: var(--ns-gold);
+  background: var(--ns-gold-soft);
+}
+
+.ns-orbit-tooltip {
+  position: absolute;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--vp-c-bg-elv);
+  border: 1px solid var(--vp-c-divider);
+  padding: 12px 16px;
+  border-radius: 8px;
+  width: 220px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.ns-orbit-tooltip.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.tt-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.tt-row:last-child {
+  margin-bottom: 0;
+}
+.tt-row span {
+  color: var(--vp-c-text-2);
+}
+.tt-row strong {
+  color: var(--vp-c-text-1);
+  font-family: var(--ns-font-mono);
+}
+
+/* Interactivity Hover Effects */
+.ns-sat-hitbox {
+  cursor: pointer;
+}
+
+.has-hover .ns-sat,
+.has-hover .ns-ring {
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+
+.has-hover.hover-leo .ns-sat-leo,
+.has-hover.hover-leo .ns-ring-leo,
+.has-hover.hover-meo .ns-sat-meo,
+.has-hover.hover-meo .ns-ring-meo,
+.has-hover.hover-geo .ns-sat-geo,
+.has-hover.hover-geo .ns-ring-geo {
+  opacity: 1;
+}
+
+.has-hover.hover-leo .ns-sat-leo,
+.has-hover.hover-meo .ns-sat-meo,
+.has-hover.hover-geo .ns-sat-geo {
+  animation-play-state: paused;
+}
+
 
 @media (max-width: 560px) {
   .ns-hero-br {

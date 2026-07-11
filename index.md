@@ -8,6 +8,12 @@ titleTemplate: false
 <TelemetryStrip />
 <ModuleGrid />
 
+<div style="max-width: 1152px; margin: 0 auto; padding: 0 24px;">
+  <SubnetWidget />
+  <PacketTracerMini />
+  <TerminalSimulator />
+</div>
+
 <div class="ns-home-note">
 
 **Cara memakai dokumentasi ini.** Materi disusun berurutan — tiap halaman dibangun
