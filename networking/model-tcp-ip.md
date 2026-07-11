@@ -98,25 +98,12 @@ sama tanpa saling bertabrakan.
 
 TCP membuka koneksi lewat **three-way handshake**:
 
-```text
-Klien                         Server
-  │ ── SYN  (seq=x) ────────────▶ │
-  │ ◀─ SYN-ACK (seq=y, ack=x+1) ─ │
-  │ ── ACK  (ack=y+1) ──────────▶ │
-  │        koneksi terbentuk      │
-```
+<TcpInteractiveDemo mode="handshake" />
 
 Setelah itu setiap byte diberi nomor urut, penerima mengirim ACK, dan data yang
 hilang dikirim ulang. Begini wujudnya dalam satu pertukaran kecil:
 
-```text
-Klien mengirim 1000 byte  : seq=1..1000
-Server membalas           : ack=1001   ("sudah kuterima s.d. byte 1000")
-Klien mengirim 1000 lagi  : seq=1001..2000     ✖ hilang di jalan
-Klien mengirim 1000 lagi  : seq=2001..3000
-Server membalas           : ack=1001   (tetap! "aku masih menunggu byte 1001")
-Klien menyadari, kirim ulang seq=1001..2000 → aliran pulih
-```
+<TcpInteractiveDemo mode="recovery" />
 
 Pengirim tidak menunggu ACK satu per satu — ia boleh "mengutang" sejumlah byte
 yang belum di-ACK, sebanyak ukuran **window**. Makin besar window, makin penuh
