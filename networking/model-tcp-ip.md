@@ -42,6 +42,23 @@ sumber ke alamat tujuan, **melintasi jaringan apa pun di tengahnya**. Sifatnya:
 
 ### Anatomi header IPv4
 
+```text
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-------+-------+---------------+-------------------------------+
+|Versi  | IHL   |    DSCP/ECN   |        Total Length           |
++-------+-------+---------------+-----+-------------------------+
+|         Identification        |Flags|    Fragment Offset      |
++---------------+---------------+-----+-------------------------+
+|      TTL      |   Protocol    |       Header Checksum         |
++---------------+---------------+-------------------------------+
+|                     Source IP Address                         |
++---------------------------------------------------------------+
+|                  Destination IP Address                       |
++---------------------------------------------------------------+
+```
+
+*Jelajahi setiap field header IPv4 di atas melalui komponen interaktif ini:*
 <IpHeaderInteractive />
 
 Field yang paling sering kamu temui dalam praktik:
@@ -98,11 +115,30 @@ sama tanpa saling bertabrakan.
 
 TCP membuka koneksi lewat **three-way handshake**:
 
+```text
+Klien                         Server
+  │ ── SYN  (seq=x) ────────────▶ │
+  │ ◀─ SYN-ACK (seq=y, ack=x+1) ─ │
+  │ ── ACK  (ack=y+1) ──────────▶ │
+  │        koneksi terbentuk      │
+```
+
+*Simulasikan proses pembentukan koneksi:*
 <TcpInteractiveDemo mode="handshake" />
 
 Setelah itu setiap byte diberi nomor urut, penerima mengirim ACK, dan data yang
 hilang dikirim ulang. Begini wujudnya dalam satu pertukaran kecil:
 
+```text
+Klien mengirim 1000 byte  : seq=1..1000
+Server membalas           : ack=1001   ("sudah kuterima s.d. byte 1000")
+Klien mengirim 1000 lagi  : seq=1001..2000     ✖ hilang di jalan
+Klien mengirim 1000 lagi  : seq=2001..3000
+Server membalas           : ack=1001   (tetap! "aku masih menunggu byte 1001")
+Klien menyadari, kirim ulang seq=1001..2000 → aliran pulih
+```
+
+*Simulasikan kehilangan paket di tengah jalan:*
 <TcpInteractiveDemo mode="recovery" />
 
 Pengirim tidak menunggu ACK satu per satu — ia boleh "mengutang" sejumlah byte

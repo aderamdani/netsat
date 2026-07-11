@@ -41,6 +41,17 @@ bisa berevolusi selama 50 tahun tanpa pernah "diinstal ulang".
 
 ## Tujuh lapisan
 
+| # | Lapisan | Satuan data (PDU) | Tanggung jawab | Contoh protokol/perangkat |
+| --- | --- | --- | --- | --- |
+| 7 | Application | Data | Antarmuka layanan jaringan untuk aplikasi | HTTP, DNS, SMTP, FTP |
+| 6 | Presentation | Data | Format, enkripsi, kompresi | TLS, JPEG, ASCII/UTF-8 |
+| 5 | Session | Data | Membuka, menjaga, menutup sesi dialog | NetBIOS, RPC, sesi TLS |
+| 4 | Transport | Segment | Pengiriman ujung-ke-ujung antar-proses, kendali aliran | TCP, UDP |
+| 3 | Network | Packet | Pengalamatan logis & pemilihan jalur antar-jaringan | IP, ICMP; **router** |
+| 2 | Data Link | Frame | Pengiriman antar-tetangga di satu medium, alamat fisik | Ethernet, Wi-Fi (MAC); **switch** |
+| 1 | Physical | Bit | Transmisi bit di medium: tegangan, cahaya, gelombang radio | UTP, serat optik, **RF satelit** |
+
+*Eksplorasi tiap lapisan lebih dalam lewat simulasi interaktif berikut:*
 <OsiInteractive />
 
 Jembatan keledai populer (dari lapisan 7 ke 1):
@@ -91,6 +102,16 @@ Saat data dikirim, setiap lapisan **membungkus** data dari lapisan di atasnya
 dengan <TermTooltip term="header" def="Informasi kendali tambahan yang dipasang di bagian depan data, berisi alamat tujuan, asal, dan protokol." /> miliknya (layer 2 juga menambah *trailer*). Proses <TermTooltip term="Enkapsulasi" def="Proses membungkus data dengan header dari setiap lapisan sebelum dikirimkan ke jaringan." /> —
 serta sebaliknya, membuka bungkus lapis demi lapis — terjadi di penerima.
 
+```text
+PENGIRIM                                        PENERIMA
+Aplikasi   [data]                               [data]         Aplikasi
+Transport  [TCP|data]                           [TCP|data]     Transport
+Network    [IP|TCP|data]                        [IP|TCP|data]  Network
+Data Link  [ETH|IP|TCP|data|FCS]  ──medium──▶  [ETH|IP|TCP|data|FCS]
+Physical   101101110101... ──────────────────▶ 101101110101...
+```
+
+*Lihat proses pembungkusan ini secara langsung lewat animasi di bawah:*
 <EncapsulationDemo />
 
 Perhatikan konsekuensinya: **switch** hanya membuka bungkus sampai layer 2
