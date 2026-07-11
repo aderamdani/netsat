@@ -89,6 +89,10 @@ adaptor PoE mati karena *overcurrent*.
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Mengapa pucuk pohon yang menghalangi sebagian kecil langit bisa memutus
    koneksi total beberapa detik berulang kali?
    <br>→ Satelit LEO bergerak cepat melintasi langit; setiap kali lintasannya
@@ -104,6 +108,9 @@ adaptor PoE mati karena *overcurrent*.
    (mencegah lonjakan hingga ±150 W) dan mengurangi risiko panas berlebih.
 
 ---
+
+
+</details>
 
 ## Modul Starlink selesai
 

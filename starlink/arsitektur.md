@@ -101,6 +101,10 @@ Perjalanan satu permintaan HTTP dari laptop lewat Starlink:
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Apa beda arsitektur *bent pipe* tradisional dengan arsitektur Starlink
    ber-laser ISL?
    <br>→ Bent pipe hanya memantulkan sinyal — terminal dan gateway harus
@@ -117,3 +121,5 @@ Perjalanan satu permintaan HTTP dari laptop lewat Starlink:
 
 Berikutnya: perangkat yang dipegang pelanggan —
 [Perangkat Keras](/starlink/hardware).
+
+</details>

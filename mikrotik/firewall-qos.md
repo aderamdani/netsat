@@ -244,6 +244,10 @@ jam kerja, batasi internet anak-anak di malam hari:
 
 ## Uji pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Kenapa `established,related` selalu aturan pertama? → Efisiensi: mayoritas
    paket langsung lolos tanpa mengevaluasi sisa daftar — firewall stateful
    [bekerja sekali di paket pembuka](/networking/keamanan#firewall).
@@ -256,3 +260,5 @@ jam kerja, batasi internet anak-anak di malam hari:
 
 Lalu lintas sudah tersaring dan terjadwal. Berikutnya menyambungkan
 pulau-pulau jaringan dengan terowongan terenkripsi: [VPN](/mikrotik/vpn).
+
+</details>

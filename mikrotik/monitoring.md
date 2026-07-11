@@ -224,6 +224,10 @@ tambahan:
 
 ## Uji pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Kamu ingin semua router di jaringan dipantau dari satu Zabbix server — apa
    yang harus diaktifkan di tiap router? → SNMP dengan `community` read-only
    yang terbatas ke subnet monitoring.
@@ -232,3 +236,5 @@ tambahan:
 3. Container di RouterOS tidak mau jalan — dua kemungkinan pertama yang kamu
    periksa? → Arsitektur Routerboard tidak mendukung (MIPS, TILE) atau storage
    tidak mencukupi.
+
+</details>

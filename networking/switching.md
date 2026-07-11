@@ -189,6 +189,10 @@ lompatan 36.000 km.
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Frame tiba dengan MAC tujuan yang tidak ada di tabel switch. Apa yang
    terjadi? <br>→ **Flooding** — dikirim ke semua port kecuali port asal;
    begitu tujuan membalas, MAC-nya langsung dipelajari.
@@ -208,3 +212,5 @@ lompatan 36.000 km.
 
 Berikutnya: nama-nama protokol yang sejak tadi berseliweran — TCP, UDP, DNS,
 DHCP, HTTP — dibedah satu per satu di [Protokol Jaringan](/networking/protokol).
+
+</details>

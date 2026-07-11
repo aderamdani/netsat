@@ -179,6 +179,10 @@ Daftar minimum untuk jaringan apa pun, dari lab sekolah sampai kantor:
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Enkripsi HTTPS melindungi pilar CIA yang mana? <br>→ **Confidentiality**
    dan **integrity** (plus autentikasi server lewat sertifikat). Ia *tidak*
    menolong availability.
@@ -203,3 +207,5 @@ ini dibangun di [Firewall & QoS](/mikrotik/firewall-qos) dan
 
 Modul networking selesai. Sekarang saatnya meninggalkan permukaan bumi:
 [Pengantar Satelit](/satelit/) menunggu di modul berikutnya.
+
+</details>

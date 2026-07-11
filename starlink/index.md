@@ -79,6 +79,10 @@ kedaulatan. Perbandingan menyeluruhnya ada di
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Berapa ketinggian rata-rata satelit Starlink, dan mengapa latensinya jauh
    lebih rendah dari VSAT GEO tradisional?
    <br>→ ±550 km di atas bumi — jauh lebih dekat daripada GEO (35.786 km),
@@ -95,3 +99,5 @@ kedaulatan. Perbandingan menyeluruhnya ada di
    dan aplikasi database/cloud interaktif yang sensitif terhadap jeda.
 
 Lanjut ke bagaimana semua ini tersusun: [Arsitektur Jaringan](/starlink/arsitektur).
+
+</details>

@@ -357,6 +357,10 @@ celah atau pintu belakang sejak lahir? Praktik minimal:
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Domain email perusahaanmu sering dipakai phishing. Rekaman DNS apa yang
    harus segera dipasang? <br>→ **SPF** (siapa yang sah kirim surel),
    **DKIM** (tanda tangan verifikasi), **DMARC** (perintah ke penerima).
@@ -380,3 +384,5 @@ celah atau pintu belakang sejak lahir? Praktik minimal:
 5. Backup konfigurasi yang disimpan di cloud — apakah sudah cukup aman?
    <br>→ Belum: pastikan backup dienkripsi (`password=`), dan *restore*
       pernah diuji. Backup yang tidak bisa di-restore bukan backup.
+
+</details>

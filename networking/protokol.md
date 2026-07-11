@@ -206,6 +206,10 @@ telanjang di sana. Sangat dianjurkan dicoba minimal sekali.
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Kamu mengganti rekaman A domainmu, tapi sebagian pengunjung masih diarahkan
    ke server lama selama beberapa jam. Kenapa? <br>→ **Cache resolver** masih
    menyimpan jawaban lama sampai TTL-nya habis.
@@ -225,3 +229,5 @@ demi langkah di [DHCP, DNS & NAT (MikroTik)](/mikrotik/dhcp-dns-nat).
 Protokol-protokol ini dirancang di era jaringan yang saling percaya. Apa yang
 terjadi ketika ada pihak yang berniat jahat? Lanjut ke
 [Keamanan Jaringan](/networking/keamanan).
+
+</details>

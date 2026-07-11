@@ -357,6 +357,10 @@ Dengan metode Hybrid WAN ini, pengguna mendapatkan kenyamanan ganda: berselancar
 
 ## Uji pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Tabel memuat `0.0.0.0/0 via A` dan `198.51.100.0/24 via B`; paket menuju
    `198.51.100.7` lewat mana? → **B** —
    [longest prefix match](/networking/routing#longest-prefix-match) mengalahkan
@@ -370,3 +374,5 @@ Dengan metode Hybrid WAN ini, pengguna mendapatkan kenyamanan ganda: berselancar
 
 Paket sudah tahu jalan. Sekarang memutuskan siapa yang **boleh lewat** — dan
 secepat apa: [Firewall & QoS](/mikrotik/firewall-qos).
+
+</details>

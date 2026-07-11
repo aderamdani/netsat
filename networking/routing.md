@@ -168,6 +168,10 @@ Dua titik temu yang menarik:
 
 ## Uji pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Paket menuju `172.16.5.9`; tabel memuat `172.16.0.0/16 via A` dan
    `172.16.5.0/24 via B`. Lewat mana? → **B** (longest prefix match).
 2. Kenapa link satelit diberi OSPF cost tinggi? → Agar dipilih hanya ketika
@@ -185,3 +189,5 @@ di [Routing di RouterOS (MikroTik)](/mikrotik/routing).
 
 Routing mengurus perpindahan **antar**-jaringan. Perpindahan **di dalam** satu
 jaringan lokal adalah dunia yang berbeda: [Switching & VLAN](/networking/switching).
+
+</details>

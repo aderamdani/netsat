@@ -172,6 +172,10 @@ bukan sebagai kitab suci — dan lanjutkan ke model yang benar-benar dipakai:
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 <QuizBox 
   question="Perangkat apakah yang bekerja di Layer 2 (Data Link) dan membaca alamat MAC?"
   :options="['Router', 'Switch', 'Hub', 'Kabel UTP']"
@@ -196,3 +200,5 @@ bukan sebagai kitab suci — dan lanjutkan ke model yang benar-benar dipakai:
 ---
 
 **Praktik:** cara menu RouterOS dipetakan berdasarkan lapisan OSI — layer 2 di `/interface/bridge`, layer 3 di `/ip` dan `/routing` — dijelaskan di [Pengantar RouterOS](/mikrotik/#arsitektur-menu-konfigurasi-sebagai-pohon).
+
+</details>

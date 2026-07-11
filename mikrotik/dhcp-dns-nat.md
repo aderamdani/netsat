@@ -308,6 +308,10 @@ diberikan ke klien di VLAN 10.
 
 ## Uji pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Klien mendapat IP `169.254.x.x` — apa hipotesis pertamamu? →
    [DHCP gagal](/networking/protokol#dhcp): server mati, kabel/VLAN salah,
    atau pool habis. Cek `/ip/dhcp-server/print` dan lease-nya.
@@ -320,3 +324,5 @@ diberikan ke klien di VLAN 10.
 
 Alamat beres, nama beres, penyamaran beres. Berikutnya: mengarahkan paket ke
 jalur yang benar — [Routing di RouterOS](/mikrotik/routing).
+
+</details>

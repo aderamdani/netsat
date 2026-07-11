@@ -122,6 +122,10 @@ Router adalah titik pandang terbaik untuk troubleshooting
 
 ## Uji pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. `add address=192.0.2.1 interface=ether2` (tanpa `/24`) — apa akibatnya?
    → RouterOS menganggap `/32`; klien LAN takkan menemukan gateway-nya.
    Prefix bukan hiasan.
@@ -134,3 +138,5 @@ Router adalah titik pandang terbaik untuk troubleshooting
 Satu port satu kabel sudah beres. Menggabungkan banyak port menjadi switch —
 lengkap dengan VLAN — adalah bab berikutnya:
 [Bridging & Switching](/mikrotik/bridging-switching).
+
+</details>

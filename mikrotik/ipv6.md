@@ -120,6 +120,10 @@ add chain=forward in-interface=ether1 connection-state=new action=drop comment="
 
 ## Uji pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. **Kenapa kita tidak perlu melakukan konfigurasi NAT (masquerade) pada IPv6?**
    <br>→ Karena setiap perangkat LAN mendapatkan alokasi IP Global Unicast (GUA) unik langsung dari pool ISP, sehingga paket dapat dikirim bolak-balik di internet secara langsung. Peran keamanan NAT digantikan sepenuhnya oleh firewall filter.
 
@@ -128,3 +132,5 @@ add chain=forward in-interface=ether1 connection-state=new action=drop comment="
 
 3. **Mengapa aturan firewall ICMPv6 wajib di-accept?**
    <br>→ ICMPv6 menggantikan peran ARP (melalui Neighbor Solicitation/Advertisement) dan menangani penyesuaian ukuran paket (MTU). Memblokirnya akan menghentikan komunikasi lokal maupun internet IPv6.
+
+</details>

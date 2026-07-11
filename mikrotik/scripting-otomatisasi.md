@@ -165,6 +165,10 @@ Router yang menggunakan koneksi internet dengan IP Publik dinamis (berubah-ubah 
 
 ## Uji pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. **Apa perbedaan antara `:local` dan `:global` dalam pembuatan variabel di RouterOS?**
    <br>→ Variabel `:local` hanya hidup di dalam cakupan kode di mana ia dideklarasikan (fungsi atau skrip saat itu) dan langsung dihapus saat skrip selesai. Variabel `:global` tersimpan di RAM router secara permanen, sehingga nilainya dapat dibaca oleh skrip lain atau tetap tersimpan sampai router di-reboot.
 
@@ -173,3 +177,5 @@ Router yang menggunakan koneksi internet dengan IP Publik dinamis (berubah-ubah 
 
 3. **Bagaimana cara mencegah penjadwalan backup menguras memori internal (storage) router?**
    <br>→ Dengan menambahkan baris penghapusan file lokal setelah proses upload FTP selesai di dalam skrip, misalnya menambahkan perintah: `/file/remove [find name="$backupFile.backup"]` dan `/file/remove [find name="$backupFile.rsc"]`.
+
+</details>

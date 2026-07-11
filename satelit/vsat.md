@@ -155,6 +155,10 @@ sudah terlihat: terminal *multi-orbit* yang berpindah GEO↔LEO otomatis.
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Dua kantor cabang sama-sama pakai VSAT dan saling telepon. Kenapa
    percakapannya terasa sangat tertunda dibanding menelepon kantor pusat?
    <br>→ **Double hop**: remote→satelit→hub→satelit→remote ≈ 1 detik RTT,
@@ -172,6 +176,9 @@ sudah terlihat: terminal *multi-orbit* yang berpindah GEO↔LEO otomatis.
    dibeli di GEO. Solusinya QoS ketat, atau layanan LEO/teresterial.
 
 ---
+
+
+</details>
 
 ## Kamu sudah sampai di ujung
 

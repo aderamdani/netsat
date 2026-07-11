@@ -160,6 +160,10 @@ dikerjakan perangkat lunak pelacak di [ground station](/satelit/ground-station#m
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Kenapa parabola TV tidak butuh motor, sedangkan dish Starlink "hidup"?
    <br>→ TV memakai satelit **GEO** yang diam relatif terhadap Bumi; Starlink
    di **LEO** melintas cepat sehingga beam harus terus dipindah (phased
@@ -177,3 +181,5 @@ dikerjakan perangkat lunak pelacak di [ground station](/satelit/ground-station#m
 
 Ketinggian sudah dipilih — sekarang bagaimana sinyal benar-benar menempuh
 jarak itu? Lanjut ke [Komunikasi Satelit](/satelit/komunikasi).
+
+</details>

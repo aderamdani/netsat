@@ -163,6 +163,10 @@ perangkat yang tersambung ke internet hari ini.
 
 ## Uji pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Router habis di-reset `no-defaults=yes` — bagaimana masuk lagi?
    → **MAC-telnet / WinBox mode MAC** dari laptop di segmen L2 yang sama.
 2. Kenapa MAC-telnet tidak bisa dipakai dari kantor pusat ke router cabang?
@@ -173,3 +177,5 @@ perangkat yang tersambung ke internet hari ini.
 
 Sudah bisa masuk dengan aman — sekarang kenali alat-alat kerjanya:
 [Manajemen Perangkat](/mikrotik/manajemen).
+
+</details>

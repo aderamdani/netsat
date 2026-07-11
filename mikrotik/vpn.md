@@ -266,6 +266,10 @@ heterogen atau klien yang tidak bisa/tidak mau instal aplikasi: IKEv2.
 
 ## Uji pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Terowongan WireGuard tersambung (handshake sukses) tapi LAN lawan tak
    ter-ping — tersangka pertama? → `allowed-address` tidak memuat subnet LAN
    lawan.
@@ -278,3 +282,5 @@ heterogen atau klien yang tidak bisa/tidak mau instal aplikasi: IKEv2.
 
 Tinggal satu bab: udara dan angkasa —
 [Wireless & Satelit](/mikrotik/wireless-dan-satelit).
+
+</details>

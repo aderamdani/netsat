@@ -171,6 +171,10 @@ bekerja tanpa kamu minta. Lengkapi dengan penjaga kedua di port akses:
 
 ## Uji pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. IP LAN dipasang di `ether2` yang berstatus slave bridge — kenapa jaringan
    kacau? → Alamat harus di **bridge**; port slave bukan lagi entitas L3.
 2. Frame untagged masuk lewat trunk `ether1` (PVID bawaan 1) masuk ke VLAN
@@ -182,3 +186,5 @@ bekerja tanpa kamu minta. Lengkapi dengan penjaga kedua di port akses:
 
 Layer 2 tertata. Sekarang layanan-layanan yang membuat LAN "hidup":
 [DHCP, DNS & NAT](/mikrotik/dhcp-dns-nat).
+
+</details>

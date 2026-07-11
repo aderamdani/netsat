@@ -684,6 +684,10 @@ oleh regulator.
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. ISP ingin menghubungkan 2 BTS di dua pulau dengan traffic stabil 15 Mbps
    per link. SCPC atau MF-TDMA? <br>→ **SCPC** — traffic stabil, jumlah
    link sedikit, butuh CIR 100%, SLA tinggi.
@@ -718,3 +722,5 @@ oleh regulator.
 Lihat [Wireless & Satelit (MikroTik)](/mikrotik/wireless-dan-satelit#routeros-di-jaringan-vsat)
 untuk konfigurasi router di sisi remote VSAT — QoS, DNS cache, dan monitoring.
 :::
+
+</details>

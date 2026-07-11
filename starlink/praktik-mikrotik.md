@@ -125,6 +125,10 @@ add name=starlink-cake-qos target=192.168.88.0/24 \
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Mengapa `persistent-keepalive=25s` penting pada WireGuard penembus CGNAT?
    <br>→ NAT Starlink menghapus pemetaan sesi yang lama diam. Paket kecil
    tiap 25 detik menjaga pemetaan tetap hidup sehingga terowongan bisa terus
@@ -141,3 +145,5 @@ add name=starlink-cake-qos target=192.168.88.0/24 \
 
 Terakhir: saat koneksi bermasalah —
 [Troubleshooting & Diagnostik](/starlink/troubleshooting).
+
+</details>

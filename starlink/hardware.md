@@ -80,6 +80,10 @@ Antena Starlink disuplai lewat **PoE tegangan tinggi** dari dalam ruangan:
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Kenapa Gen 3 dirancang tanpa motor penggerak seperti Gen 2?
    <br>→ Mengurangi titik kegagalan mekanis akibat keausan di cuaca luar
    ruangan, menyederhanakan perangkat, dan menurunkan biaya produksi —
@@ -95,3 +99,5 @@ Antena Starlink disuplai lewat **PoE tegangan tinggi** dari dalam ruangan:
 
 Perangkat sudah dikenal — sekarang paket layanannya:
 [Jenis Layanan & Paket](/starlink/layanan).
+
+</details>

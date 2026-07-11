@@ -106,6 +106,10 @@ yang dipinjam menggandakan jumlah subnet dan membagi dua ukuran masing-masing.
 
 ### Contoh dikerjakan: memecah /24 menjadi 4 subnet
 
+<details>
+<summary>Lihat pembahasan</summary>
+
+
 Diberikan `192.168.10.0/24`, butuh 4 subnet sama besar.
 
 1. 4 subnet → butuh 2 bit tambahan (2² = 4) → prefix baru **/26**.
@@ -117,6 +121,9 @@ Diberikan `192.168.10.0/24`, butuh 4 subnet sama besar.
 | 2 | 192.168.10.64/26 | .65 – .126 | .127 |
 | 3 | 192.168.10.128/26 | .129 – .190 | .191 |
 | 4 | 192.168.10.192/26 | .193 – .254 | .255 |
+
+
+</details>
 
 ### Resep hitung cepat
 
@@ -152,6 +159,10 @@ dulu** supaya tidak terjadi tumpang-tindih.
 
 ### Contoh dikerjakan: kantor dengan 4 kebutuhan
 
+<details>
+<summary>Lihat pembahasan</summary>
+
+
 Blok `172.16.0.0/23` (512 alamat). Kebutuhan:
 kantor A 200 host, kantor B 100 host, Wi-Fi tamu 50 host, dan 2 link
 antar-router.
@@ -172,6 +183,9 @@ dan router hub — hanya butuh 2 alamat. Karena itu /30 (atau /31, RFC 3021)
 adalah standar de facto. Operator VSAT yang melayani ratusan remote menghemat
 ribuan alamat dengan kebiasaan ini.
 :::
+
+
+</details>
 
 ## Supernetting / route aggregation
 
@@ -250,6 +264,10 @@ Satu blok `/48` memiliki 16 bit kosong sebelum mencapai batas standar `/64` (`64
 
 ## Uji pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Berapa host efektif di `10.10.4.0/22`? <br>→ 2¹⁰ − 2 = **1.022**
 2. `203.0.113.77/27` — network dan broadcast-nya? <br>→ block size 32; network
    `203.0.113.64`, broadcast `203.0.113.95`
@@ -266,3 +284,5 @@ Satu blok `/48` memiliki 16 bit kosong sebelum mencapai batas standar `/64` (`64
 
 Selanjutnya: alamat sudah tertata — sekarang bagaimana paket berpindah
 antar-subnet? Lanjut ke [Routing](/networking/routing).
+
+</details>

@@ -44,6 +44,10 @@ FSPL = 20 × log10(d) + 20 × log10(f) + 32,44
 
 ### Contoh kasus: bandingkan LEO vs GEO
 
+<details>
+<summary>Lihat pembahasan</summary>
+
+
 FSPL pada frekuensi Ku-band downlink (12 GHz = 12.000 MHz):
 
 | Orbit | Jarak | Perhitungan | FSPL |
@@ -57,6 +61,9 @@ dari satelit LEO tiba sekitar **4.000 kali lebih kuat** daripada dari GEO.
 Itulah kenapa dish Starlink bisa sekecil kotak pizza, sementara VSAT GEO
 butuh parabola — untuk throughput yang setara.
 :::
+
+
+</details>
 
 ## Akuntansi desibel: Eb/No dan C/N
 

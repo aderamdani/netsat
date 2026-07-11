@@ -585,6 +585,10 @@ Pada NGFW seperti FortiGate atau Palo Alto, identitas bisa langsung dari AD:
 
 ### Contoh urutan aturan yang baik
 
+<details>
+<summary>Lihat pembahasan</summary>
+
+
 ```bash
 # 1. Aturan connection tracking — harus di atas
 /ip/firewall/filter/add chain=input connection-state=established,related action=accept
@@ -605,6 +609,9 @@ Pada NGFW seperti FortiGate atau Palo Alto, identitas bisa langsung dari AD:
 # 5. Default deny — tanpa log
 /ip/firewall/filter/add chain=input action=drop
 ```
+
+
+</details>
 
 ### Kesalahan umum
 
@@ -906,6 +913,10 @@ Firewall itu sendiri adalah target. Amankan akses manajemennya:
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Sebuah server web di DMZ bisa mengakses database di LAN. Apa masalahnya?
    <br>→ DMZ → LAN harusnya **ditolak**. Server DMZ yang dibobol memberi
    akses langsung ke database. Aturannya: DMZ → LAN = `action=drop`.
@@ -935,3 +946,5 @@ Firewall itu sendiri adalah target. Amankan akses manajemennya:
 ::: tip Praktik langsung
 Semua konsep di halaman ini diterapkan di [Firewall & QoS MikroTik](/mikrotik/firewall-qos).
 :::
+
+</details>

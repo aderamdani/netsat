@@ -133,6 +133,10 @@ dan data satelitnya muncul langsung di cloud. Pola pikirnya persis
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Kenapa kualitas LNA/LNB paling menentukan di sisi terima, padahal ia cuma
    satu dari sekian komponen? <br>→ Ia penguat **pertama**: derau yang ia
    tambahkan ikut dikuatkan oleh seluruh rantai setelahnya. Derau yang masuk
@@ -154,3 +158,5 @@ dan data satelitnya muncul langsung di cloud. Pola pikirnya persis
 Semua komponen di halaman ini bekerja pada frekuensi yang diatur ketat oleh
 regulasi internasional. Kenapa Ku dan Ka jadi primadona — dan kenapa hujan
 tropis adalah musuh utamanya? Lanjut ke [Frekuensi & Band](/satelit/frekuensi-band).
+
+</details>

@@ -311,6 +311,10 @@ menuju server SMTP.
 
 ## Uji pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Kamu akan mengubah firewall router di kota lain lewat SSH. Langkah pertama?
    → **Ctrl+X** (safe mode), sehingga salah blokir = otomatis batal.
 2. Backup mana yang bisa dipakai memindahkan konfigurasi ke unit pengganti
@@ -321,3 +325,5 @@ menuju server SMTP.
 
 Alat sudah di tangan. Saatnya konfigurasi jaringan pertama:
 [Interface & IP Address](/mikrotik/interface-ip).
+
+</details>

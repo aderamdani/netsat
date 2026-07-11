@@ -216,6 +216,10 @@ alasan bab [Komunikasi Satelit](/satelit/komunikasi) membahas TCP secara khusus.
 
 ### Contoh dikerjakan: berapa lama unduhan 100 MB?
 
+<details>
+<summary>Lihat pembahasan</summary>
+
+
 Link 100 Mbps, file 100 MB (megabyte, bukan megabit):
 
 1. 100 MB = 800 megabit (1 byte = 8 bit — jebakan klasik!).
@@ -228,7 +232,14 @@ Link 100 Mbps, file 100 MB (megabyte, bukan megabit):
 Pola pikirnya yang penting: **bandwidth menentukan batas atas; latensi dan
 loss menentukan seberapa dekat kamu ke batas itu**.
 
+
+</details>
+
 ## Cek pemahaman
+
+<details>
+<summary>Lihat jawaban</summary>
+
 
 1. Wi-Fi rumahmu termasuk jenis jaringan apa? <br>→ **WLAN** — dan koneksi
    rumah ke ISP adalah bagian dari **WAN**.
@@ -241,6 +252,9 @@ loss menentukan seberapa dekat kamu ke batas itu**.
 4. Link 50 Mbps dengan RTT 600 ms vs link 10 Mbps dengan RTT 20 ms — mana yang
    lebih nyaman untuk video call? <br>→ Yang kedua: video call butuh latensi
    rendah dan stabil; bandwidth 10 Mbps sudah jauh lebih dari cukup.
+
+
+</details>
 
 ## Peta modul ini
 

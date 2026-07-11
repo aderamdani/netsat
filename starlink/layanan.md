@@ -68,6 +68,10 @@ SpaceX mulai menguji **Direct to Cell** — satelit sebagai "BTS terbang":
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Apa keuntungan utama paket Bisnis/Enterprise dibanding Residensial dari
    sudut pandang admin jaringan kantor cabang?
    <br>→ **Priority data** (throughput stabil karena didahulukan di atas
@@ -84,3 +88,5 @@ SpaceX mulai menguji **Direct to Cell** — satelit sebagai "BTS terbang":
    modem atau adaptor tambahan.
 
 Saatnya praktik: [Praktik Integrasi RouterOS](/starlink/praktik-mikrotik).
+
+</details>

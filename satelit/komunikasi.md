@@ -87,6 +87,10 @@ keempatnya dengan biaya.
 
 ### Contoh dikerjakan: neraca mini sebuah downlink Ku
 
+<details>
+<summary>Lihat pembahasan</summary>
+
+
 Angka disederhanakan, tapi bentuk hitungannya persis praktik nyata:
 
 | Komponen neraca | Nilai |
@@ -106,6 +110,9 @@ aman; hujan deras memakan 12 dB → C/N jatuh di bawah minimum → modem
 bila tetap kurang, link putus sampai hujan reda. Sekarang tabel redaman hujan
 di [Frekuensi & Band](/satelit/frekuensi-band#redaman-hujan-isu-nomor-satu-di-indonesia)
 terasa nyata konsekuensinya.
+
+
+</details>
 
 ## Modulasi dan coding
 
@@ -191,6 +198,10 @@ membutuhkan.
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Kenapa uplink dan downlink tak boleh memakai frekuensi yang sama? <br>→
    Pemancar satelit akan menulikan penerimanya sendiri — seperti berbisik
    sambil meniup terompet di telinga sendiri.
@@ -209,3 +220,5 @@ membutuhkan.
 
 Sinyal sudah sampai bumi — sekarang siapa yang menangkap dan mengolahnya?
 Lanjut ke [Ground Station](/satelit/ground-station).
+
+</details>

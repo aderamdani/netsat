@@ -130,6 +130,10 @@ Istilah yang hampir pasti kamu temui di brosur layanan satelit:
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Layanan internet satelit butuh kapasitas sebesar mungkin. Kenapa tidak
    semua pindah ke Ka (atau Q/V) saja? <br>→ Kapasitas naik, tapi **redaman
    hujan** naik lebih cepat — di zona tropis, availability-nya bisa tak layak
@@ -148,3 +152,5 @@ Istilah yang hampir pasti kamu temui di brosur layanan satelit:
 Dengan peta band di tangan, kita siap membedah sistem yang menggabungkan
 semuanya — jaringan piringan kecil yang menyatukan pelosok:
 [VSAT](/satelit/vsat).
+
+</details>

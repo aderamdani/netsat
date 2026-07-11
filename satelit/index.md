@@ -127,6 +127,10 @@ teknologi mana pun, karena dibatasi kecepatan cahaya.
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Kenapa satelit tidak butuh mesin menyala terus untuk tetap di orbit? <br>→
    Orbit adalah **jatuh bebas yang terus meleset**: kecepatan ke samping
    membuat lengkung jatuhnya sejajar lengkung Bumi. Mesin hanya dinyalakan
@@ -140,6 +144,9 @@ teknologi mana pun, karena dibatasi kecepatan cahaya.
 4. Kenapa Indonesia sangat bergantung pada satelit dibanding banyak negara
    lain? <br>→ Geografi: ±17.000 pulau bergunung dan berlaut membuat kabel
    tidak selalu ekonomis — satelit menjangkau semuanya dari satu titik orbit.
+
+
+</details>
 
 ## Peta modul ini
 

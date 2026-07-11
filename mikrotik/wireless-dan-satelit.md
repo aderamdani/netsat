@@ -141,6 +141,10 @@ sederhana sering kali lebih tangguh.
 
 ## Uji pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 1. Kenapa `configuration.country` wajib benar? → Kanal dan daya pancar diatur
    regulasi nasional — salah negara = ilegal sekaligus mengganggu pengguna
    [spektrum](/satelit/frekuensi-band) lain.
@@ -152,6 +156,9 @@ sederhana sering kali lebih tangguh.
    penghematan terbesar justru di paket-paket terkecil.
 
 ---
+
+
+</details>
 
 ## Modul praktik selesai
 

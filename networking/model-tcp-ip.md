@@ -198,6 +198,10 @@ utuh dari ujung ke ujung**. Itulah inti desain internet: *IP over everything*.
 
 ## Cek pemahaman
 
+<details>
+<summary>Lihat jawaban</summary>
+
+
 <QuizBox 
   question="IP tidak menjamin paket sampai. Lalu kenapa unduhan file tidak pernah bolong isinya?"
   :options="['Karena internet kabel sudah sangat andal', 'Karena router menyimpan cadangan paket', 'Karena ada TCP di atasnya yang meminta kirim ulang', 'Karena DNS otomatis memperbaikinya']"
@@ -225,6 +229,9 @@ utuh dari ujung ke ujung**. Itulah inti desain internet: *IP over everything*.
   :correctIndex="2"
   explanation="Mekanisme Congestion Control pada TCP (seperti Slow Start) menaikkan jendela transmisi (window) setiap kali menerima ACK (satu RTT). Jika RTT-nya lama (500ms), maka akselerasinya pun ikut lambat."
 />
+
+
+</details>
 
 ## Lanjut ke mana?
 
