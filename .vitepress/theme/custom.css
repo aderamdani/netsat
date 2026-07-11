@@ -251,3 +251,30 @@
     animation: none !important;
   }
 }
+
+/* ---------- hide sidebar global toggle ---------- */
+
+html.hide-sidebar .VPSidebar {
+  transform: translateX(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (min-width: 960px) {
+  /* Hilangkan padding kiri 272px dari sidebar */
+  html.hide-sidebar .VPContent.has-sidebar {
+    padding-left: 0 !important;
+  }
+  
+  /* Perlebar kontainer teks dengan kompensasi 272px */
+  html.hide-sidebar .VPDoc.has-aside .content-container {
+    max-width: calc(688px + var(--vp-sidebar-width, 272px)) !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  /* Di layar super lebar, pertahankan margin auto VitePress tapi tanpa 272px */
+  html.hide-sidebar .VPContent.has-sidebar {
+    padding-left: calc((100vw - var(--vp-layout-max-width)) / 2) !important;
+  }
+}

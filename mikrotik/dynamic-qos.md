@@ -4,7 +4,7 @@ title: Otomatisasi Antrean QoS Dinamis
 
 # Otomatisasi Antrean QoS Dinamis
 
-Pada bab [Wireless & Satelit](/mikrotik/wireless-dan-satelit#2-qos-adalah-keharusan-bukan-hiasan), kita belajar bahwa batas antrean QoS (`max-limit`) di RouterOS harus dikonfigurasi **sedikit di bawah kapasitas nyata** link satelit. Hal ini memastikan proses antrean terjadi di router kita (yang dapat kita atur prioritasnya), bukan di dalam buffer modem satelit yang tidak bisa kita kontrol (*bufferbloat*).
+Pada bab [Wireless & Satelit](/mikrotik/wireless-dan-satelit#routeros-di-jaringan-vsat), kita belajar bahwa batas antrean QoS (`max-limit`) di RouterOS harus dikonfigurasi **sedikit di bawah kapasitas nyata** link satelit. Hal ini memastikan proses antrean terjadi di router kita (yang dapat kita atur prioritasnya), bukan di dalam buffer modem satelit yang tidak bisa kita kontrol (*bufferbloat*).
 
 Namun, kapasitas link satelit frekuensi tinggi (Ku-band atau Ka-band) bersifat dinamis. Saat cuaca buruk/hujan lebat, fitur ACM satelit akan menurunkan modulasi sehingga kapasitas bandwidth riil menurun (misalnya dari $10\text{ Mbps}$ turun menjadi $3\text{ Mbps}$). Jika QoS kita tetap membatasi di $10\text{ Mbps}$, maka kontrol antrean akan berpindah kembali ke modem satelit, dan trafik kritis seperti VoIP atau database transaksi akan terganggu.
 

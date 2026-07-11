@@ -4,92 +4,113 @@ title: Troubleshooting & Diagnostik Starlink
 
 # Troubleshooting & Diagnostik Starlink
 
-Mengelola koneksi satelit LEO membutuhkan pendekatan diagnostik yang berbeda dengan koneksi internet kabel biasa. Karena satelit berada di luar angkasa dan bergerak sangat cepat, gangguan bisa bersumber dari faktor lingkungan (hambatan pandangan), cuaca ekstrem, kerusakan kabel luar ruangan, hingga kelebihan beban catu daya.
+Mendiagnosis satelit LEO berbeda dengan internet kabel: satelit bergerak
+cepat, antena berada di luar ruangan, dan gangguan bisa datang dari halangan
+pandangan, cuaca, kabel, sampai catu daya. Halaman ini merangkum pola gejala
+→ penyebab → solusi yang paling sering ditemui di lapangan — pendekatannya
+tetap [berpikir per lapisan](/networking/model-osi#berpikir-per-lapisan-saat-troubleshooting),
+dimulai dari yang paling fisik.
 
-Halaman ini membahas panduan troubleshooting dan pembacaan parameter diagnostik pada terminal Starlink.
+## 1. Hambatan fisik (obstructions) — penyebab utama sinyal drop
 
----
-
-## 1. Hambatan Fisik (Obstructions) — Penyebab Utama Sinyal Drop
-
-Satelit LEO melintasi langit dengan kecepatan tinggi. Jika ada objek kecil (seperti pucuk pohon, tiang jemuran, atau ujung atap gedung) menghalangi garis pandang antena (*Line of Sight*), koneksi akan terputus selama 1 hingga 5 detik setiap kali satelit melintas di balik objek tersebut.
+Satelit LEO melintasi langit dengan cepat (±27.000 km/jam). Objek kecil yang
+menghalangi garis pandang antena — pucuk pohon, tiang, ujung atap — memutus
+koneksi 1–5 detik **setiap kali** ada satelit melintas di baliknya.
 
 ```text
-       Satelit LEO Meluncur Cepat (27.000 km/h)
+       Satelit LEO meluncur cepat (±27.000 km/jam)
           ● ──────► ● ──────► [ ● HILANG SINYAL ] ──────► ●
                                   │
-                                ┌─▼─┐  Pucuk Pohon menghalangi
+                                ┌─▼─┐  Pucuk pohon menghalangi
                                 │ 🌳│  garis pandang antena
                                 └───┘
                                   ▲
-                                 / \  (Sudut elevasi antena)
+                                 / \  (sudut pandang antena)
                                 ┌───┐
                                 │Ant│ Antena Starlink
                                 └───┘
 ```
 
-### Karakteristik Gejala Hambatan:
-*   Speedtest normal dan kencang saat berjalan, tetapi terjadi **RTO (Request Time Out)** konstan setiap beberapa menit sekali.
-*   Panggilan VoIP terputus sejenak atau game online mengalami *disconnect*.
+**Gejala khas:** speedtest kencang, tapi **RTO berkala** setiap beberapa
+menit; VoIP terputus sejenak; game online *disconnect*.
 
-### Solusi & Diagnostik:
-1.  Buka aplikasi Starlink, masuk ke menu **Obstructions**.
-2.  Lihat peta 3D hambatan. Area berwarna merah menunjukkan objek yang menghalangi.
-3.  Pindahkan antena ke posisi yang lebih tinggi (menggunakan pipa tiang tambahan) agar mendapatkan sudut pandang langit $110^\circ - 140^\circ$ yang bersih total tanpa penghalang.
+**Solusi & diagnostik:**
 
----
+1. Buka aplikasi Starlink → menu **Obstructions**; area merah pada peta 3D =
+   objek penghalang.
+2. Pindahkan/tinggikan antena (pipa tiang tambahan) sampai sudut pandang
+   langit 110°–140° benar-benar bersih.
 
-## 2. Gangguan Kabel & Konektor (Cable Connection Failures)
+## 2. Gangguan kabel & konektor
 
-Kabel bawaan Starlink menyalurkan daya PoE tegangan tinggi sekaligus data gigabit ethernet. Konektor khusus Starlink Gen 2 rawan longgar atau teroksidasi oleh kelembapan udara luar ruangan.
+Kabel Starlink membawa daya PoE tegangan tinggi sekaligus data gigabit.
+Konektor proprietary Gen 2 rawan longgar dan teroksidasi kelembapan.
 
-### Gejala Kabel Bermasalah:
-*   Status ethernet di port WAN MikroTik berulang kali berubah dari *UP* menjadi *DOWN* (link flapping).
-*   Kecepatan negosiasi port ethernet turun dari `1 Gbps` menjadi `10 Mbps` atau `100 Mbps`.
-*   Muncul notifikasi **"Starlink Disconnected"** atau **"Cable Ping Drop"** di aplikasi Starlink.
+**Gejala khas:**
 
-### Solusi & Diagnostik:
-1.  Periksa ujung konektor kabel yang menancap di bawah antena dan di router bawaan. Bersihkan dari debu atau air, lalu colokkan kembali hingga berbunyi klik kencang.
-2.  Gunakan pelindung air (*waterproof grease*) atau isolasi karet khusus pada sambungan luar ruangan.
-3.  Lakukan ping ke IP manajemen antena (`192.168.100.1`) dari sisi MikroTik. Jika latensi ping lokal ini di atas `5 ms` atau banyak paket hilang, dapat dipastikan kabel atau adaptor ethernet mengalami kerusakan fisik.
+- Port WAN MikroTik bolak-balik *up/down* (link flapping).
+- Negosiasi port turun dari 1 Gbps ke 100/10 Mbps.
+- Notifikasi **"Starlink Disconnected"** / **"Cable Ping Drop"** di aplikasi.
 
----
+**Solusi & diagnostik:**
 
-## 3. Masalah Catu Daya & Overload Thermal
+1. Periksa dan bersihkan konektor di bawah antena dan di router; colok ulang
+   sampai berbunyi klik.
+2. Lindungi sambungan luar ruangan dengan gel kedap air/isolasi karet.
+3. Ping IP manajemen antena dari MikroTik: `/ping 192.168.100.1`. Latensi
+   lokal >5 ms atau ada paket hilang = kabel/adaptor bermasalah — ini ping
+   segmen kabel saja, belum menyentuh angkasa.
 
-Satelit Starlink memiliki fitur **Snow Melt Mode** (pemanas otomatis) untuk memanaskan permukaan antena agar salju atau air hujan lebat tidak menumpuk dan meredam sinyal. 
+## 3. Masalah catu daya & thermal
 
-Saat mode ini aktif, konsumsi daya antena melonjak tajam:
-*   Tipe Standard Gen 3: Naik hingga **$100\text{ W}$**.
-*   Tipe Flat High Performance: Naik hingga **$150\text{ W}$**.
+Fitur **Snow Melt Mode** memanaskan permukaan antena agar salju/air tidak
+menumpuk. Saat aktif, konsumsi daya melonjak: Gen 3 hingga ±100 W, Flat High
+Performance hingga ±150 W.
 
-### Gejala Masalah Daya:
-*   Antena tiba-tiba melakukan restart (*boot looping*) saat terjadi hujan lebat atau cuaca dingin.
-*   Modem mati total karena adaptor PoE kelebihan beban (*overcurrent*).
+**Gejala khas:** antena restart sendiri (*boot loop*) saat hujan lebat;
+adaptor PoE mati karena *overcurrent*.
 
-### Solusi & Diagnostik:
-1.  Pastikan kapasitas catu daya UPS di lokasi remote memadai (minimal menyuplai daya konstan di atas kebutuhan puncak antena).
-2.  Pada aplikasi Starlink, ubah setelan **Snow Melt Mode** dari *Automatic* menjadi *Off* jika Anda berada di wilayah tropis Indonesia yang tidak bersalju, untuk menghemat daya dan mencegah panas berlebih pada komponen internal antena (*thermal protection*).
+**Solusi & diagnostik:**
 
----
+1. Pastikan UPS/catu daya sanggup memikul kebutuhan **puncak** antena, bukan
+   rata-ratanya.
+2. Di wilayah tropis Indonesia yang tak bersalju, set **Snow Melt Mode** ke
+   *Off* — menghemat daya dan mengurangi panas komponen.
 
-## 4. Checklist Diagnostik Cepat
+## 4. Checklist diagnostik cepat
 
-| Gejala Masalah | Kemungkinan Penyebab | Tindakan Perbaikan |
+| Gejala | Kemungkinan penyebab | Tindakan |
 | --- | --- | --- |
-| Ping RTO berkala setiap 5-10 menit | Terjadi hambatan fisik (*Obstruction*) | Pindahkan antena ke tempat yang lebih tinggi |
-| Port interface WAN sering Up/Down | Kabel longgar atau teroksidasi air | Bersihkan konektor, gunakan isolasi karet |
-| Latensi lokal ke `192.168.100.1` tinggi/loss | Kerusakan kabel atau adaptor ethernet | Ganti adaptor ethernet atau kabel Starlink |
-| Antena reboot sendiri saat hujan lebat | Catu daya drop / overload thermal | Pasang UPS stabil, matikan fitur Snow Melt |
-| Kecepatan internet tiba-tiba turun drastis | Kuota Prioritas habis (Enterprise) | Cek sisa kuota prioritas di portal Starlink |
+| Ping RTO berkala tiap beberapa menit | Hambatan fisik (*obstruction*) | Tinggikan/pindahkan antena |
+| Port WAN sering up/down | Kabel longgar / teroksidasi | Bersihkan konektor, isolasi kedap air |
+| Latensi ke `192.168.100.1` tinggi/loss | Kabel atau adaptor ethernet rusak | Ganti adaptor/kabel |
+| Antena reboot saat hujan lebat | Catu daya drop / overload | UPS memadai, matikan Snow Melt |
+| Kecepatan tiba-tiba anjlok | Kuota Priority habis (Enterprise) | Cek sisa kuota di portal |
+
+## Cek pemahaman
+
+1. Mengapa pucuk pohon yang menghalangi sebagian kecil langit bisa memutus
+   koneksi total beberapa detik berulang kali?
+   <br>→ Satelit LEO bergerak cepat melintasi langit; setiap kali lintasannya
+   tepat di balik penghalang, sinyal terblokir sampai satelit berikutnya
+   muncul di area langit yang bersih.
+2. Bagaimana mendeteksi kerusakan kabel Starlink hanya dengan ping dari
+   RouterOS?
+   <br>→ Ping `192.168.100.1` (IP manajemen antena). Jalur ini murni kabel
+   lokal — latensi >5 ms atau packet loss berarti kabel/konektor/adaptor
+   bermasalah, bukan satelitnya.
+3. Mengapa Snow Melt Mode disarankan dimatikan di Indonesia?
+   <br>→ Tidak ada salju yang perlu dicairkan; mematikannya menghemat daya
+   (mencegah lonjakan hingga ±150 W) dan mengurangi risiko panas berlebih.
 
 ---
 
-## Cek Pemahaman
+## Modul Starlink selesai
 
-1.  Mengapa pucuk pohon yang hanya menghalangi sebagian kecil langit dapat menyebabkan koneksi Starlink terputus total selama beberapa detik secara berulang?
-    <br>→ Karena satelit LEO bergerak sangat cepat melintasi langit. Ketika jalur lintasan satelit tersebut tepat berada di balik pucuk pohon yang menghalangi, sinyal gelombang mikro terblokir total hingga satelit berikutnya muncul di area langit yang bersih.
-2.  Bagaimana cara mendeteksi kerusakan fisik pada kabel Starlink menggunakan perintah ping sederhana dari MikroTik RouterOS?
-    <br>→ Lakukan ping ke IP manajemen antena (`192.168.100.1`). Jika latensi ping lokal ini berfluktuasi tinggi ($>5\text{ ms}$) atau mengalami *packet loss*, berarti terjadi kegagalan transmisi data fisik pada kabel atau konektor ethernet.
-3.  Mengapa penonaktifan fitur *Snow Melt Mode* direkomendasikan pada instalasi Starlink di wilayah tropis seperti Indonesia?
-    <br>→ Karena di wilayah tropis tidak ada salju, sehingga mematikan fitur ini akan menghemat konsumsi daya listrik antena (mencegah lonjakan daya hingga $150\text{ W}$) dan meminimalkan resiko panas berlebih (*overheating*) pada sirkuit internal antena.
+Kamu kini memegang gambaran utuh: [mengapa LEO](/starlink/) mengubah
+permainan latensi, [bagaimana arsitekturnya](/starlink/arsitektur) bekerja,
+[perangkat apa](/starlink/hardware) yang dipasang, [paket mana](/starlink/layanan)
+yang dipilih, dan [cara mengintegrasikannya](/starlink/praktik-mikrotik)
+dengan RouterOS. Bandingkan dengan dunia [VSAT GEO](/satelit/vsat) di
+[LEO vs VSAT vs Starlink](/satelit/leo-vsat-starlink) — lalu pilih alat yang
+tepat untuk masalah yang tepat.

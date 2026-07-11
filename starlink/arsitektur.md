@@ -4,83 +4,116 @@ title: Arsitektur Jaringan Starlink
 
 # Arsitektur Jaringan Starlink
 
-Jaringan Starlink adalah salah satu infrastruktur siber paling kompleks di dunia. Jaringan ini memadukan teknologi komunikasi nirkabel berbasis bumi dengan konstelasi satelit dinamis yang bergerak cepat di ruang angkasa.
+Jaringan Starlink memadukan komunikasi nirkabel di bumi dengan konstelasi
+satelit yang bergerak cepat di angkasa. Untuk mengikuti perjalanan data dari
+laptop di pedalaman sampai server di belahan dunia lain, kita bedah tiga
+segmen utamanya — pembagian yang sama dengan
+[tiga segmen sistem satelit](/satelit/#tiga-segmen-sebuah-sistem-satelit)
+di modul teori: **user segment**, **space segment**, dan **ground segment**.
 
-Untuk memahami bagaimana data dikirim dari laptop kamu di pedalaman hingga sampai ke server internet di belahan dunia lain, kita perlu membedah tiga segmen utama arsitektur Starlink: **User Segment**, **Space Segment**, dan **Ground Segment**.
-
----
-
-## Tiga Segmen Utama Jaringan
+## Tiga segmen utama jaringan
 
 ```text
        [ SPACE SEGMENT ]
        ● [Satelit LEO] ◄═════ Laser (ISL) ═════► ● [Satelit LEO]
         ▲                                          │
         │ Ku-band / Ka-band                        │ Ka-band / V-band
-        │ (Frekuensi Sinyal)                       ▼
+        │ (frekuensi sinyal)                       ▼
  ┌──────┴─────────┐                         ┌──────┴──────────┐
  │ USER SEGMENT   │                         │ GROUND SEGMENT  │
- │ Antena Remote  │                         │ Teleport/Gateway│
+ │ Antena remote  │                         │ Teleport/Gateway│
  └──────┬─────────┘                         └──────┬──────────┘
-        │ LAN                                      │ Serat Optik
-   [ Laptop ]                                  [ Internet POP / ]
-                                               [  ISP Backbone  ]
+        │ LAN                                      │ Serat optik
+   [ Laptop ]                                  [ Internet POP /
+                                                 ISP backbone ]
 ```
 
-### 1. User Segment (Terminal Pengguna)
-Segmen ini terdiri dari perangkat keras yang berada di lokasi pelanggan:
-*   **User Terminal (UT):** Antena parabola datar berteknologi *Phased Array* (larik berfase) yang melacak satelit secara elektronik.
-*   **Wi-Fi Router:** Mengubah sinyal dari terminal menjadi jaringan lokal (kabel ethernet atau nirkabel Wi-Fi) untuk komputer, HP, atau router kustom pihak ketiga (seperti MikroTik).
+### 1. User segment (terminal pengguna)
 
-### 2. Space Segment (Konstelasi Satelit)
-Satelit Starlink bertindak sebagai router terbang di ruang angkasa:
-*   **Phased Array Antennas:** Mengirimkan *beam* (berkas sinyal) terfokus ke ribuan terminal pengguna di bawahnya secara dinamis.
-*   **Laser Inter-Satellite Links (ISL):** Satelit Starlink dilengkapi pemancar laser khusus. Laser ini memungkinkan satelit untuk berkomunikasi dan mengirimkan data secara langsung antar satelit di luar angkasa dengan kecepatan cahaya, tanpa perlu terus-menerus turun ke stasiun bumi.
+Perangkat di lokasi pelanggan:
 
-### 3. Ground Segment (Stasiun Bumi & Gateway)
-Menghubungkan jaringan luar angkasa dengan internet fisik bumi:
-*   **Gateway / Teleport:** Antena bumi berukuran besar milik Starlink yang terhubung langsung ke infrastruktur serat optik internet global. Satelit LEO mengirimkan data yang diterimanya ke gateway terdekat.
-*   **Point of Presence (POP):** Pusat interkoneksi di mana jaringan Starlink terhubung langsung dengan operator telekomunikasi lokal (ISP) dan penyedia konten global (seperti Google, Cloudflare, AWS).
+- **User Terminal (UT)** — antena datar berteknologi **phased array** yang
+  melacak satelit secara elektronik, tanpa motor pelacak — prinsipnya di
+  [Melacak satelit](/satelit/ground-station#melacak-satelit).
+- **Wi-Fi router** — membagikan koneksi ke LAN (kabel/nirkabel), atau
+  digantikan router pihak ketiga seperti
+  [MikroTik](/starlink/praktik-mikrotik).
 
----
+### 2. Space segment (konstelasi satelit)
 
-## Mekanisme Laser Antar-Satelit (Laser ISL)
+Satelit Starlink adalah router terbang:
 
-Pada satelit LEO generasi awal (atau sistem satelit komersial biasa), satelit hanya bertindak sebagai "cermin pantul sederhana" (*bent-pipe architecture*). Sinyal dari terminal pengguna harus langsung dipantulkan ke gateway di bumi yang berada dalam jangkauan pandang satelit yang sama.
+- **Phased array antennas** — memancarkan *beam* terfokus ke ribuan terminal
+  di bawahnya secara dinamis (konsep *spot beam* yang sama dengan
+  [HTS](/satelit/komunikasi#beam-dari-satu-benua-ke-titik-titik-kecil)).
+- **Laser inter-satellite links (ISL)** — pemancar laser antar-satelit:
+  data berpindah langsung di angkasa tanpa harus turun-naik ke stasiun bumi
+  di setiap lompatan.
 
-Jika pengguna berada di tengah samudra lepas atau di kutub utara yang tidak memiliki stasiun bumi dalam radius $1.000\text{ km}$, koneksi internet tidak akan bisa berjalan.
+### 3. Ground segment (stasiun bumi & gateway)
 
-Starlink memecahkan masalah ini dengan **Space Laser Routing**:
+Menyambungkan angkasa ke internet fisik:
+
+- **Gateway / teleport** — antena bumi Starlink yang menempel ke serat optik
+  global; satelit menurunkan trafik ke gateway terdekat. Perannya persis
+  [teleport/gateway](/satelit/ground-station#tiga-wajah-segmen-bumi) di modul
+  teori.
+- **Point of Presence (POP)** — titik interkoneksi dengan ISP lokal dan
+  penyedia konten global (Google, Cloudflare, AWS).
+
+## Mekanisme laser antar-satelit (Laser ISL)
+
+Satelit komunikasi klasik bekerja sebagai *bent pipe* — cermin pantul: sinyal
+terminal harus langsung dipantulkan ke gateway yang berada dalam jangkauan
+pandang satelit yang **sama**. Pengguna di tengah samudra tanpa gateway dalam
+radius ±1.000 km berarti tidak ada koneksi.
+
+Starlink memecahkannya dengan meneruskan data **antar-satelit** memakai laser:
 
 ```text
- [Terminal di Kapal] ──► [Satelit LEO A] ── Laser ──► [Satelit LEO B] ── Laser ──► [Satelit LEO C] ──► [Gateway Bumi]
+ [Terminal di kapal] ──► [Satelit A] ─laser─► [Satelit B] ─laser─► [Satelit C] ──► [Gateway bumi]
 ```
 
-1.  Terminal di tengah samudra mengirimkan data ke **Satelit LEO A**.
-2.  Satelit A mengarahkan lasernya ke **Satelit LEO B** yang berada di depannya, lalu diteruskan ke **Satelit LEO C**.
-3.  Satelit C, yang sudah berada di dekat daratan, memancarkan sinyal turun ke **Gateway Bumi** lokal yang terhubung ke jaringan internet serat optik.
-4.  Ini memungkinkan cakupan internet global 100% tanpa batas geografis.
+1. Terminal di tengah samudra memancar ke satelit terdekat (A).
+2. Satelit A meneruskan lewat laser ke B, lalu C, yang sudah dekat daratan.
+3. Satelit C menurunkan trafik ke gateway yang tersambung serat optik.
 
----
+Hasilnya cakupan benar-benar global — laut lepas dan daerah kutub sekalipun —
+dan konstelasi ini membentuk jaringan
+[mesh yang benar-benar melakukan routing di angkasa](/networking/routing#routing-dan-satelit).
 
-## Aliran Perjalanan Data (Data Flow)
+## Aliran perjalanan data
 
-Mari kita ikuti bagaimana sebuah paket data (misalnya saat kamu membuka halaman web) berjalan melalui jaringan Starlink:
+Perjalanan satu permintaan HTTP dari laptop lewat Starlink:
 
-1.  **Laptop ke Antena:** Laptop mengirimkan request HTTP. Paket melewati LAN lokal menuju antena Starlink (*Dish*).
-2.  **Transmisi Udara (Uplink):** Antena melakukan modulasi sinyal dan memancarkannya pada frekuensi **Ku-band** (sekitar $14\text{ GHz}$) ke satelit Starlink terdekat yang berada di atas langit ($550\text{ km}$).
-3.  **Transit Angkasa:** Satelit memproses paket. Jika satelit berada dalam jangkauan gateway bumi terdekat, data langsung dikirim ke gateway. Jika tidak, data dikirim antar satelit melalui **Link Laser** luar angkasa hingga mencapai satelit yang berada di dekat stasiun bumi.
-4.  **Turun ke Bumi (Downlink):** Satelit memancarkan data ke Gateway Bumi menggunakan frekuensi **Ka-band** atau **V-band**.
-5.  **Koneksi Backbone:** Gateway meneruskan paket melalui serat optik bawah tanah menuju **Point of Presence (POP)** terdekat, lalu langsung ke server tujuan (misal server Google).
-6.  **Paket Balasan:** Balasan dari server tujuan dikirim kembali melalui jalur yang sama dalam waktu total hanya sekitar **$30 - 45\text{ ms}$**.
+1. **Laptop → antena** — paket melewati LAN menuju *dish*.
+2. **Uplink** — antena memodulasi dan memancar pada **Ku-band** (±14 GHz) ke
+   satelit di ±550 km — pembagian
+   [uplink/downlink](/satelit/komunikasi#uplink-dan-downlink) yang sama dengan
+   satelit mana pun.
+3. **Transit angkasa** — satelit meneruskan langsung ke gateway bila
+   terjangkau; bila tidak, melompat antar-satelit lewat laser ISL.
+4. **Downlink** — satelit menurunkan trafik ke gateway pada **Ka-band** atau
+   **V-band** (kapasitas besar, [peta band](/satelit/frekuensi-band#peta-band-satelit)).
+5. **Backbone** — gateway meneruskan lewat serat optik ke **POP** terdekat,
+   lalu ke server tujuan.
+6. **Balasan** — menempuh jalur sebaliknya. Total RTT hanya **±30–45 ms**.
 
----
+## Cek pemahaman
 
-## Cek Pemahaman
+1. Apa beda arsitektur *bent pipe* tradisional dengan arsitektur Starlink
+   ber-laser ISL?
+   <br>→ Bent pipe hanya memantulkan sinyal — terminal dan gateway harus
+   berada di bawah satelit yang sama. Dengan laser ISL, data diteruskan
+   antar-satelit di angkasa, sehingga layanan tetap hidup di area tanpa
+   gateway terdekat (tengah samudra, kutub).
+2. Frekuensi apa yang dipakai Starlink di udara, dan untuk apa?
+   <br>→ **Ku-band** antara terminal pengguna dan satelit; **Ka-band** dan
+   **V-band** untuk jalur berkapasitas besar antara satelit dan gateway bumi.
+3. Di mana titik pertemuan pertama trafik Starlink dengan internet serat
+   optik komersial?
+   <br>→ Di **gateway/teleport**, yang meneruskannya ke **POP** untuk
+   interkoneksi dengan ISP lokal dan penyedia konten.
 
-1.  Apa perbedaan antara arsitektur satelit *bent-pipe* tradisional dengan arsitektur Starlink yang didukung teknologi *Laser Inter-Satellite Links (ISL)*?
-    <br>→ Satelit *bent-pipe* hanya memantulkan sinyal langsung dari stasiun bumi ke terminal pengguna dalam satu waktu (keduanya harus berada di bawah jangkauan satelit yang sama). Sementara dengan Laser ISL, satelit Starlink dapat meneruskan data antar satelit di luar angkasa menggunakan sinar laser, memungkinkan layanan internet aktif di area tanpa stasiun bumi terdekat (seperti di tengah samudera).
-2.  Frekuensi apa saja yang digunakan Starlink untuk jalur komunikasi udara, dan apa peruntukannya?
-    <br>→ Starlink menggunakan frekuensi **Ku-band** untuk komunikasi antara User Terminal (antena remote pelanggan) dengan satelit LEO, serta menggunakan frekuensi **Ka-band** dan **V-band** untuk komunikasi berkapasitas besar antara satelit dengan Gateway Bumi (Teleport).
-3.  Di manakah titik pertemuan pertama antara trafik dari jaringan satelit Starlink dengan jaringan internet fiber optik komersial milik operator bumi?
-    <br>→ Titik pertemuan pertamanya adalah di **Gateway Bumi / Teleport**, yang kemudian lalu lintas datanya diteruskan ke **Point of Presence (POP)** untuk berinterkoneksi langsung dengan penyedia internet lokal (ISP) dan server penyedia konten.
+Berikutnya: perangkat yang dipegang pelanggan —
+[Perangkat Keras](/starlink/hardware).

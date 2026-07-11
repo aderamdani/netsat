@@ -8,6 +8,8 @@ import '@fontsource/ibm-plex-mono/500.css'
 
 import './custom.css'
 
+import Layout from './Layout.vue'
+
 import HomeHero from './components/HomeHero.vue'
 import ModuleGrid from './components/ModuleGrid.vue'
 import TelemetryStrip from './components/TelemetryStrip.vue'
@@ -20,6 +22,7 @@ import TcpInteractiveDemo from './components/TcpInteractiveDemo.vue'
 
 export default {
   extends: DefaultTheme,
+  Layout: Layout,
   enhanceApp({ app, router }) {
     app.component('HomeHero', HomeHero)
     app.component('ModuleGrid', ModuleGrid)
@@ -38,12 +41,26 @@ export default {
       router.onBeforeRouteChange = () => {
         // Prevent overlapping transitions
         if (resolveTransition) return
-        
+
         const transition = document.startViewTransition(() => {
-          return new Promise(resolve => {
+          return new Promise<void>((resolve) => {
             resolveTransition = resolve
+            // pengaman: kalau onAfterRouteChanged tak pernah menembak
+            // (navigasi dibatalkan/hard reload), jangan biarkan callback
+            // menggantung sampai Chrome meng-abort transisi
+            setTimeout(() => {
+              if (resolveTransition) {
+                resolveTransition()
+                resolveTransition = null
+              }
+            }, 1000)
           })
         })
+        // transisi yang dibatalkan (navigasi cepat/keras) me-reject promise;
+        // tanpa catch, ini jadi uncaught error di console
+        transition.ready.catch(() => {})
+        transition.finished.catch(() => {})
+        transition.updateCallbackDone.catch(() => {})
       }
 
       router.onAfterRouteChanged = () => {

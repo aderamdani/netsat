@@ -4,105 +4,108 @@ title: Praktik Integrasi RouterOS
 
 # Praktik Integrasi RouterOS
 
-Mengintegrasikan terminal Starlink dengan MikroTik RouterOS memberikan kendali penuh kepada administrator jaringan untuk mengelola distribusi alamat IP, keamanan firewall, dan manajemen bandwidth di lingkungan lokal.
+Mengganti router bawaan Starlink dengan MikroTik memberi kendali penuh atas
+alamat IP, firewall, dan manajemen bandwidth di sisi LAN — semua bekal
+[modul MikroTik](/mikrotik/) berlaku di sini. Halaman ini berisi konfigurasi
+praktis RouterOS v7 untuk link Starlink.
 
-Halaman ini berisi panduan konfigurasi copy-paste praktis menggunakan RouterOS v7 untuk mengoptimalkan link Starlink.
+## 1. Konfigurasi awal & bypass mode
 
----
+Matikan dulu fungsi routing di router bawaan Starlink:
 
-## 1. Konfigurasi Awal & Bypass Mode
+1. Buka aplikasi Starlink → **Settings** → **Bypass Starlink Router**.
+2. Hubungkan kabel ethernet dari Starlink (via Ethernet Adapter di Gen 2,
+   atau port langsung di Gen 3) ke **ether1** MikroTik (konvensi WAN
+   [modul ini](/mikrotik/#konvensi-modul-ini)).
 
-Sebelum menghubungkan kabel fisik, matikan fungsi routing pada router bawaan Starlink:
-1.  Buka aplikasi Starlink di ponsel Anda.
-2.  Masuk ke **Settings** → Pilih **Bypass Starlink Router**.
-3.  Hubungkan kabel ethernet dari Starlink (melalui Ethernet Adapter atau port langsung Gen 3) ke port **ether1** MikroTik (kita asumsikan `ether1` adalah port WAN).
-
-### Konfigurasi IPv4 DHCP Client di RouterOS
-Minta alamat IP dari terminal Starlink secara otomatis:
+Lalu minta IP secara otomatis:
 
 ```routeros
 /ip dhcp-client add interface=ether1 disabled=no use-peer-dns=yes use-peer-ntp=yes
 ```
 
-Periksa apakah RouterOS mendapatkan IP kelas `100.64.0.0/10` (CGNAT) pada paket Residensial, atau IP Publik Dinamis pada paket Enterprise melalui menu `/ip/dhcp-client/print`.
+Periksa `/ip/dhcp-client/print`: paket Residensial menerima IP
+[CGNAT `100.64.0.0/10`](/networking/subnetting#alamat-khusus-yang-wajib-hafal);
+paket Bisnis/Enterprise menerima IP publik dinamis.
 
----
+## 2. Rute statis akses telemetri aplikasi Starlink
 
-## 2. Rute Statis Akses Telemetri Aplikasi Starlink
-
-Meskipun dalam mode bypass, antena Starlink memiliki IP internal **`192.168.100.1`** yang memancarkan telemetri (latensi, hambatan, dll.) ke aplikasi Starlink di HP client.
-
-Tambahkan rute statis agar client di jaringan LAN MikroTik tetap dapat membuka aplikasi Starlink:
+Dalam mode bypass pun, antena tetap punya IP internal **`192.168.100.1`**
+yang menyajikan telemetri (latensi, obstruction, dll.) ke aplikasi Starlink.
+Tambahkan rute statis agar klien LAN tetap bisa membukanya:
 
 ```routeros
-/ip route add dst-address=192.168.100.1/32 gateway=ether1 distance=1 comment="Akses Aplikasi Starlink"
+/ip route add dst-address=192.168.100.1/32 gateway=ether1 distance=1 comment="Akses aplikasi Starlink"
 ```
 
----
+## 3. Konfigurasi IPv6 prefix delegation
 
-## 3. Konfigurasi IPv6 Prefix Delegation
+Starlink mendukung IPv6 native. Dengan **DHCPv6 Prefix Delegation (PD)**,
+seisi LAN mendapat alamat global tanpa NAT (teori dasarnya di
+[IPv6 di RouterOS](/mikrotik/ipv6)):
 
-Starlink mendukung IPv6 secara native. Kita dapat menggunakan metode **DHCPv6 Prefix Delegation (PD)** agar semua client di LAN otomatis mendapatkan IP global IPv6 asli tanpa NAT.
-
-### Langkah 1: Minta Prefiks dari Starlink
-Minta prefiks IPv6 dan simpan ke pool bernama `starlink-v6-pool`:
+**Langkah 1 — minta prefix dari Starlink**, simpan ke pool:
 
 ```routeros
 /ipv6 dhcp-client add interface=ether1 pool-name=starlink-v6-pool request=prefix prefix-hint=::/56 disabled=no
 ```
 
-### Langkah 2: Distribusikan ke Interface LAN (SLAAC)
-Pasang alamat IPv6 dari pool tersebut ke interface LAN (misal: `bridge1`) dan aktifkan iklan IP (*Router Advertisement*):
+**Langkah 2 — distribusikan ke LAN (SLAAC):**
 
 ```routeros
 /ipv6 address add address=::1/64 from-pool=starlink-v6-pool interface=bridge1 advertise=yes
 ```
 
-Dengan `advertise=yes`, client LAN akan otomatis membuat IP global IPv6 mereka sendiri secara dinamis menggunakan protokol SLAAC.
+Dengan `advertise=yes`, klien LAN membuat alamat global IPv6-nya sendiri
+lewat SLAAC.
 
----
+## 4. Workaround CGNAT (port forwarding via WireGuard)
 
-## 4. Workaround CGNAT (Port Forwarding via WireGuard)
-
-Karena paket residensial menggunakan CGNAT, port forwarding IPv4 langsung di MikroTik tidak akan bekerja. Solusi praktisnya adalah melakukan koneksi keluar (tunneling) menuju VPS eksternal ber-IP Publik:
+Di paket residensial ber-CGNAT,
+[dst-nat/port-forward biasa](/mikrotik/dhcp-dns-nat#dst-nat-membuka-layanan-ke-dalam-port-forward)
+tidak mungkin — koneksi masuk mati di NAT milik Starlink. Solusinya membalik
+arah: router **membuka koneksi keluar** ke VPS ber-IP publik, lalu trafik
+masuk menumpang terowongan itu:
 
 ```text
- [ Client di Internet ] ──► [ VPS IP Publik: 203.0.113.5 ]
+ [ Klien di internet ] ──► [ VPS IP publik: 203.0.113.5 ]
                                       │
-                         === WIREGUARD TUNNEL === (Keluar menembus CGNAT)
+                         === WIREGUARD TUNNEL === (keluar menembus CGNAT)
                                       │
                                       ▼
                                  [ RouterOS ] (WAN IP: 100.64.x.x)
                                       │
                                       ▼
-                              [ Web Server LAN ]
+                              [ Web server LAN ]
 ```
 
-### Konfigurasi WireGuard di RouterOS:
+Konfigurasi WireGuard di RouterOS (dasar-dasarnya di
+[bab VPN](/mikrotik/vpn#wireguard-site-to-site)):
 
 ```routeros
 # 1. Buat interface WireGuard
 /interface wireguard add name=wg-cgnat-bypass listen-port=13231
 
-# 2. Tambahkan alamat IP WireGuard yang diberikan oleh VPS (misal: 10.0.0.2/24)
+# 2. Alamat IP terowongan yang dijatah VPS (mis. 10.0.0.2/24)
 /ip address add address=10.0.0.2/24 interface=wg-cgnat-bypass
 
-# 3. Hubungkan Peer ke VPS Publik
+# 3. Hubungkan peer ke VPS publik
 /interface wireguard peers add interface=wg-cgnat-bypass \
   public-key="MASUKKAN_PUBLIC_KEY_VPS_ANDA=" \
   endpoint-address=203.0.113.5 endpoint-port=51820 \
   allowed-address=0.0.0.0/0 persistent-keepalive=25s
 ```
 
-*   `persistent-keepalive=25s`: Sangat penting untuk mengirimkan paket *keepalive* setiap 25 detik agar tabel translasi NAT di ISP Starlink tidak menghapus jalur koneksi keluar kita.
+- `persistent-keepalive=25s` — denyut tiap 25 detik agar pemetaan NAT di
+  jaringan Starlink tidak kedaluwarsa; tanpa ini terowongan "tertidur" dan
+  koneksi dari luar gagal masuk.
 
----
+## 5. Mengatasi bandwidth fluktuatif dengan QoS CAKE
 
-## 5. Mengatasi Bandwidth Fluktuatif menggunakan QoS CAKE
-
-Satelit LEO memiliki kapasitas bandwidth yang berubah-ubah secara konstan. Membatasi bandwidth dengan antrean statis kaku di satelit LEO akan memicu *bufferbloat* saat sinyal melemah. 
-
-Gunakan algoritma **CAKE** pada RouterOS v7 untuk menyeimbangkan bandwidth antar pengguna secara dinamis:
+Kapasitas satelit LEO berubah-ubah terus (satelit berganti, sel ramai-sepi).
+Antrean statis yang kaku memicu *bufferbloat* saat sinyal melemah. Gunakan
+algoritme **CAKE** di RouterOS v7 (lanjutan
+[QoS Dinamis](/mikrotik/dynamic-qos)):
 
 ```routeros
 # 1. Buat tipe antrean CAKE untuk upload (TX) dan download (RX)
@@ -110,21 +113,31 @@ Gunakan algoritma **CAKE** pada RouterOS v7 untuk menyeimbangkan bandwidth antar
 add name=starlink-cake-tx kind=cake cake-flowmode=triple-isolate cake-nat=yes
 add name=starlink-cake-rx kind=cake cake-flowmode=triple-isolate cake-nat=yes
 
-# 2. Pasang Simple Queue menggunakan tipe antrean CAKE
+# 2. Pasang simple queue memakai tipe antrean CAKE
 /queue simple
 add name=starlink-cake-qos target=192.168.88.0/24 \
-  queue=starlink-cake-tx/starlink-cake-rx comment="QoS Dinamis Starlink (CAKE)"
+  queue=starlink-cake-tx/starlink-cake-rx comment="QoS dinamis Starlink (CAKE)"
 ```
 
-*   `cake-flowmode=triple-isolate`: Memilah bandwidth secara adil berdasarkan host pengirim, penerima, dan jenis aplikasi. Ini mencegah satu komputer client yang sedang melakukan download besar/torrent memonopoli seluruh bandwidth Starlink.
+- `cake-flowmode=triple-isolate` — membagi bandwidth secara adil per host
+  pengirim, penerima, dan aliran; satu klien yang mengunduh besar-besaran
+  tidak bisa memonopoli link.
 
----
+## Cek pemahaman
 
-## Cek Pemahaman
+1. Mengapa `persistent-keepalive=25s` penting pada WireGuard penembus CGNAT?
+   <br>→ NAT Starlink menghapus pemetaan sesi yang lama diam. Paket kecil
+   tiap 25 detik menjaga pemetaan tetap hidup sehingga terowongan bisa terus
+   dimasuki dari arah luar.
+2. Apa keunggulan QoS CAKE dibanding simple queue statis (`max-limit` kaku)
+   di link satelit LEO?
+   <br>→ CAKE membagi bandwidth secara dinamis dan adil (*fair queueing*)
+   tanpa batas kaku — pas untuk Starlink yang kapasitasnya naik-turun;
+   antrean statis justru memicu bufferbloat saat kapasitas turun.
+3. Setelah bypass mode aktif, apakah manajemen bandwidth dan firewall tetap
+   bisa dilakukan di RouterOS?
+   <br>→ Ya — justru penuh: RouterOS memegang IP WAN langsung, sehingga
+   firewall, NAT, routing, dan QoS untuk seluruh LAN 100% di tanganmu.
 
-1.  Mengapa parameter `persistent-keepalive=25s` sangat penting disetel pada konfigurasi WireGuard untuk menembus CGNAT Starlink?
-    <br>→ Karena router di dalam jaringan CGNAT Starlink akan menutup sesi port translasi NAT jika tidak ada aktivitas dalam waktu tertentu. Mengirimkan paket kosong setiap 25 detik memastikan terowongan VPN tetap terbuka dari luar.
-2.  Apa keunggulan penggunaan QoS CAKE dibanding Simple Queue tradisional dengan nilai *limit-at* dan *max-limit* statis pada link satelit LEO?
-    <br>→ QoS CAKE membagi bandwidth secara dinamis dan adil (*fair-queueing*) berdasarkan host dan aplikasi tanpa perlu mendefinisikan batas bandwidth maksimum yang kaku. Hal ini sangat cocok untuk Starlink yang bandwidth-nya fluktuatif naik-turun.
-3.  Apakah setelah mengaktifkan *Bypass Mode* kita masih bisa melakukan manajemen bandwidth dan firewall di RouterOS?
-    <br>→ Ya, justru karena RouterOS memegang IP WAN langsung, RouterOS memiliki kontrol penuh 100% untuk melakukan manajemen bandwidth, firewall filtering, NAT, dan routing untuk seluruh client LAN.
+Terakhir: saat koneksi bermasalah —
+[Troubleshooting & Diagnostik](/starlink/troubleshooting).

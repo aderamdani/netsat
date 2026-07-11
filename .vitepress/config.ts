@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
+import { withMermaid } from 'vitepress-plugin-mermaid'
 
-export default defineConfig({
+export default withMermaid(defineConfig({
   lang: 'id-ID',
   title: 'NetSat',
   description:
@@ -53,6 +54,13 @@ export default defineConfig({
 
   vite: {
     server: { hmr: { overlay: false } },
+    build: { chunkSizeWarningLimit: 1600 },
+    // interop CJS dependensi mermaid saat `vitepress dev`
+    optimizeDeps: { include: ['mermaid', 'dayjs', '@braintree/sanitize-url', 'debug', 'cytoscape', 'cytoscape-cose-bilkent'] },
+  },
+
+  markdown: {
+    languageAlias: { routeros: 'bash' },
   },
 
   sitemap: {
@@ -252,4 +260,4 @@ export default defineConfig({
       copyright: '© 2026 Ade Ramdani — NetSat',
     },
   },
-})
+}))

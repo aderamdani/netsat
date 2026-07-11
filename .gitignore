@@ -5,3 +5,7 @@ node_modules/
 .DS_Store
 .vercel
 .env*
+
+# file kerja internal — jangan ikut repo publik / build
+CLAUDE.md
+DOCUMENTATION.md

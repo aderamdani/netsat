@@ -4,61 +4,94 @@ title: Pengantar Starlink
 
 # Pengantar Starlink
 
-**Starlink** adalah layanan konstelasi satelit internet yang dikembangkan oleh **SpaceX**, perusahaan dirgantara milik Elon Musk. Berbeda dengan internet satelit tradisional yang menggunakan satu atau dua satelit besar di orbit geostasioner (GEO) yang sangat tinggi, Starlink menggunakan konstelasi ribuan satelit kecil yang saling terhubung di orbit bumi rendah (LEO - *Low Earth Orbit*).
+**Starlink** adalah layanan internet berbasis konstelasi satelit milik
+**SpaceX**. Berbeda dengan internet satelit tradisional yang bertumpu pada
+satu-dua satelit besar di [orbit geostasioner (GEO)](/satelit/orbit#geo-geostationary-orbit),
+Starlink memakai ribuan satelit kecil yang saling terhubung di
+[orbit bumi rendah (LEO)](/satelit/orbit#leo-low-earth-orbit).
 
-Tujuan utama Starlink adalah menyediakan konektivitas internet pita lebar (*broadband*) berkecepatan tinggi dengan latensi rendah ke seluruh penjuru bumi — terutama ke area terpencil, pedalaman, maritim, dan daerah tertinggal yang belum terjangkau kabel serat optik (*fiber optic*) atau jaringan seluler.
+Tujuannya: broadband cepat berlatensi rendah ke seluruh penjuru bumi —
+terutama area terpencil, pedalaman, dan maritim yang tak terjangkau serat
+optik maupun seluler. Modul ini membedah arsitekturnya, perangkat kerasnya,
+jenis layanannya, sampai praktik integrasinya dengan RouterOS.
 
----
+## Konsep konstelasi satelit LEO
 
-## Konsep Konstelasi Satelit LEO
-
-Untuk memahami keunikan Starlink, kita harus melihat bagaimana konstelasi ini dirancang secara masif:
-
-*   **Ribuan Satelit:** Jika satelit GEO hanya membutuhkan 3 satelit untuk menjangkau bumi, Starlink membutuhkan ribuan satelit karena orbit LEO sangat dekat dengan bumi. Cakupan tiap satelit LEO sangat sempit.
-*   **Kecepatan Tinggi:** Satelit Starlink mengorbit bumi dengan kecepatan sekitar **$27.000\text{ km/jam}$**, menyelesaikan satu putaran bumi dalam waktu sekitar **$90 - 100\text{ menit}$**.
-*   **Tinggi Orbit Rendah:** Satelit Starlink berada di ketinggian sekitar **$550\text{ km}$** di atas permukaan bumi. Ketinggian ini sekitar **65 kali lebih dekat** dibandingkan satelit GEO ($35.786\text{ km}$).
+- **Ribuan satelit, bukan tiga.** Satelit GEO cukup 3 unit untuk menjangkau
+  hampir seluruh bumi; satelit LEO yang rendah punya cakupan sempit dan
+  melintas cepat, sehingga butuh ribuan unit agar selalu ada satelit di atas
+  langit pengguna — teori lengkapnya di
+  [Konstelasi LEO modern](/satelit/orbit#konstelasi-leo-modern).
+- **Melintas cepat.** Satelit Starlink mengorbit dengan kecepatan ±27.000
+  km/jam (±7,6 km/s), menyelesaikan satu putaran bumi tiap ±90–100 menit.
+- **Sangat dekat.** Ketinggian orbit ±550 km — sekitar 65 kali lebih dekat
+  daripada satelit GEO (35.786 km).
 
 ```text
-  [Satelit GEO] ────────────────────────── ~ 35.786 km (Latensi 600 ms)
-  
-  
-  
-  [Satelit LEO Starlink] ── ~ 550 km (Latensi 30 ms)
-  
+  [Satelit GEO] ────────────────────────── ±35.786 km (RTT ±500–600 ms)
+
+
+
+  [Satelit LEO Starlink] ── ±550 km (RTT ±25–45 ms)
+
   [BUMI]
 ```
 
----
+## Mengapa latensi rendah sangat penting?
 
-## Mengapa Latensi Rendah Sangat Penting?
+Latensi adalah waktu tempuh pulang-pergi data (*Round Trip Time*, RTT):
 
-Latensi adalah waktu yang dibutuhkan data untuk melakukan perjalanan pulang-pergi dari komputer pengirim ke penerima (*Round Trip Time* atau RTT). 
-*   **Satelit GEO:** Karena jarak tempuh yang jauh ($36.000\text{ km}$ naik dan $36.000\text{ km}$ turun), hukum fisika (kecepatan cahaya) membatasi latensi minimum satelit GEO di kisaran **$500 - 600\text{ ms}$**.
-*   **Starlink LEO:** Karena jaraknya hanya $550\text{ km}$, latensi Starlink berkisar antara **$25 - 45\text{ ms}$**.
+- **Satelit GEO** — sinyal naik-turun ±36.000 km dua kali; kecepatan cahaya
+  membatasi RTT minimum di **±500–600 ms**. Tidak bisa ditawar teknologi
+  apa pun — lihat [Latensi per orbit](/satelit/komunikasi#latensi-per-orbit).
+- **Starlink LEO** — jarak hanya ±550 km; RTT **±25–45 ms**, setara internet
+  kabel.
 
-Latensi rendah ini mengubah segalanya. Dengan Starlink, pengguna di pedalaman kini bisa melakukan aktivitas yang sebelumnya mustahil dilakukan lewat satelit tradisional, seperti:
-*   Panggilan video (*video call*) tanpa jeda suara yang mengganggu.
-*   Bekerja secara kolaboratif menggunakan aplikasi cloud interaktif (Microsoft Teams, Google Workspace).
-*   Menggunakan VPN kantor cabang tanpa hambatan *timeout*.
-*   Bermain game online real-time.
+Selisih ini mengubah kelas aplikasi yang bisa jalan. Di RTT setengah detik,
+[TCP sendiri tersiksa](/satelit/komunikasi#dampak-latensi-pada-tcp); di RTT
+30 ms, semuanya normal kembali:
 
----
+- Panggilan video tanpa jeda suara yang mengganggu.
+- Aplikasi cloud interaktif (Microsoft Teams, Google Workspace).
+- VPN kantor cabang tanpa hambatan *timeout*.
+- Game online real-time.
 
-## Skala Proyek Starlink
+## Skala proyek Starlink
 
-Sejak peluncuran pertamanya pada tahun 2019, Starlink terus meluncurkan satelit menggunakan roket Falcon 9 milik SpaceX:
+Sejak peluncuran perdana 2019 dengan roket Falcon 9, konstelasi ini tumbuh
+menjadi objek buatan manusia terbanyak di orbit. Angka per awal 2026:
 
-*   **Target Fase Pertama:** Lebih dari **$4.400$ satelit** aktif di langit.
-*   **Target Jangka Panjang:** SpaceX telah mendapatkan izin untuk meluncurkan hingga **$12.000$ satelit**, bahkan merencanakan perluasan hingga **$42.000$ satelit**.
-*   **Cakupan Global:** Layanan Starlink kini telah dinikmati oleh jutaan pelanggan aktif di berbagai benua, termasuk Indonesia (sejak tahun 2024), melayani sektor perumahan, perkebunan, pertambangan, maritim, dan instansi pemerintah.
+- **±9.900 satelit operasional** (dari lebih dari 10.000 yang diluncurkan) —
+  sekitar **68% dari seluruh satelit aktif di dunia**.
+- **±7 juta pelanggan** di berbagai benua.
+- Izin FCC saat ini **12.000 satelit**, dengan pengajuan tambahan hingga
+  **30.000** dan visi jangka panjang **±42.000 satelit**.
+- **Indonesia**: layanan komersial aktif **sejak 2024** — melayani ritel/
+  rumahan, perkebunan, pertambangan, maritim, dan instansi pemerintah.
 
----
+::: tip Posisi Starlink di peta besar satelit
+Starlink tidak "mematikan" VSAT GEO — keduanya mengisi ceruk berbeda:
+LEO unggul latensi, GEO/HTS unggul SLA korporat, broadcast, dan kendali
+kedaulatan. Perbandingan menyeluruhnya ada di
+[LEO vs VSAT vs Starlink](/satelit/leo-vsat-starlink) dan
+[VSAT vs LEO: masa depan pelosok](/satelit/vsat#vsat-vs-leo-masa-depan-pelosok).
+:::
 
-## Cek Pemahaman
+## Cek pemahaman
 
-1.  Berapakah ketinggian rata-rata satelit Starlink dari bumi, dan mengapa hal tersebut membuat latensinya jauh lebih rendah dari VSAT GEO tradisional?
-    <br>→ Satelit Starlink berada pada ketinggian sekitar $550\text{ km}$ di atas bumi. Jarak ini jauh lebih dekat dibanding satelit GEO ($35.786\text{ km}$), sehingga waktu perjalanan sinyal (yang bergerak dengan kecepatan cahaya) menjadi jauh lebih singkat, menghasilkan latensi RTT rendah ($\approx 30\text{ ms}$).
-2.  Mengapa Starlink membutuhkan ribuan satelit aktif di angkasa, sementara satelit GEO hanya membutuhkan 3 satelit untuk mencakup hampir seluruh bumi?
-    <br>→ Karena orbit LEO sangat rendah ($550\text{ km}$), area cakupan sinyal (*footprint*) satu satelit di atas permukaan bumi sangat kecil dan satelit meluncur dengan sangat cepat. Oleh karena itu, dibutuhkan jaringan ribuan satelit yang saling terhubung agar selalu ada satelit di atas langit pengguna setiap saat.
-3.  Aplikasi apa saja yang kinerjanya sangat terpengaruh oleh latensi dan kini dapat berjalan dengan baik di Starlink tetapi tidak di VSAT GEO?
-    <br>→ Aplikasi real-time seperti panggilan video (*video conferencing*), game online, koneksi VPN enkripsi tinggi, dan pertukaran database interaktif yang sensitif terhadap jeda waktu pengiriman paket.
+1. Berapa ketinggian rata-rata satelit Starlink, dan mengapa latensinya jauh
+   lebih rendah dari VSAT GEO tradisional?
+   <br>→ ±550 km di atas bumi — jauh lebih dekat daripada GEO (35.786 km),
+   sehingga waktu tempuh sinyal (yang dibatasi kecepatan cahaya) jauh lebih
+   singkat: RTT ≈30 ms vs ±500–600 ms.
+2. Mengapa Starlink butuh ribuan satelit aktif, sementara GEO cukup 3 satelit
+   untuk mencakup hampir seluruh bumi?
+   <br>→ Karena orbit LEO sangat rendah, *footprint* tiap satelit sempit dan
+   satelit melintas sangat cepat — dibutuhkan ribuan satelit yang saling
+   menyambung agar selalu ada satelit di atas langit pengguna setiap saat.
+3. Aplikasi apa saja yang sangat terpengaruh latensi sehingga berjalan baik di
+   Starlink tetapi tersiksa di VSAT GEO?
+   <br>→ Aplikasi real-time: panggilan video, game online, VPN terenkripsi,
+   dan aplikasi database/cloud interaktif yang sensitif terhadap jeda.
+
+Lanjut ke bagaimana semua ini tersusun: [Arsitektur Jaringan](/starlink/arsitektur).

@@ -352,7 +352,7 @@ bandwidth teoritis. Lihat
 
 **Torch** — Alat diagnostik real-time RouterOS untuk melihat trafik per
 host/protokol pada suatu interface. Lihat
-[Torch](/mikrotik/monitoring#torch-intip-isi-pipa-real-time).
+[Torch](/mikrotik/monitoring#_4-torch-mikrotik-real-time-sniffer).
 
 **Transponder** — Perangkat di satelit yang menerima sinyal uplink,
 menggeser frekuensinya, menguatkan, dan memancarkan kembali ke bumi.

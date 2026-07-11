@@ -68,7 +68,7 @@ Profil client bisa disetel agar reconnect otomatis saat putus:
 
 - Update profile tanpa putus: `/ppp/profile/set [find name=pelanggan-10M] rate-limit=20M/20M`
 - Sesi berikutnya langsung kena; sesi aktif butuh reconnect
-- Gunakan PPPoE + [Queue Tree](/mikrotik/firewall-qos#queue-tree--pcq-sekilas) untuk QoS hierarkis
+- Gunakan PPPoE + [Queue Tree](/mikrotik/firewall-qos#queue-tree-pcq-sekilas) untuk QoS hierarkis
 - Alternatif: `rate-limit` di profile saja untuk 90% kasus
 
 ## Firewall untuk PPPoE

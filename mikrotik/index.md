@@ -132,15 +132,20 @@ Contoh formatnya:
 | 1 | [Akses Awal](/mikrotik/akses-awal) | [Switching](/networking/switching) (MAC-telnet = layer 2) |
 | 2 | [Manajemen Perangkat](/mikrotik/manajemen) | — (bekal alat kerja) |
 | 3 | [Interface & IP Address](/mikrotik/interface-ip) | [Subnetting](/networking/subnetting) |
-| 4 | [Bridging & Switching](/mikrotik/bridging-switching) | [Switching & VLAN](/networking/switching) |
-| 5 | [DHCP, DNS & NAT](/mikrotik/dhcp-dns-nat) | [Protokol Jaringan](/networking/protokol) |
-| 6 | [Routing di RouterOS](/mikrotik/routing) | [Routing](/networking/routing) |
-| 7 | [Firewall & QoS](/mikrotik/firewall-qos) | [Keamanan Jaringan](/networking/keamanan) |
-| 8 | [PPPoE](/mikrotik/pppoe) | [Protokol Jaringan](/networking/protokol) (PPP) |
-| 9 | [VPN](/mikrotik/vpn) | [Keamanan](/networking/keamanan#vpn-terowongan-terenkripsi) |
-| 10 | [Wireless & Satelit](/mikrotik/wireless-dan-satelit) | [VSAT](/satelit/vsat), [Komunikasi Satelit](/satelit/komunikasi) |
-| 11 | [Operasi & Monitoring](/mikrotik/monitoring) | [Manajemen Perangkat](/mikrotik/manajemen) (bekal) |
-| 12 | [Glosari](/mikrotik/glosari) | — (referensi cepat) |
+| 4 | [IPv6 di RouterOS](/mikrotik/ipv6) | [Subnetting](/networking/subnetting#deep-dive-ipv6-subnetting) (IPv6) |
+| 5 | [Bridging & Switching](/mikrotik/bridging-switching) | [Switching & VLAN](/networking/switching) |
+| 6 | [DHCP, DNS & NAT](/mikrotik/dhcp-dns-nat) | [Protokol Jaringan](/networking/protokol) |
+| 7 | [Routing di RouterOS](/mikrotik/routing) | [Routing](/networking/routing) |
+| 8 | [Firewall & QoS](/mikrotik/firewall-qos) | [Keamanan Jaringan](/networking/keamanan) |
+| 9 | [PPPoE](/mikrotik/pppoe) | [Protokol Jaringan](/networking/protokol) (PPP) |
+| 10 | [VPN](/mikrotik/vpn) | [Keamanan](/networking/keamanan#vpn-terowongan-terenkripsi) |
+| 11 | [Wireless & Satelit](/mikrotik/wireless-dan-satelit) | [VSAT](/satelit/vsat), [Komunikasi Satelit](/satelit/komunikasi) |
+| 12 | [Failover & Multi-WAN Satelit](/mikrotik/multi-wan) | [Routing](/networking/routing#dari-mana-isi-tabel-routing-berasal) |
+| 13 | [Optimasi VPN & MTU/MSS](/mikrotik/vpn-optimization) | [VPN di atas satelit](/mikrotik/vpn#vpn-di-atas-link-satelit) |
+| 14 | [QoS Dinamis](/mikrotik/dynamic-qos) | [Firewall & QoS](/mikrotik/firewall-qos) |
+| 15 | [Operasi & Monitoring](/mikrotik/monitoring) | [Manajemen Perangkat](/mikrotik/manajemen) (bekal) |
+| 16 | [Scripting & Otomatisasi](/mikrotik/scripting-otomatisasi) | [Manajemen Perangkat](/mikrotik/manajemen#tata-bahasa-cli) |
+| 17 | [Glosari](/mikrotik/glosari) | — (referensi cepat) |
 
 Referensi utama modul ini adalah dokumentasi resmi
 [manual.mikrotik.com](https://manual.mikrotik.com) — struktur topiknya sengaja

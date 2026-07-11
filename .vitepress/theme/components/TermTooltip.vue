@@ -21,7 +21,7 @@ const isHovered = ref(false)
     <span class="ns-term-text">{{ term }}</span>
     <span class="ns-tooltip" :class="{ 'is-visible': isHovered }" role="tooltip">
       <strong>{{ term }}</strong>
-      <p>{{ def }}</p>
+      <span class="ns-tooltip-def">{{ def }}</span>
     </span>
   </span>
 </template>
@@ -45,6 +45,7 @@ const isHovered = ref(false)
 }
 
 .ns-tooltip {
+  display: none;
   position: absolute;
   bottom: calc(100% + 8px);
   left: 50%;
@@ -91,9 +92,18 @@ const isHovered = ref(false)
 }
 
 .ns-tooltip.is-visible {
+  display: block;
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
+}
+
+/* fade-in tetap jalan di browser modern walau dari display:none */
+@starting-style {
+  .ns-tooltip.is-visible {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
 }
 
 .ns-tooltip strong {
@@ -106,7 +116,8 @@ const isHovered = ref(false)
   margin-bottom: 6px;
 }
 
-.ns-tooltip p {
+.ns-tooltip-def {
+  display: block;
   margin: 0;
 }
 </style>

@@ -4,74 +4,94 @@ title: Spesifikasi Perangkat Keras Starlink
 
 # Spesifikasi Perangkat Keras Starlink
 
-Penyediaan internet berkecepatan tinggi dari orbit rendah bumi memerlukan perangkat keras canggih di sisi pengguna. Sejak diluncurkan pertama kali, SpaceX telah merilis beberapa generasi terminal pengguna (*User Terminal* atau *Dish*) dengan perbedaan spesifikasi, konsumsi daya, dan jenis koneksi kabel.
+Internet dari orbit rendah menuntut perangkat canggih di sisi pengguna. Sejak
+generasi pertama, SpaceX merilis beberapa tipe terminal (*dish*) dengan
+perbedaan bentuk, konsumsi daya, dan jenis koneksi kabel. Halaman ini
+merangkum spesifikasi tiap tipe sebagai bekal perancangan jaringan di
+lapangan.
 
-Halaman ini mengulas anatomi dan spesifikasi teknis dari masing-masing tipe perangkat keras Starlink untuk membantu perancangan jaringan di lapangan.
-
----
-
-## Perbandingan Antena (Dish) Starlink
-
-SpaceX membagi perangkat kerasnya ke dalam beberapa model utama:
+## Perbandingan antena (dish) Starlink
 
 ```text
-   Gen 1 (Bulat)       Gen 2 (Persegi Actuated)      Gen 3 (Kickstand)      Flat High Performance
+   Gen 1 (bulat)       Gen 2 (persegi actuated)      Gen 3 (kickstand)      Flat High Performance
     ┌─────────┐              ┌───────────┐             ┌───────────┐             ┌─────────────┐
     │  ● ● ●  │              │           │             │           │             │             │
     │  ● ● ●  │              │           │             │           │             │             │
     └────┬────┘              └─────┬─────┘             └─────┬─────┘             └──────┬──────┘
-         │ Tiang                   │ Tiang                   │ Penyangga                │ Braket Datar
-      (Motor)                   (Motor)                  (Manual)                   (Statis)
+         │ tiang                   │ tiang                   │ penyangga                │ braket datar
+      (motor)                   (motor)                  (manual)                   (statis)
 ```
 
-| Parameter Spesifikasi | Gen 1 (Circular) | Gen 2 (Standard Actuated) | Gen 3 (Standard) | Flat High Performance |
+| Parameter | Gen 1 (Circular) | Gen 2 (Standard Actuated) | Gen 3 (Standard) | Flat High Performance |
 | --- | --- | --- | --- | --- |
-| **Bentuk Fisik** | Bulat (Diameter $58.9\text{ cm}$) | Persegi ($51.3 \times 30.3\text{ cm}$) | Persegi ($59.4 \times 38.3\text{ cm}$) | Persegi Datar ($57.5 \times 51.1\text{ cm}$) |
-| **Motor Penggerak** | Ada (Self-pointing) | Ada (Self-pointing) | Tidak Ada (Kickstand Manual) | Tidak Ada (Pemasangan Flat Statis) |
-| **Sudut Pandang (FoV)**| $110^\circ$ | $110^\circ$ | $110^\circ$ | **$140^\circ$** (Sangat Luas) |
-| **Konsumsi Daya** | $90 - 150\text{ W}$ | $50 - 75\text{ W}$ | $75 - 100\text{ W}$ | **$110 - 150\text{ W}$** |
-| **Peringkat Cuaca** | IP54 | IP56 | **IP67** (Tahan Air Tinggi) | **IP67** (Tahan Air Tinggi) |
-| **Aplikasi Utama** | Residensial Awal (Pensiun) | Residensial / Roam Umum | Residensial v3 / Bisnis Baru | **Enterprise / Maritim / Mobilitas** |
+| **Bentuk fisik** | Bulat (diameter 58,9 cm) | Persegi (51,3 × 30,3 cm) | Persegi (59,4 × 38,3 cm) | Persegi datar (57,5 × 51,1 cm) |
+| **Motor penggerak** | Ada (self-pointing) | Ada (self-pointing) | Tidak ada (kickstand manual) | Tidak ada (pemasangan statis) |
+| **Sudut pandang (FoV)** | 110° | 110° | 110° | **140°** (sangat luas) |
+| **Konsumsi daya** | 90–150 W | 50–75 W | 75–100 W | **110–150 W** |
+| **Peringkat cuaca** | IP54 | IP56 | **IP67** | **IP67** |
+| **Aplikasi utama** | Residensial awal (pensiun) | Residensial / Roam umum | Residensial v3 / bisnis baru | **Enterprise / maritim / mobilitas** |
 
----
+Semua tipe memakai antena **phased array** — beam digeser secara elektronik
+untuk mengikuti satelit yang melintas, prinsip yang sama dengan
+[gateway LEO modern](/satelit/ground-station#melacak-satelit).
 
-## Detail Generasi Perangkat
+## Detail generasi perangkat
 
-### 1. Gen 2 (Standard Actuated) — Si Kecil Motorized
-Merupakan antena paling populer di pasar Indonesia saat ini.
-*   **Motor Penggerak:** Memiliki motor internal yang akan berputar otomatis saat dinyalakan untuk mencari sudut langit terbaik yang bersih dari hambatan.
-*   **Tantangan Konektor:** Menggunakan kabel proprietary berujung konektor **SPX** khusus (bukan RJ45 standar). Konektor ini rawan longgar atau kemasukan air jika dipasang di luar ruangan tanpa pelindung.
-*   **Ketiadaan Port LAN:** Router bawaan Gen 2 tidak memiliki port RJ45. Pengguna wajib membeli **Starlink Ethernet Adapter** tambahan agar bisa menghubungkannya ke router pihak ketiga (seperti MikroTik).
+### 1. Gen 2 (Standard Actuated) — si kecil bermotor
 
-### 2. Gen 3 (Standard Kickstand) — Era Datar & RJ45 Standar
-Merupakan standar terbaru yang dirancang untuk keandalan dan kemudahan instalasi.
-*   **Tanpa Motor:** Antena ini tidak bergerak secara mekanis. Penyetelan arah (*pointing*) dilakukan sekali di awal instalasi secara manual memanfaatkan panduan kamera *Augmented Reality* (AR) pada aplikasi Starlink di HP.
-*   **Koneksi RJ45 Standar:** Antena dan router Gen 3 terhubung menggunakan kabel ethernet Cat6 berpelindung (*shielded*) standar dengan konektor RJ45 tahan air, memudahkan penggantian kabel jika terjadi kerusakan.
-*   **Router Wi-Fi 6:** Router bawaan Gen 3 memiliki **2 port ethernet RJ45 bypass bawaan** di bagian belakang, sehingga tidak memerlukan adaptor tambahan untuk koneksi kabel ke router lain.
+Antena paling banyak beredar di Indonesia saat ini.
 
-### 3. Flat High Performance — Kelas Industri & Mobilitas
-Didesain khusus untuk kebutuhan korporat, maritim, dan kendaraan bergerak.
-*   **Sudut Pandang $140^\circ$:** Bidang pandang langit yang sangat luas memungkinkannya mendeteksi dan terhubung dengan satelit LEO cadangan saat satelit utama terhalang objek.
-*   **Toleransi Gangguan Tinggi:** Sangat andal digunakan di tengah hutan perkebunan, tebing pertambangan, maupun saat hujan badai di laut lepas.
-*   **Daya Pancar Lebih Tinggi:** Mampu mempertahankan kecepatan transmisi data (*throughput*) yang stabil di kondisi ekstrem.
+- **Motor internal** berputar otomatis saat dinyalakan untuk mencari sudut
+  langit terbaik.
+- **Konektor proprietary SPX** (bukan RJ45) — rawan longgar atau kemasukan
+  air bila dipasang di luar tanpa pelindung.
+- **Tanpa port LAN** — router bawaannya tidak punya RJ45; untuk menyambung ke
+  router pihak ketiga (mis. [MikroTik](/starlink/praktik-mikrotik)) wajib
+  membeli **Starlink Ethernet Adapter**.
 
----
+### 2. Gen 3 (Standard Kickstand) — era datar & RJ45 standar
 
-## Power over Ethernet (PoE) & Catu Daya di Site Remote
+- **Tanpa motor** — *pointing* dilakukan sekali saat instalasi, dipandu
+  kamera *augmented reality* di aplikasi Starlink.
+- **Kabel Cat6 shielded ber-RJ45 tahan air** — kabel rusak mudah diganti,
+  tak lagi proprietary.
+- **Router Wi-Fi 6 dengan 2 port RJ45** bawaan — sambung ke router lain tanpa
+  adaptor tambahan.
 
-Satelit Starlink beroperasi menggunakan teknologi **Power over Ethernet (PoE)** bertegangan tinggi untuk menyuplai daya dari dalam ruangan menuju antena di luar ruangan:
+### 3. Flat High Performance — kelas industri & mobilitas
 
-*   **Tegangan Operasional:** Umumnya berkisar antara **$48\text{ V}$ hingga $57\text{ V}$ DC**.
-*   **Kebutuhan Arus Tinggi:** Pada antena Flat High Performance, arus listrik yang dialirkan bisa mencapai **$2.5\text{ A}$** (terutama saat pemanas es otomatis aktif).
-*   **Pentingnya UPS di Site Remote:** Antena Starlink membutuhkan waktu sekitar **3 hingga 10 menit** untuk melakukan proses booting, mencari sinyal satelit, dan melakukan sinkronisasi IP (*handshake*). Jika site remote mengalami pemadaman listrik sekejap tanpa UPS, koneksi internet akan lumpuh total selama beberapa menit tersebut. Wajib memasang UPS minimal kapasitas $600\text{ VA}$ untuk menjaga kestabilan catu daya router dan antena Starlink.
+- **FoV 140°** — melihat lebih banyak satelit sekaligus; saat satelit utama
+  terhalang, satelit cadangan langsung mengambil alih.
+- **Toleransi gangguan tinggi** — andal di perkebunan, tambang, dan laut
+  lepas saat badai.
+- **Daya pancar lebih besar** — throughput tetap stabil di kondisi ekstrem;
+  satu-satunya tipe yang diizinkan dipakai **bergerak** (in-motion).
 
----
+## Power over Ethernet (PoE) & catu daya di site remote
 
-## Cek Pemahaman
+Antena Starlink disuplai lewat **PoE tegangan tinggi** dari dalam ruangan:
 
-1.  Kenapa antena Starlink Gen 3 (Standard) dirancang tanpa motor penggerak mekanis seperti pada Gen 2?
-    <br>→ Untuk mengurangi titik kegagalan mekanis (*mechanical failure point*) akibat keausan motor di cuaca luar ruangan yang ekstrem, menyederhanakan struktur perangkat keras, serta menurunkan biaya produksi.
-2.  Apa keunggulan utama dari antena tipe *Flat High Performance* dibanding tipe *Standard Actuated* jika dipasang pada area dengan sedikit hambatan pohon (seperti pinggiran hutan)?
-    <br>→ Tipe Flat High Performance memiliki sudut pandang (*Field of View*) yang jauh lebih luas ($140^\circ$ vs $110^\circ$). Hal ini memungkinkannya melacak lebih banyak satelit LEO secara bersamaan dan mengurangi potensi *drop connection* akibat hambatan fisik di sekitar antena.
-3.  Tindakan pengamanan apa yang wajib dilakukan pada instalasi kelistrikan Starlink di site remote yang sering mengalami tegangan listrik naik-turun (*voltage spike*)?
-    <br>→ Wajib menggunakan **UPS (Uninterruptible Power Supply)** berkualitas untuk menstabilkan tegangan dan mencegah pemadaman sekejap, karena proses booting dan sinkronisasi satelit Starlink membutuhkan waktu cukup lama (3 hingga 10 menit).
+- **Tegangan operasional** ±48–57 V DC.
+- **Arus tinggi** — Flat High Performance bisa menarik hingga ±2,5 A,
+  terutama saat pemanas otomatis aktif.
+- **UPS wajib di site remote.** Antena butuh ±3–10 menit untuk boot, mencari
+  satelit, dan sinkronisasi. Padam listrik sekejap tanpa UPS = internet
+  lumpuh beberapa menit. Sediakan UPS minimal 600 VA untuk antena + router.
+
+## Cek pemahaman
+
+1. Kenapa Gen 3 dirancang tanpa motor penggerak seperti Gen 2?
+   <br>→ Mengurangi titik kegagalan mekanis akibat keausan di cuaca luar
+   ruangan, menyederhanakan perangkat, dan menurunkan biaya produksi —
+   pointing cukup sekali, sisanya dikerjakan phased array secara elektronik.
+2. Apa keunggulan utama Flat High Performance dibanding Standard Actuated di
+   area dengan hambatan pohon?
+   <br>→ FoV jauh lebih luas (140° vs 110°): melacak lebih banyak satelit
+   sekaligus sehingga potensi *drop* akibat halangan fisik jauh berkurang.
+3. Pengamanan kelistrikan apa yang wajib di site remote dengan listrik
+   naik-turun?
+   <br>→ **UPS** — menstabilkan tegangan dan menjembatani padam sekejap,
+   karena proses boot + sinkronisasi satelit memakan 3–10 menit.
+
+Perangkat sudah dikenal — sekarang paket layanannya:
+[Jenis Layanan & Paket](/starlink/layanan).
