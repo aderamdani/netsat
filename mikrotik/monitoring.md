@@ -66,15 +66,16 @@ Sintaks dasar di RouterOS CLI:
 ```
 
 Contoh keluaran (output) terminal:
-```text
-  SEQ HOST                                     SIZE TTL TIME  STATUS             
-    0 8.8.8.8                                    56  57 18ms  
-    1 8.8.8.8                                    56  57 15ms  
-    2 8.8.8.8                                    56  57 146ms 
-    3 8.8.8.8                                                 timeout            
-    4 8.8.8.8                                    56  57 17ms  
-    sent=5 received=4 packet-loss=20% min-rtt=15ms avg-rtt=49ms max-rtt=146ms
-```
+
+| SEQ | HOST | SIZE | TTL | TIME | STATUS |
+| --- | --- | --- | --- | --- | --- |
+| 0 | 8.8.8.8 | 56 | 57 | 18ms | |
+| 1 | 8.8.8.8 | 56 | 57 | 15ms | |
+| 2 | 8.8.8.8 | 56 | 57 | 146ms | |
+| 3 | 8.8.8.8 | | | | timeout |
+| 4 | 8.8.8.8 | 56 | 57 | 17ms | |
+
+`sent=5 received=4 packet-loss=20% min-rtt=15ms avg-rtt=49ms max-rtt=146ms`
 
 #### Cara Menganalisis Output Ping:
 * **TTL (Time to Live):** Nilai batas lompatan (*hop limit*) paket. Setiap kali melewati sebuah router, nilai TTL dikurangi 1. Pada output di atas, `TTL 57` menandakan paket telah melewati beberapa router (biasanya nilai awal TTL adalah 64 atau 128). Jika nilai TTL tiba-tiba berubah secara drastis, ada kemungkinan jalur rute berubah (*routing flap*).
@@ -97,14 +98,14 @@ Sintaks dasar di RouterOS CLI:
 ```
 
 Contoh keluaran (output) terminal:
-```text
- # ADDRESS                          LOSS SENT LAST     AVG      BEST     WORST
- 1 192.168.88.1                     0%   5    0.4ms    0.5ms    0.3ms    0.8ms
- 2 10.10.10.1                       0%   5    5.2ms    6.1ms    4.8ms    12ms
- 3 *                                100% 5    timeout
- 4 203.0.113.5                      0%   5    15.4ms   16.2ms   15.1ms   22ms
- 5 1.1.1.1                          0%   5    18.1ms   19.0ms   17.8ms   25ms
-```
+
+| # | ADDRESS | LOSS | SENT | LAST | AVG | BEST | WORST |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 192.168.88.1 | 0% | 5 | 0.4ms | 0.5ms | 0.3ms | 0.8ms |
+| 2 | 10.10.10.1 | 0% | 5 | 5.2ms | 6.1ms | 4.8ms | 12ms |
+| 3 | * | 100% | 5 | timeout | | | |
+| 4 | 203.0.113.5 | 0% | 5 | 15.4ms | 16.2ms | 15.1ms | 22ms |
+| 5 | 1.1.1.1 | 0% | 5 | 18.1ms | 19.0ms | 17.8ms | 25ms |
 
 #### Cara Menganalisis Output Traceroute:
 * **Nomor Urut (1, 2, 3...):** Menunjukkan urutan router (*hop*) yang dilewati. Hop 1 biasanya adalah gateway lokal Anda.
@@ -124,15 +125,14 @@ Sintaks dasar di RouterOS CLI:
 /ip/arp/print
 ```
 
-Contoh keluaran (output) terminal:
-```text
-Flags: D - dynamic, S - static, I - invalid, H - DHCP, C - complete 
- #      ADDRESS         MAC-ADDRESS       INTERFACE
- 0 D CH 192.168.88.254  AA:BB:CC:DD:EE:11 bridge1
- 1 D  C 192.168.88.253  AA:BB:CC:DD:EE:22 bridge1
- 2 D  I 192.168.88.252  00:00:00:00:00:00 bridge1
- 3  S C 192.168.88.10   AA:BB:CC:DD:EE:99 bridge1
-```
+Contoh keluaran (output) terminal — *Flags: D - dynamic, S - static, I - invalid, H - DHCP, C - complete*:
+
+| # | Flags | ADDRESS | MAC-ADDRESS | INTERFACE |
+| --- | --- | --- | --- | --- |
+| 0 | D C H | 192.168.88.254 | AA:BB:CC:DD:EE:11 | bridge1 |
+| 1 | D C | 192.168.88.253 | AA:BB:CC:DD:EE:22 | bridge1 |
+| 2 | D I | 192.168.88.252 | 00:00:00:00:00:00 | bridge1 |
+| 3 | S C | 192.168.88.10 | AA:BB:CC:DD:EE:99 | bridge1 |
 
 #### Cara Menganalisis Flags & Status ARP:
 * **D (Dynamic):** Entri dibuat secara otomatis ketika router mendeteksi paket ARP dari client. Entri dynamic memiliki *aging time* (waktu kedaluwarsa) dan akan dihapus otomatis jika client mati/tidak aktif.
@@ -154,12 +154,12 @@ Sintaks dasar di RouterOS CLI:
 ```
 
 Contoh keluaran (output) terminal:
-```text
- MAC-SRC           IP-SRC             IP-DST             PORT  TX-RATE   RX-RATE  
- AA:BB:CC:DD:EE:11 192.168.88.254     203.0.113.10       443   12.5kbps  1.2Mbps
- AA:BB:CC:DD:EE:22 192.168.88.253     8.8.8.8            53    1.2kbps   0.8kbps
- AA:BB:CC:DD:EE:33 192.168.88.120     198.51.100.42      80    2.4Mbps   12.1kbps
-```
+
+| MAC-SRC | IP-SRC | IP-DST | PORT | TX-RATE | RX-RATE |
+| --- | --- | --- | --- | --- | --- |
+| AA:BB:CC:DD:EE:11 | 192.168.88.254 | 203.0.113.10 | 443 | 12.5kbps | 1.2Mbps |
+| AA:BB:CC:DD:EE:22 | 192.168.88.253 | 8.8.8.8 | 53 | 1.2kbps | 0.8kbps |
+| AA:BB:CC:DD:EE:33 | 192.168.88.120 | 198.51.100.42 | 80 | 2.4Mbps | 12.1kbps |
 
 #### Cara Menganalisis Output Torch:
 * **TX-RATE & RX-RATE:** Menunjukkan volume data yang melintasi interface per detik (upload/download dari sudut pandang router).
@@ -224,17 +224,19 @@ tambahan:
 
 ## Cek pemahaman
 
+1. Kamu ingin semua router di jaringan dipantau dari satu Zabbix server — apa
+   yang harus diaktifkan di tiap router?
+2. Pelanggan komplain "internet lambat" — alat apa yang langsung memberi
+   gambaran trafik real-time per host?
+3. Container di RouterOS tidak mau jalan — dua kemungkinan pertama yang kamu
+   periksa?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Kamu ingin semua router di jaringan dipantau dari satu Zabbix server — apa
-   yang harus diaktifkan di tiap router? → SNMP dengan `community` read-only
-   yang terbatas ke subnet monitoring.
-2. Pelanggan komplain "internet lambat" — alat apa yang langsung memberi
-   gambaran trafik real-time per host? → **Torch** (`/tool/torch`).
-3. Container di RouterOS tidak mau jalan — dua kemungkinan pertama yang kamu
-   periksa? → Arsitektur Routerboard tidak mendukung (MIPS, TILE) atau storage
+1. SNMP dengan `community` read-only yang terbatas ke subnet monitoring.
+2. **Torch** (`/tool/torch`).
+3. Arsitektur Routerboard tidak mendukung (MIPS, TILE) atau storage
    tidak mencukupi.
 
 </details>

@@ -11,14 +11,17 @@ paling sering dipakai di lapangan.
 
 ## Membaca tabel routing
 
-```text
+```routeros
 /ip/route/print
-# Flags: D - dynamic, A - active, c - connect, s - static, o - ospf, b - bgp
-#  #    DST-ADDRESS        GATEWAY         DISTANCE
-#  0 As 0.0.0.0/0          203.0.113.1     1
-#  1 DAc 192.0.2.0/24      bridge1         0
-#  2 DAc 203.0.113.0/24    ether1          0
 ```
+
+Flags: `D` dynamic, `A` active, `c` connect, `s` static, `o` ospf, `b` bgp
+
+| # | Flags | Dst-address | Gateway | Distance |
+| --- | --- | --- | --- | --- |
+| 0 | As | 0.0.0.0/0 | 203.0.113.1 | 1 |
+| 1 | DAc | 192.0.2.0/24 | bridge1 | 0 |
+| 2 | DAc | 203.0.113.0/24 | ether1 | 0 |
 
 - `DAc` — *dynamic, active, connected*: lahir otomatis dari setiap
   [alamat yang kamu pasang](/mikrotik/interface-ip#memasang-alamat-ip); inilah
@@ -157,13 +160,15 @@ reordering.
 
 Verifikasi bahwa ECMP bekerja:
 
-```text
+```routeros
 /ip/route/print where dst-address=0.0.0.0/0
-Flags: D - dynamic, A - active, c - connect, s - static
- #      DST-ADDRESS        GATEWAY           DISTANCE
- 0 As   0.0.0.0/0          203.0.113.1       1
-                             198.51.100.1
 ```
+
+Flags: `D` dynamic, `A` active, `c` connect, `s` static
+
+| # | Flags | Dst-address | Gateway | Distance |
+| --- | --- | --- | --- | --- |
+| 0 | As | 0.0.0.0/0 | 203.0.113.1, 198.51.100.1 | 1 |
 
 Bendera `A` (active) muncul di kedua gateway — beda dengan failover biasa yang
 hanya satu gateway aktif. Untuk pemeriksaan lebih dalam:
@@ -362,22 +367,22 @@ Dengan metode Hybrid WAN ini, pengguna mendapatkan kenyamanan ganda: berselancar
 
 ## Cek pemahaman
 
+1. Tabel memuat `0.0.0.0/0 via A` dan `198.51.100.0/24 via B`; paket menuju
+   `198.51.100.7` lewat mana?
+2. Dua default route ber-distance 1 dan 2 — kapan yang kedua dipakai?
+3. Apa fungsi `passive` di interface-template LAN?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Tabel memuat `0.0.0.0/0 via A` dan `198.51.100.0/24 via B`; paket menuju
-   `198.51.100.7` lewat mana? → **B** —
-   [longest prefix match](/networking/routing#longest-prefix-match) mengalahkan
-   default route.
-2. Dua default route ber-distance 1 dan 2 — kapan yang kedua dipakai? →
-   Saat rute pertama hilang/dinonaktifkan `check-gateway`; distance adalah
+1. **B** — [longest prefix match](/networking/routing#longest-prefix-match)
+   mengalahkan default route.
+2. Saat rute pertama hilang/dinonaktifkan `check-gateway`; distance adalah
    urutan cadangan, bukan pembagi beban.
-3. Apa fungsi `passive` di interface-template LAN? → Subnet tetap diumumkan,
-   tapi OSPF tidak mencari neighbor di situ — hemat, dan menutup pintu
-   neighbor palsu.
+3. Subnet tetap diumumkan, tapi OSPF tidak mencari neighbor di situ — hemat,
+   dan menutup pintu neighbor palsu.
+
+</details>
 
 Paket sudah tahu jalan. Sekarang memutuskan siapa yang **boleh lewat** — dan
 secepat apa: [Firewall & QoS](/mikrotik/firewall-qos).
-
-</details>

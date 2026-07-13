@@ -102,14 +102,13 @@ Saat data dikirim, setiap lapisan **membungkus** data dari lapisan di atasnya
 dengan <TermTooltip term="header" def="Informasi kendali tambahan yang dipasang di bagian depan data, berisi alamat tujuan, asal, dan protokol." /> miliknya (layer 2 juga menambah *trailer*). Proses <TermTooltip term="Enkapsulasi" def="Proses membungkus data dengan header dari setiap lapisan sebelum dikirimkan ke jaringan." /> —
 serta sebaliknya, membuka bungkus lapis demi lapis — terjadi di penerima.
 
-```text
-PENGIRIM                                        PENERIMA
-Aplikasi   [data]                               [data]         Aplikasi
-Transport  [TCP|data]                           [TCP|data]     Transport
-Network    [IP|TCP|data]                        [IP|TCP|data]  Network
-Data Link  [ETH|IP|TCP|data|FCS]  ──medium──▶  [ETH|IP|TCP|data|FCS]
-Physical   101101110101... ──────────────────▶ 101101110101...
-```
+| Lapisan | Pengirim (membungkus) | Penerima (membuka bungkus) |
+| --- | --- | --- |
+| Aplikasi | `[data]` | `[data]` |
+| Transport | `[TCP\|data]` | `[TCP\|data]` |
+| Network | `[IP\|TCP\|data]` | `[IP\|TCP\|data]` |
+| Data Link | `[ETH\|IP\|TCP\|data\|FCS]` | `[ETH\|IP\|TCP\|data\|FCS]` |
+| Physical | `101101110101...` — dikirim lewat *medium* → | `101101110101...` |
 
 *Lihat proses pembungkusan ini secara langsung lewat animasi di bawah:*
 <EncapsulationDemo />
@@ -172,10 +171,6 @@ bukan sebagai kitab suci — dan lanjutkan ke model yang benar-benar dipakai:
 
 ## Cek pemahaman
 
-<details>
-<summary>Lihat jawaban</summary>
-
-
 <QuizBox 
   question="Perangkat apakah yang bekerja di Layer 2 (Data Link) dan membaca alamat MAC?"
   :options="['Router', 'Switch', 'Hub', 'Kabel UTP']"
@@ -200,5 +195,3 @@ bukan sebagai kitab suci — dan lanjutkan ke model yang benar-benar dipakai:
 ---
 
 **Praktik:** cara menu RouterOS dipetakan berdasarkan lapisan OSI — layer 2 di `/interface/bridge`, layer 3 di `/ip` dan `/routing` — dijelaskan di [Pengantar RouterOS](/mikrotik/#arsitektur-menu-konfigurasi-sebagai-pohon).
-
-</details>

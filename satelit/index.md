@@ -108,11 +108,14 @@ selalu ekonomis.
 
 Gambaran besar yang akan dibedah sepanjang modul:
 
-```text
-[Pengguna] ─ LAN ─ [Terminal VSAT] ~~uplink 14 GHz~~▶ [Satelit GEO]
-                                                          │ transponder
-[Internet] ─ fiber ─ [Ground Station / Teleport] ◀~~downlink 11 GHz~~┘
+```mermaid
+flowchart LR
+    U[Pengguna] -- LAN --> T[Terminal VSAT]
+    T -- "uplink 14 GHz" --> S["Satelit GEO<br/>(transponder: geser & kuatkan)"]
+    S -- "downlink 11 GHz" --> G[Ground Station / Teleport]
+    G -- fiber --> I[Internet]
 ```
+*Rantai komunikasi satelit dari ujung ke ujung: naik lewat uplink, digeser frekuensinya oleh transponder, turun lewat downlink, lalu masuk ke jaringan terestrial lewat ground station.*
 
 1. Terminal remote ([VSAT](/satelit/vsat)) memancarkan ke satelit.
 2. [Transponder](/satelit/komunikasi) menggeser frekuensi dan menguatkan.
@@ -127,23 +130,25 @@ teknologi mana pun, karena dibatasi kecepatan cahaya.
 
 ## Cek pemahaman
 
+1. Kenapa satelit tidak butuh mesin menyala terus untuk tetap di orbit?
+2. Bagian mana dari satelit yang "menghasilkan uang", dan bagian mana yang
+   "menjaganya tetap hidup"?
+3. Transponder *bent pipe* mengerti isi data yang dilewatkannya?
+4. Kenapa Indonesia sangat bergantung pada satelit dibanding banyak negara
+   lain?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Kenapa satelit tidak butuh mesin menyala terus untuk tetap di orbit? <br>→
-   Orbit adalah **jatuh bebas yang terus meleset**: kecepatan ke samping
+1. Orbit adalah **jatuh bebas yang terus meleset**: kecepatan ke samping
    membuat lengkung jatuhnya sejajar lengkung Bumi. Mesin hanya dinyalakan
    sesekali untuk koreksi (*station-keeping*).
-2. Bagian mana dari satelit yang "menghasilkan uang", dan bagian mana yang
-   "menjaganya tetap hidup"? <br>→ **Payload** (transponder & antena)
-   menghasilkan; **bus** (daya, termal, propulsi, AOCS, TT&C) menjaga.
-3. Transponder *bent pipe* mengerti isi data yang dilewatkannya? <br>→ Tidak —
-   ia hanya menggeser frekuensi dan menguatkan. Baginya paket TCP, siaran TV,
-   dan telepon sama saja: gelombang radio.
-4. Kenapa Indonesia sangat bergantung pada satelit dibanding banyak negara
-   lain? <br>→ Geografi: ±17.000 pulau bergunung dan berlaut membuat kabel
-   tidak selalu ekonomis — satelit menjangkau semuanya dari satu titik orbit.
+2. **Payload** (transponder & antena) menghasilkan; **bus** (daya, termal,
+   propulsi, AOCS, TT&C) menjaga.
+3. Tidak — ia hanya menggeser frekuensi dan menguatkan. Baginya paket TCP,
+   siaran TV, dan telepon sama saja: gelombang radio.
+4. Geografi: ±17.000 pulau bergunung dan berlaut membuat kabel tidak selalu
+   ekonomis — satelit menjangkau semuanya dari satu titik orbit.
 
 
 </details>

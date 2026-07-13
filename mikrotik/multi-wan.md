@@ -16,21 +16,18 @@ Materi praktik ini membahas konfigurasi **Recursive Routing** untuk failover oto
 
 ## Topologi Jaringan
 
-```text
-               ┌───────────────┐
-               │   INTERNET    │
-               └─▲─────▲─────▲─┘
-                 │     │     │
-         Terrestrial  LEO   GEO
-          (Radio PtP) (Starlink) (VSAT)
-                 │     │     │
-               ether1 ether2 ether3
-               ┌─────────────────┐
-               │    ROUTEROS     │
-               └────────┬────────┘
-                        │ bridge1
-                       LAN
+```mermaid
+flowchart TD
+    INT[INTERNET]
+    INT -- "Terrestrial (Radio PtP)" --> E1[ether1]
+    INT -- "LEO (Starlink)" --> E2[ether2]
+    INT -- "GEO (VSAT)" --> E3[ether3]
+    E1 --> R[ROUTEROS]
+    E2 --> R
+    E3 --> R
+    R -- "bridge1" --> LAN[LAN]
 ```
+*Tiga jalur WAN (terrestrial, LEO Starlink, GEO VSAT) masuk lewat ether1/2/3 ke satu RouterOS, diteruskan ke LAN lewat bridge1.*
 
 ---
 

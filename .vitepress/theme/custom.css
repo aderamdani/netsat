@@ -222,6 +222,33 @@
   }
 }
 
+/* ---------- diagram mermaid ---------- */
+
+/* Ukuran natural mermaid sering jauh lebih kecil dari kolom konten (~700px),
+   terutama flowchart TD berantai linear (hub->remote) atau sequenceDiagram
+   sederhana. min-width menaikkan yang terlalu kecil tanpa memaksa diagram
+   sempit/tinggi jadi melebar aneh (beda dari width:100% yang selalu mepet
+   penuh dan bisa membuat diagram linear jadi sangat tinggi). */
+.vp-doc .mermaid {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.vp-doc .mermaid svg {
+  min-width: min(100%, 480px);
+  max-width: 100%;
+  height: auto;
+}
+
+/* wadah scroll horizontal untuk diagram yang secara alami sangat lebar
+   (mis. flowchart LR bercabang banyak) agar tak memaksa layout melebar */
+@media (max-width: 640px) {
+  .vp-doc .mermaid {
+    overflow-x: auto;
+  }
+}
+
 /* ---------- custom blocks ---------- */
 
 .vp-doc .custom-block {

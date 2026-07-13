@@ -14,17 +14,21 @@ Penyebab utamanya adalah kombinasi dari **overhead enkripsi**, **fragmentasi pak
 
 Ketika data dikirim melalui VPN, paket data asli dibungkus (*kapsulasi*) dengan header tambahan (IP header baru, UDP/TCP header, dan enkripsi keamanan). Hal ini membuat ukuran paket membengkak.
 
-```text
-  Paket Data Asli (MTU 1500)
- ┌───────────────────────────────────────┐
- │ IP Header │         TCP DATA          │
- └───────────────────────────────────────┘
-  
-  Paket Setelah Dibungkus VPN (Ukuran Melebihi 1500)
- ┌────────────────────────────────────────────────────────┐
- │ VPN Header │ Enkripsi │ IP Header │     TCP DATA       │
- └────────────────────────────────────────────────────────┘
-```
+**Sebelum dibungkus VPN** (masih dalam batas MTU 1500 byte):
+
+| Bagian | Isi |
+| --- | --- |
+| IP Header | Header IP asli |
+| TCP Data | Payload aplikasi |
+
+**Setelah dibungkus VPN** (melebihi 1500 byte → perlu fragmentasi):
+
+| Bagian | Isi |
+| --- | --- |
+| VPN Header | Header protokol VPN (WireGuard/IPsec/dll) |
+| Enkripsi | Overhead enkripsi payload |
+| IP Header | Header IP asli, ikut terbungkus di dalam |
+| TCP Data | Payload aplikasi asli |
 
 1.  **Batas MTU Fisik:** Standar ukuran paket maksimal yang bisa dilewati jaringan internet fisik (termasuk satelit) adalah **`1500 byte`** (disebut MTU - *Maximum Transmission Unit*).
 2.  **Fragmentasi:** Jika ukuran paket VPN yang dibungkus melebihi `1500 byte`, paket tersebut harus dipecah menjadi dua bagian (fragmentasi) oleh router pengirim agar bisa lewat, dan dirakit kembali di router penerima.

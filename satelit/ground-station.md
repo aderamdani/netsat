@@ -23,11 +23,12 @@ ukuran.
 
 ## Rantai sinyal
 
-```text
-             ┌────────────── ANTENA ──────────────┐
-TERIMA (RX): reflektor → feed → LNA/LNB → down-converter → demodulator → IP
-KIRIM (TX) : IP → modulator → up-converter → HPA → feed → reflektor
+```mermaid
+flowchart LR
+    RX0[TERIMA - RX] --> R1[Reflektor] --> R2[Feed] --> R3[LNA/LNB] --> R4[Down-converter] --> R5[Demodulator] --> R6[IP]
+    TX0[KIRIM - TX] --> T1[IP] --> T2[Modulator] --> T3[Up-converter] --> T4[HPA] --> T5[Feed] --> T6[Reflektor]
 ```
+*Rantai sinyal ground station: RX menurunkan frekuensi dari udara ke data IP, TX menaikkan dari IP ke udara — feed dan reflektor dipakai bersama oleh kedua arah.*
 
 ### Antena
 
@@ -133,30 +134,32 @@ dan data satelitnya muncul langsung di cloud. Pola pikirnya persis
 
 ## Cek pemahaman
 
+1. Kenapa kualitas LNA/LNB paling menentukan di sisi terima, padahal ia cuma
+   satu dari sekian komponen?
+2. Antena makin besar makin bagus — tapi apa harga tersembunyinya selain
+   uang?
+3. Kenapa stasiun bumi satelit polar dibangun di Svalbard (78°LU), bukan di
+   ekuator?
+4. Sinyal dari LNB dialirkan ke modem lewat kabel koaksial biasa. Kok bisa,
+   padahal sinyalnya Ku-band 11 GHz?
+
 <details>
 <summary>Lihat jawaban</summary>
 
+1. Ia penguat **pertama**: derau yang ia tambahkan ikut dikuatkan oleh
+   seluruh rantai setelahnya. Derau yang masuk belakangan dampaknya jauh
+   lebih kecil.
+2. Beam makin **sempit**: menuntut pointing (dan tracking) makin presisi;
+   salah arah sedikit, sinyal hilang.
+3. Satelit polar melewati **kutub setiap orbit** — stasiun lintang tinggi
+   melihatnya di setiap lintasan; stasiun ekuator hanya beberapa kali sehari.
+4. LNB sudah **menurunkannya ke L-band** (±1–2 GHz) — cukup rendah untuk
+   kabel koaksial murah puluhan meter.
 
-1. Kenapa kualitas LNA/LNB paling menentukan di sisi terima, padahal ia cuma
-   satu dari sekian komponen? <br>→ Ia penguat **pertama**: derau yang ia
-   tambahkan ikut dikuatkan oleh seluruh rantai setelahnya. Derau yang masuk
-   belakangan dampaknya jauh lebih kecil.
-2. Antena makin besar makin bagus — tapi apa harga tersembunyinya selain
-   uang? <br>→ Beam makin **sempit**: menuntut pointing (dan tracking) makin
-   presisi; salah arah sedikit, sinyal hilang.
-3. Kenapa stasiun bumi satelit polar dibangun di Svalbard (78°LU), bukan di
-   ekuator? <br>→ Satelit polar melewati **kutub setiap orbit** — stasiun
-   lintang tinggi melihatnya di setiap lintasan; stasiun ekuator hanya
-   beberapa kali sehari.
-4. Sinyal dari LNB dialirkan ke modem lewat kabel koaksial biasa. Kok bisa,
-   padahal sinyalnya Ku-band 11 GHz? <br>→ LNB sudah **menurunkannya ke
-   L-band** (±1–2 GHz) — cukup rendah untuk kabel koaksial murah puluhan
-   meter.
+</details>
 
 ---
 
 Semua komponen di halaman ini bekerja pada frekuensi yang diatur ketat oleh
 regulasi internasional. Kenapa Ku dan Ka jadi primadona — dan kenapa hujan
 tropis adalah musuh utamanya? Lanjut ke [Frekuensi & Band](/satelit/frekuensi-band).
-
-</details>

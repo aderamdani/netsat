@@ -11,9 +11,14 @@ publik. Halaman ini memasang ketiganya di RouterOS.
 
 Topologi acuan untuk seluruh contoh:
 
-```text
-internet ── ether1 (WAN, 203.0.113.2/24) ─ ROUTER ─ bridge1 (LAN, 192.0.2.1/24) ── klien
+```mermaid
+flowchart LR
+    INT[internet] --> WAN["ether1<br/>WAN, 203.0.113.2/24"]
+    WAN --> R[ROUTER]
+    R --> LAN["bridge1<br/>LAN, 192.0.2.1/24"]
+    LAN --> K[klien]
 ```
+*Topologi acuan yang dipakai di seluruh contoh DHCP/DNS/NAT pada halaman ini.*
 
 ## DHCP client (sisi WAN)
 
@@ -308,21 +313,22 @@ diberikan ke klien di VLAN 10.
 
 ## Cek pemahaman
 
+1. Klien mendapat IP `169.254.x.x` — apa hipotesis pertamamu?
+2. Kenapa masquerade memakai `out-interface`, bukan `src-address`?
+3. dst-nat sudah benar tapi tetangga satu LAN tak bisa akses
+   `203.0.113.2:8080` — fenomena apa ini?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Klien mendapat IP `169.254.x.x` — apa hipotesis pertamamu? →
-   [DHCP gagal](/networking/protokol#dhcp): server mati, kabel/VLAN salah,
+1. [DHCP gagal](/networking/protokol#dhcp): server mati, kabel/VLAN salah,
    atau pool habis. Cek `/ip/dhcp-server/print` dan lease-nya.
-2. Kenapa masquerade memakai `out-interface`, bukan `src-address`? → Lebih
-   tahan perubahan: berapa pun subnet LAN kelak, semua yang keluar WAN
+2. Lebih tahan perubahan: berapa pun subnet LAN kelak, semua yang keluar WAN
    tersamar. (Menambah `src-address=192.0.2.0/24` lebih ketat — juga sah.)
-3. dst-nat sudah benar tapi tetangga satu LAN tak bisa akses
-   `203.0.113.2:8080` — fenomena apa ini? → *Hairpin NAT*: trafik LAN→IP
-   publik→LAN butuh aturan masquerade tambahan untuk arah baliknya.
+3. *Hairpin NAT*: trafik LAN→IP publik→LAN butuh aturan masquerade
+   tambahan untuk arah baliknya.
+
+</details>
 
 Alamat beres, nama beres, penyamaran beres. Berikutnya: mengarahkan paket ke
 jalur yang benar — [Routing di RouterOS](/mikrotik/routing).
-
-</details>

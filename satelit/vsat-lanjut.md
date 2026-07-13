@@ -674,37 +674,38 @@ oleh regulator.
 
 ## Cek pemahaman
 
+1. ISP ingin menghubungkan 2 BTS di dua pulau dengan traffic stabil 15 Mbps
+   per link. SCPC atau MF-TDMA?
+2. Sebuah remote VSAT sering hilang saat hujan deras. C/N turun 6 dB saat
+   hujan. Link margin saat cerah 4 dB. Antena saat ini 0,9 m. Apa solusi?
+3. Pasang antena VSAT baru. Rx level −50 dBm (sangat bagus) tapi saat
+   line-up cross-pol hanya 15 dB. Apa masalahnya dan bagaimana
+   memperbaikinya?
+4. Perbedaan utama bandwidth transponder untuk SCPC vs MF-TDMA untuk 100
+   remote dengan total traffic rata-rata 50 Mbps?
+5. SATRIA-1 menyediakan 150 Gbps untuk 150.000 titik. Jika satu titik perlu
+   2 Mbps CIR, apakah cukup?
+
 <details>
 <summary>Lihat jawaban</summary>
 
+1. **SCPC** — traffic stabil, jumlah link sedikit, butuh CIR 100%, SLA
+   tinggi.
+2. Link margin 4 − 6 = **−2 dB saat hujan** = tidak cukup. Solusi: perbesar
+   antena ke 1,2 m (+2,5 dB) atau 1,8 m (+6 dB). Atau turunkan modulasi
+   (ACM) — tapi throughput ikut turun.
+3. Polarisasi feed belum tepat. Putar feed ODU beberapa derajat sampai
+   cross-pol > 30 dB. Sinyal kuat (Rx −50) + cross-pol jelek = feed miring.
+4. SCPC: alokasi carrier tetap — butuh 50 Mbps × overhead ≈ 75–100 MHz,
+   termasuk guard band antar carrier. MF-TDMA: alokasi dinamis — butuh
+   ~60–70 MHz karena kontensi; 100 remote tidak pernah kirim penuh
+   bersamaan.
+5. 150.000 × 2 Mbps = 300 Gbps = **tidak cukup** (2× kapasitas). Solusinya
+   oversubscription: tidak semua titik aktif bersamaan di CIR penuh.
+   Kapasitas 150 Gbps ÷ 150.000 titik = 1 Mbps rata-rata. Setiap titik
+   dapat CIR 512 Kbps–1 Mbps + burst MIR.
 
-1. ISP ingin menghubungkan 2 BTS di dua pulau dengan traffic stabil 15 Mbps
-   per link. SCPC atau MF-TDMA? <br>→ **SCPC** — traffic stabil, jumlah
-   link sedikit, butuh CIR 100%, SLA tinggi.
-
-2. Sebuah remote VSAT sering hilang saat hujan deras. C/N turun 6 dB saat
-   hujan. Link margin saat cerah 4 dB. Antena saat ini 0,9 m. Apa solusi?
-   <br>→ Link margin 4 − 6 = **−2 dB saat hujan** = tidak cukup. Solusi:
-   perbesar antena ke 1,2 m (+2,5 dB) atau 1,8 m (+6 dB). Atau turunkan
-   modulasi (ACM) — tapi throughput ikut turun.
-
-3. Pasang antena VSAT baru. Rx level −50 dBm (sangat bagus) tapi saat
-   line-up cross-pol hanya 15 dB. Apa masalahnya dan bagaimana
-   memperbaikinya? <br>→ Polarisasi feed belum tepat. Putar feed ODU
-   beberapa derajat sampai cross-pol > 30 dB. Sinyal kuat (Rx −50) + cross-pol
-   jelek = feed miring.
-
-4. Perbedaan utama bandwidth transponder untuk SCPC vs MF-TDMA untuk 100
-   remote dengan total traffic rata-rata 50 Mbps? <br>→ SCPP: alokasi carrier
-   tetap — butuh 50 Mbps × overhead ≈ 75–100 MHz, termasuk guard band antar
-   carrier. MF-TDMA: alokasi dinamis — butuh ~60–70 MHz karena kontensi;
-   100 remote tidak pernah kirim penuh bersamaan.
-
-5. SATRIA-1 menyediakan 150 Gbps untuk 150.000 titik. Jika satu titik perlu
-   2 Mbps CIR, apakah cukup? <br>→ 150.000 × 2 Mbps = 300 Gbps = **tidak
-   cukup** (2× kapasitas). Solusinya oversubscription: tidak semua titik
-   aktif bersamaan di CIR penuh. Kapasitas 150 Gbps ÷ 150.000 titik = 1 Mbps
-   rata-rata. Setiap titik dapat CIR 512 Kbps–1 Mbps + burst MIR.
+</details>
 
 ---
 
@@ -712,5 +713,3 @@ oleh regulator.
 Lihat [Wireless & Satelit (MikroTik)](/mikrotik/wireless-dan-satelit#routeros-di-jaringan-vsat)
 untuk konfigurasi router di sisi remote VSAT — QoS, DNS cache, dan monitoring.
 :::
-
-</details>

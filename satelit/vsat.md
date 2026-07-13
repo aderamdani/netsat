@@ -154,28 +154,27 @@ sudah terlihat: terminal *multi-orbit* yang berpindah GEO↔LEO otomatis.
 
 ## Cek pemahaman
 
+1. Dua kantor cabang sama-sama pakai VSAT dan saling telepon. Kenapa
+   percakapannya terasa sangat tertunda dibanding menelepon kantor pusat?
+2. Layanan 1:20 contention 10 Mbps vs 1:1 CIR 2 Mbps — mana untuk ATM bank,
+   mana untuk Wi-Fi desa?
+3. Kenapa antena VSAT melenceng 1° dianggap pelanggaran serius, bukan sekadar
+   "sinyal saya jelek"?
+4. Pelanggan komplain: "speedtest kencang, tapi video call patah-patah."
+   Jelaskan.
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Dua kantor cabang sama-sama pakai VSAT dan saling telepon. Kenapa
-   percakapannya terasa sangat tertunda dibanding menelepon kantor pusat?
-   <br>→ **Double hop**: remote→satelit→hub→satelit→remote ≈ 1 detik RTT,
+1. **Double hop**: remote→satelit→hub→satelit→remote ≈ 1 detik RTT,
    dua kali lipat jalur remote→hub.
-2. Layanan 1:20 contention 10 Mbps vs 1:1 CIR 2 Mbps — mana untuk ATM bank,
-   mana untuk Wi-Fi desa? <br>→ ATM: **CIR 1:1** (transaksi kecil tapi wajib
-   selalu bisa lewat — SLA). Wi-Fi desa: **1:20** (murah; pengguna banyak
-   tapi toleran).
-3. Kenapa antena VSAT melenceng 1° dianggap pelanggaran serius, bukan sekadar
-   "sinyal saya jelek"? <br>→ 1° di sabuk GEO ≈ 600 km — antenamu "berteriak"
-   ke **satelit tetangga** dan mengganggu ratusan terminal orang lain.
-4. Pelanggan komplain: "speedtest kencang, tapi video call patah-patah."
-   Jelaskan. <br>→ Speedtest mengukur throughput (yang diselamatkan PEP+ACM);
-   video call butuh **RTT rendah dan jitter kecil** — dua hal yang tidak bisa
-   dibeli di GEO. Solusinya QoS ketat, atau layanan LEO/teresterial.
-
----
-
+2. ATM: **CIR 1:1** (transaksi kecil tapi wajib selalu bisa lewat — SLA).
+   Wi-Fi desa: **1:20** (murah; pengguna banyak tapi toleran).
+3. 1° di sabuk GEO ≈ 600 km — antenamu "berteriak" ke **satelit tetangga**
+   dan mengganggu ratusan terminal orang lain.
+4. Speedtest mengukur throughput (yang diselamatkan PEP+ACM); video call
+   butuh **RTT rendah dan jitter kecil** — dua hal yang tidak bisa dibeli
+   di GEO. Solusinya QoS ketat, atau layanan LEO/teresterial.
 
 </details>
 

@@ -179,25 +179,29 @@ Daftar minimum untuk jaringan apa pun, dari lab sekolah sampai kantor:
 
 ## Cek pemahaman
 
+1. Enkripsi HTTPS melindungi pilar CIA yang mana?
+2. Korban ARP spoofing membuka situs ber-HTTPS. Apa yang bisa dan tidak bisa
+   dilihat penyerang?
+3. Kenapa firewall stateful lebih aman daripada packet filter murni?
+4. Kantormu memisahkan VLAN karyawan, tamu, dan CCTV. Serangan apa yang
+   dilemahkan desain ini?
+
 <details>
 <summary>Lihat jawaban</summary>
 
+1. **Confidentiality** dan **integrity** (plus autentikasi server lewat
+   sertifikat). Ia *tidak* menolong availability.
+2. Bisa: ke mana korban terhubung (IP/nama situs), kapan, seberapa banyak.
+   Tidak bisa: **isi** trafiknya — TLS tetap mengunci. Lapisan pertahanan
+   bekerja walau satu lapis jebol.
+3. Ia hanya meloloskan balasan dari koneksi yang **memang dibuka dari
+   dalam** — paket masuk yang tidak diundang otomatis tertolak tanpa perlu
+   aturan khusus.
+4. *Lateral movement*: penyerang yang menguasai satu segmen (mis. kamera
+   CCTV murah yang tak pernah di-update) tidak otomatis bisa menjangkau
+   komputer karyawan.
 
-1. Enkripsi HTTPS melindungi pilar CIA yang mana? <br>→ **Confidentiality**
-   dan **integrity** (plus autentikasi server lewat sertifikat). Ia *tidak*
-   menolong availability.
-2. Korban ARP spoofing membuka situs ber-HTTPS. Apa yang bisa dan tidak bisa
-   dilihat penyerang? <br>→ Bisa: ke mana korban terhubung (IP/nama situs),
-   kapan, seberapa banyak. Tidak bisa: **isi** trafiknya — TLS tetap
-   mengunci. Lapisan pertahanan bekerja walau satu lapis jebol.
-3. Kenapa firewall stateful lebih aman daripada packet filter murni? <br>→ Ia
-   hanya meloloskan balasan dari koneksi yang **memang dibuka dari dalam** —
-   paket masuk yang tidak diundang otomatis tertolak tanpa perlu aturan
-   khusus.
-4. Kantormu memisahkan VLAN karyawan, tamu, dan CCTV. Serangan apa yang
-   dilemahkan desain ini? <br>→ *Lateral movement*: penyerang yang menguasai
-   satu segmen (mis. kamera CCTV murah yang tak pernah di-update) tidak
-   otomatis bisa menjangkau komputer karyawan.
+</details>
 
 ---
 
@@ -207,5 +211,3 @@ ini dibangun di [Firewall & QoS](/mikrotik/firewall-qos) dan
 
 Modul networking selesai. Sekarang saatnya meninggalkan permukaan bumi:
 [Pengantar Satelit](/satelit/) menunggu di modul berikutnya.
-
-</details>

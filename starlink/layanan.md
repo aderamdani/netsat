@@ -68,25 +68,25 @@ SpaceX mulai menguji **Direct to Cell** — satelit sebagai "BTS terbang":
 
 ## Cek pemahaman
 
+1. Apa keuntungan utama paket Bisnis/Enterprise dibanding Residensial dari
+   sudut pandang admin jaringan kantor cabang?
+2. Bolehkah antena Standard Actuated (Residensial Gen 2) dipakai internetan
+   di kapal yang sedang berlayar?
+3. Bagaimana Direct to Cell melayani ponsel pintar standar?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Apa keuntungan utama paket Bisnis/Enterprise dibanding Residensial dari
-   sudut pandang admin jaringan kantor cabang?
-   <br>→ **Priority data** (throughput stabil karena didahulukan di atas
+1. **Priority data** (throughput stabil karena didahulukan di atas
    pengguna umum) dan **IP publik IPv4 dinamis** yang mempermudah VPN dan
    akses remote langsung tanpa menembus CGNAT.
-2. Bolehkah antena Standard Actuated (Residensial Gen 2) dipakai internetan
-   di kapal yang sedang berlayar?
-   <br>→ Tidak. Pemakaian *in-motion* melanggar ketentuan layanan, dan motor
+2. Tidak. Pemakaian *in-motion* melanggar ketentuan layanan, dan motor
    mekanisnya rawan rusak oleh goyangan ombak. Maritim wajib **Flat High
    Performance** + paket **Mobile Priority**.
-3. Bagaimana Direct to Cell melayani ponsel pintar standar?
-   <br>→ Satelit bertindak sebagai BTS seluler di orbit rendah, memancarkan
+3. Satelit bertindak sebagai BTS seluler di orbit rendah, memancarkan
    sinyal LTE standar yang ditangkap antena internal ponsel biasa — tanpa
    modem atau adaptor tambahan.
 
-Saatnya praktik: [Praktik Integrasi RouterOS](/starlink/praktik-mikrotik).
-
 </details>
+
+Saatnya praktik: [Praktik Integrasi RouterOS](/starlink/praktik-mikrotik).

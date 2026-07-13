@@ -163,19 +163,19 @@ perangkat yang tersambung ke internet hari ini.
 
 ## Cek pemahaman
 
+1. Router habis di-reset `no-defaults=yes` — bagaimana masuk lagi?
+2. Kenapa MAC-telnet tidak bisa dipakai dari kantor pusat ke router cabang?
+3. Dua langkah yang mematahkan brute-force login paling murah?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Router habis di-reset `no-defaults=yes` — bagaimana masuk lagi?
-   → **MAC-telnet / WinBox mode MAC** dari laptop di segmen L2 yang sama.
-2. Kenapa MAC-telnet tidak bisa dipakai dari kantor pusat ke router cabang?
-   → Ia bekerja di layer 2; antar-kota berarti melewati router, dan
+1. **MAC-telnet / WinBox mode MAC** dari laptop di segmen L2 yang sama.
+2. Ia bekerja di layer 2; antar-kota berarti melewati router, dan
    [router memutus broadcast domain](/networking/switching#broadcast-domain-dan-masalah-skala).
-3. Dua langkah yang mematahkan brute-force login paling murah? → Hapus user
-   `admin` + batasi `winbox/ssh` dengan `address=` subnet manajemen.
+3. Hapus user `admin` + batasi `winbox/ssh` dengan `address=` subnet manajemen.
+
+</details>
 
 Sudah bisa masuk dengan aman — sekarang kenali alat-alat kerjanya:
 [Manajemen Perangkat](/mikrotik/manajemen).
-
-</details>

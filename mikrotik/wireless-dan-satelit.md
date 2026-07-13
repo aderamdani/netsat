@@ -142,22 +142,19 @@ sederhana sering kali lebih tangguh.
 
 ## Cek pemahaman
 
+1. Kenapa `configuration.country` wajib benar?
+2. QoS satelitmu tak berpengaruh padahal queue tree rapi — dua tersangka?
+3. Apa untungnya router remote menjadi DNS cache + NTP server lokal?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Kenapa `configuration.country` wajib benar? → Kanal dan daya pancar diatur
-   regulasi nasional — salah negara = ilegal sekaligus mengganggu pengguna
-   [spektrum](/satelit/frekuensi-band) lain.
-2. QoS satelitmu tak berpengaruh padahal queue tree rapi — dua tersangka? →
-   FastTrack (paket melompati queue) atau `max-limit` induk ≥ kapasitas link
+1. Kanal dan daya pancar diatur regulasi nasional — salah negara = ilegal
+   sekaligus mengganggu pengguna [spektrum](/satelit/frekuensi-band) lain.
+2. FastTrack (paket melompati queue) atau `max-limit` induk ≥ kapasitas link
    (antrean pindah ke modem).
-3. Apa untungnya router remote menjadi DNS cache + NTP server lokal? →
-   Memotong RTT ±600 ms dari transaksi kecil berulang — persentase
+3. Memotong RTT ±600 ms dari transaksi kecil berulang — persentase
    penghematan terbesar justru di paket-paket terkecil.
-
----
-
 
 </details>
 

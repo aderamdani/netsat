@@ -17,19 +17,15 @@ Satelit LEO melintasi langit dengan cepat (±27.000 km/jam). Objek kecil yang
 menghalangi garis pandang antena — pucuk pohon, tiang, ujung atap — memutus
 koneksi 1–5 detik **setiap kali** ada satelit melintas di baliknya.
 
-```text
-       Satelit LEO meluncur cepat (±27.000 km/jam)
-          ● ──────► ● ──────► [ ● HILANG SINYAL ] ──────► ●
-                                  │
-                                ┌─▼─┐  Pucuk pohon menghalangi
-                                │ 🌳│  garis pandang antena
-                                └───┘
-                                  ▲
-                                 / \  (sudut pandang antena)
-                                ┌───┐
-                                │Ant│ Antena Starlink
-                                └───┘
+```mermaid
+flowchart LR
+    S1["Satelit lewat"] --> S2["Satelit lewat"] --> S3["Sinyal hilang"] --> S4["Satelit lewat"]
+    Obstruksi["🌳 Pucuk pohon menghalangi<br/>garis pandang antena"] --> S3
+    Antena["📡 Antena Starlink"] --> Obstruksi
 ```
+*Satelit LEO meluncur cepat (±27.000 km/jam) — begitu lintasannya tertutup
+objek di garis pandang antena (sekalipun sesaat), sinyal langsung putus
+sampai satelit berikutnya lewat.*
 
 **Gejala khas:** speedtest kencang, tapi **RTO berkala** setiap beberapa
 menit; VoIP terputus sejenak; game online *disconnect*.
@@ -89,26 +85,23 @@ adaptor PoE mati karena *overcurrent*.
 
 ## Cek pemahaman
 
+1. Mengapa pucuk pohon yang menghalangi sebagian kecil langit bisa memutus
+   koneksi total beberapa detik berulang kali?
+2. Bagaimana mendeteksi kerusakan kabel Starlink hanya dengan ping dari
+   RouterOS?
+3. Mengapa Snow Melt Mode disarankan dimatikan di Indonesia?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Mengapa pucuk pohon yang menghalangi sebagian kecil langit bisa memutus
-   koneksi total beberapa detik berulang kali?
-   <br>→ Satelit LEO bergerak cepat melintasi langit; setiap kali lintasannya
+1. Satelit LEO bergerak cepat melintasi langit; setiap kali lintasannya
    tepat di balik penghalang, sinyal terblokir sampai satelit berikutnya
    muncul di area langit yang bersih.
-2. Bagaimana mendeteksi kerusakan kabel Starlink hanya dengan ping dari
-   RouterOS?
-   <br>→ Ping `192.168.100.1` (IP manajemen antena). Jalur ini murni kabel
+2. Ping `192.168.100.1` (IP manajemen antena). Jalur ini murni kabel
    lokal — latensi >5 ms atau packet loss berarti kabel/konektor/adaptor
    bermasalah, bukan satelitnya.
-3. Mengapa Snow Melt Mode disarankan dimatikan di Indonesia?
-   <br>→ Tidak ada salju yang perlu dicairkan; mematikannya menghemat daya
+3. Tidak ada salju yang perlu dicairkan; mematikannya menghemat daya
    (mencegah lonjakan hingga ±150 W) dan mengurangi risiko panas berlebih.
-
----
-
 
 </details>
 

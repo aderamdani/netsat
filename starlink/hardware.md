@@ -12,16 +12,6 @@ lapangan.
 
 ## Perbandingan antena (dish) Starlink
 
-```text
-   Gen 1 (bulat)       Gen 2 (persegi actuated)      Gen 3 (kickstand)      Flat High Performance
-    ┌─────────┐              ┌───────────┐             ┌───────────┐             ┌─────────────┐
-    │  ● ● ●  │              │           │             │           │             │             │
-    │  ● ● ●  │              │           │             │           │             │             │
-    └────┬────┘              └─────┬─────┘             └─────┬─────┘             └──────┬──────┘
-         │ tiang                   │ tiang                   │ penyangga                │ braket datar
-      (motor)                   (motor)                  (manual)                   (statis)
-```
-
 | Parameter | Gen 1 (Circular) | Gen 2 (Standard Actuated) | Gen 3 (Standard) | Flat High Performance |
 | --- | --- | --- | --- | --- |
 | **Bentuk fisik** | Bulat (diameter 58,9 cm) | Persegi (51,3 × 30,3 cm) | Persegi (59,4 × 38,3 cm) | Persegi datar (57,5 × 51,1 cm) |
@@ -80,24 +70,24 @@ Antena Starlink disuplai lewat **PoE tegangan tinggi** dari dalam ruangan:
 
 ## Cek pemahaman
 
+1. Kenapa Gen 3 dirancang tanpa motor penggerak seperti Gen 2?
+2. Apa keunggulan utama Flat High Performance dibanding Standard Actuated di
+   area dengan hambatan pohon?
+3. Pengamanan kelistrikan apa yang wajib di site remote dengan listrik
+   naik-turun?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Kenapa Gen 3 dirancang tanpa motor penggerak seperti Gen 2?
-   <br>→ Mengurangi titik kegagalan mekanis akibat keausan di cuaca luar
+1. Mengurangi titik kegagalan mekanis akibat keausan di cuaca luar
    ruangan, menyederhanakan perangkat, dan menurunkan biaya produksi —
    pointing cukup sekali, sisanya dikerjakan phased array secara elektronik.
-2. Apa keunggulan utama Flat High Performance dibanding Standard Actuated di
-   area dengan hambatan pohon?
-   <br>→ FoV jauh lebih luas (140° vs 110°): melacak lebih banyak satelit
+2. FoV jauh lebih luas (140° vs 110°): melacak lebih banyak satelit
    sekaligus sehingga potensi *drop* akibat halangan fisik jauh berkurang.
-3. Pengamanan kelistrikan apa yang wajib di site remote dengan listrik
-   naik-turun?
-   <br>→ **UPS** — menstabilkan tegangan dan menjembatani padam sekejap,
+3. **UPS** — menstabilkan tegangan dan menjembatani padam sekejap,
    karena proses boot + sinkronisasi satelit memakan 3–10 menit.
+
+</details>
 
 Perangkat sudah dikenal — sekarang paket layanannya:
 [Jenis Layanan & Paket](/starlink/layanan).
-
-</details>

@@ -171,20 +171,22 @@ bekerja tanpa kamu minta. Lengkapi dengan penjaga kedua di port akses:
 
 ## Cek pemahaman
 
+1. IP LAN dipasang di `ether2` yang berstatus slave bridge — kenapa jaringan
+   kacau?
+2. Frame untagged masuk lewat trunk `ether1` (PVID bawaan 1) masuk ke VLAN
+   berapa?
+3. Apa arti kolom `HW=yes` hilang setelah kamu mengubah konfigurasi bridge?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. IP LAN dipasang di `ether2` yang berstatus slave bridge — kenapa jaringan
-   kacau? → Alamat harus di **bridge**; port slave bukan lagi entitas L3.
-2. Frame untagged masuk lewat trunk `ether1` (PVID bawaan 1) masuk ke VLAN
-   berapa? → VLAN 1 — karena itu praktik rapi memberi trunk PVID khusus atau
+1. Alamat harus di **bridge**; port slave bukan lagi entitas L3.
+2. VLAN 1 — karena itu praktik rapi memberi trunk PVID khusus atau
    memfilter frame untagged (`frame-types=admit-only-vlan-tagged`).
-3. Apa arti kolom `HW=yes` hilang setelah kamu mengubah konfigurasi bridge?
-   → Forwarding pindah ke CPU; throughput turun — tinjau ulang fitur yang
+3. Forwarding pindah ke CPU; throughput turun — tinjau ulang fitur yang
    baru dinyalakan.
+
+</details>
 
 Layer 2 tertata. Sekarang layanan-layanan yang membuat LAN "hidup":
 [DHCP, DNS & NAT](/mikrotik/dhcp-dns-nat).
-
-</details>

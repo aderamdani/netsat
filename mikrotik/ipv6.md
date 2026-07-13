@@ -118,17 +118,22 @@ add chain=forward in-interface=ether1 connection-state=new action=drop comment="
 
 ## Cek pemahaman
 
+1. Kenapa kita tidak perlu melakukan konfigurasi NAT (masquerade) pada IPv6?
+2. Apa yang terjadi jika parameter `advertise` di `/ipv6/address` diset ke `no`?
+3. Mengapa aturan firewall ICMPv6 wajib di-accept?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. **Kenapa kita tidak perlu melakukan konfigurasi NAT (masquerade) pada IPv6?**
-   <br>→ Karena setiap perangkat LAN mendapatkan alokasi IP Global Unicast (GUA) unik langsung dari pool ISP, sehingga paket dapat dikirim bolak-balik di internet secara langsung. Peran keamanan NAT digantikan sepenuhnya oleh firewall filter.
-
-2. **Apa yang terjadi jika parameter `advertise` di `/ipv6/address` diset ke `no`?**
-   <br>→ Router tidak akan mengiklankan prefix ke LAN. Akibatnya, klien lokal tidak akan mendapatkan IP IPv6 otomatis (SLAAC) dan konektivitas IPv6 di LAN akan mati.
-
-3. **Mengapa aturan firewall ICMPv6 wajib di-accept?**
-   <br>→ ICMPv6 menggantikan peran ARP (melalui Neighbor Solicitation/Advertisement) dan menangani penyesuaian ukuran paket (MTU). Memblokirnya akan menghentikan komunikasi lokal maupun internet IPv6.
+1. Karena setiap perangkat LAN mendapatkan alokasi IP Global Unicast (GUA)
+   unik langsung dari pool ISP, sehingga paket dapat dikirim bolak-balik di
+   internet secara langsung. Peran keamanan NAT digantikan sepenuhnya oleh
+   firewall filter.
+2. Router tidak akan mengiklankan prefix ke LAN. Akibatnya, klien lokal
+   tidak akan mendapatkan IP IPv6 otomatis (SLAAC) dan konektivitas IPv6 di
+   LAN akan mati.
+3. ICMPv6 menggantikan peran ARP (melalui Neighbor Solicitation/Advertisement)
+   dan menangani penyesuaian ukuran paket (MTU). Memblokirnya akan
+   menghentikan komunikasi lokal maupun internet IPv6.
 
 </details>

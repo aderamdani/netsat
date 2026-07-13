@@ -168,26 +168,29 @@ Dua titik temu yang menarik:
 
 ## Cek pemahaman
 
+1. Paket menuju `172.16.5.9`; tabel memuat `172.16.0.0/16 via A` dan
+   `172.16.5.0/24 via B`. Lewat mana?
+2. Kenapa link satelit diberi OSPF cost tinggi?
+3. Protokol apa yang merutekan **antar**-ISP?
+4. Rute statis `10.0.0.0/8 distance 1` dan rute OSPF `10.0.0.0/8 distance 110`
+   ada bersamaan — mana yang dipakai?
+5. `traceroute` berhenti di hop ke-5 dan tidak pernah sampai. Apa dugaan
+   pertamamu?
+
 <details>
 <summary>Lihat jawaban</summary>
 
+1. **B** (longest prefix match).
+2. Agar dipilih hanya ketika jalur teresterial mati (cadangan).
+3. **BGP**.
+4. **Statis** (prefix sama, distance lebih kecil menang).
+5. Router hop-5 tidak punya rute lanjutan (atau memblokir ICMP) — mulai
+   periksa tabel routing di sana.
 
-1. Paket menuju `172.16.5.9`; tabel memuat `172.16.0.0/16 via A` dan
-   `172.16.5.0/24 via B`. Lewat mana? → **B** (longest prefix match).
-2. Kenapa link satelit diberi OSPF cost tinggi? → Agar dipilih hanya ketika
-   jalur teresterial mati (cadangan).
-3. Protokol apa yang merutekan **antar**-ISP? → **BGP**.
-4. Rute statis `10.0.0.0/8 distance 1` dan rute OSPF `10.0.0.0/8 distance 110`
-   ada bersamaan — mana yang dipakai? → **Statis** (prefix sama, distance
-   lebih kecil menang).
-5. `traceroute` berhenti di hop ke-5 dan tidak pernah sampai. Apa dugaan
-   pertamamu? → Router hop-5 tidak punya rute lanjutan (atau memblokir ICMP)
-   — mulai periksa tabel routing di sana.
+</details>
 
 **Praktik:** rute statis, failover dua WAN, OSPF, dan BGP dikonfigurasi nyata
 di [Routing di RouterOS (MikroTik)](/mikrotik/routing).
 
 Routing mengurus perpindahan **antar**-jaringan. Perpindahan **di dalam** satu
 jaringan lokal adalah dunia yang berbeda: [Switching & VLAN](/networking/switching).
-
-</details>

@@ -311,19 +311,19 @@ menuju server SMTP.
 
 ## Cek pemahaman
 
+1. Kamu akan mengubah firewall router di kota lain lewat SSH. Langkah pertama?
+2. Backup mana yang bisa dipakai memindahkan konfigurasi ke unit pengganti
+   yang berbeda tipe?
+3. Kenapa `set 0` berbahaya di skrip?
+
 <details>
 <summary>Lihat jawaban</summary>
 
+1. **Ctrl+X** (safe mode), sehingga salah blokir = otomatis batal.
+2. `/export` (`.rsc`) — teks, bisa diedit menyesuaikan nama interface.
+3. Nomor urut berubah-ubah; gunakan `[find ...]`.
 
-1. Kamu akan mengubah firewall router di kota lain lewat SSH. Langkah pertama?
-   → **Ctrl+X** (safe mode), sehingga salah blokir = otomatis batal.
-2. Backup mana yang bisa dipakai memindahkan konfigurasi ke unit pengganti
-   yang berbeda tipe? → `/export` (`.rsc`) — teks, bisa diedit menyesuaikan
-   nama interface.
-3. Kenapa `set 0` berbahaya di skrip? → Nomor urut berubah-ubah; gunakan
-   `[find ...]`.
+</details>
 
 Alat sudah di tangan. Saatnya konfigurasi jaringan pertama:
 [Interface & IP Address](/mikrotik/interface-ip).
-
-</details>

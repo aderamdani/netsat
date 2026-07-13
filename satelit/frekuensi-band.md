@@ -130,27 +130,29 @@ Istilah yang hampir pasti kamu temui di brosur layanan satelit:
 
 ## Cek pemahaman
 
+1. Layanan internet satelit butuh kapasitas sebesar mungkin. Kenapa tidak
+   semua pindah ke Ka (atau Q/V) saja?
+2. GPS memilih L-band yang bandwidth-nya sempit. Keputusan buruk?
+3. Kenapa uplink selalu frekuensi yang lebih tinggi dari downlink?
+4. Dua carrier bisa memakai frekuensi persis sama di transponder yang sama.
+   Bagaimana caranya?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Layanan internet satelit butuh kapasitas sebesar mungkin. Kenapa tidak
-   semua pindah ke Ka (atau Q/V) saja? <br>→ Kapasitas naik, tapi **redaman
-   hujan** naik lebih cepat — di zona tropis, availability-nya bisa tak layak
-   jual tanpa margin dan trik (ACM, UPC, site diversity) yang mahal.
-2. GPS memilih L-band yang bandwidth-nya sempit. Keputusan buruk? <br>→
-   Tidak — GPS mengirim data kecil (posisi & waktu) tapi harus diterima
+1. Kapasitas naik, tapi **redaman hujan** naik lebih cepat — di zona tropis,
+   availability-nya bisa tak layak jual tanpa margin dan trik (ACM, UPC, site
+   diversity) yang mahal.
+2. Tidak — GPS mengirim data kecil (posisi & waktu) tapi harus diterima
    **chip mungil, tanpa antena terarah, di segala cuaca**. Ketahanan L-band
    persis yang dibutuhkan.
-3. Kenapa uplink selalu frekuensi yang lebih tinggi dari downlink? <br>→
-   Frekuensi tinggi lebih boros daya untuk melawan redaman — dan stasiun bumi
+3. Frekuensi tinggi lebih boros daya untuk melawan redaman — dan stasiun bumi
    punya listrik PLN; satelit hanya punya panel surya.
-4. Dua carrier bisa memakai frekuensi persis sama di transponder yang sama.
-   Bagaimana caranya? <br>→ **Polarisasi** berbeda (H/V atau RHCP/LHCP) —
-   spektrum efektif berlipat dua, asal instalasi feed-nya presisi.
+4. **Polarisasi** berbeda (H/V atau RHCP/LHCP) — spektrum efektif berlipat
+   dua, asal instalasi feed-nya presisi.
+
+</details>
 
 Dengan peta band di tangan, kita siap membedah sistem yang menggabungkan
 semuanya — jaringan piringan kecil yang menyatukan pelosok:
 [VSAT](/satelit/vsat).
-
-</details>

@@ -11,14 +11,7 @@ orbit istimewa.
 
 ## Peta ketinggian
 
-```text
-GEO   ── 35.786 km ─────────────── ● (diam relatif thd bumi)
-                                        periode: 23 j 56 m
-MEO   ── ±20.200 km ──────── ●          periode: ±12 jam (GPS)
-      
-LEO   ── 400–2.000 km ── ●              periode: ±90–120 menit
-Bumi  ── (ISS: 420 km, Starlink: 550 km)
-```
+Rentangnya jauh berbeda — LEO ratusan km, GEO puluhan ribu km:
 
 | Parameter | LEO | MEO | GEO |
 | --- | --- | --- | --- |
@@ -160,26 +153,26 @@ dikerjakan perangkat lunak pelacak di [ground station](/satelit/ground-station#m
 
 ## Cek pemahaman
 
+1. Kenapa parabola TV tidak butuh motor, sedangkan dish Starlink "hidup"?
+2. Kalau LEO latensinya jauh lebih baik, kenapa broadcast TV tetap di GEO?
+3. Satelit GEO kehabisan bahan bakar. Apa langkah terakhirnya, dan kenapa?
+4. Kenapa GPS butuh minimal 4 satelit terlihat, bukan 3?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Kenapa parabola TV tidak butuh motor, sedangkan dish Starlink "hidup"?
-   <br>→ TV memakai satelit **GEO** yang diam relatif terhadap Bumi; Starlink
+1. TV memakai satelit **GEO** yang diam relatif terhadap Bumi; Starlink
    di **LEO** melintas cepat sehingga beam harus terus dipindah (phased
    array) dan berpindah satelit tiap beberapa menit.
-2. Kalau LEO latensinya jauh lebih baik, kenapa broadcast TV tetap di GEO?
-   <br>→ Broadcast tidak peduli latensi; yang dibutuhkan **satu pancaran
+2. Broadcast tidak peduli latensi; yang dibutuhkan **satu pancaran
    menutup satu benua** dan antena penerima semurah mungkin — definisi GEO.
-3. Satelit GEO kehabisan bahan bakar. Apa langkah terakhirnya, dan kenapa?
-   <br>→ Naik ±300 km ke **graveyard orbit** dengan sisa bahan bakar. Slot
+3. Naik ±300 km ke **graveyard orbit** dengan sisa bahan bakar. Slot
    GEO langka dan diatur ITU — harus dikosongkan untuk penggantinya, dan
    bangkai yang melayang di sabuk GEO membahayakan tetangga.
-4. Kenapa GPS butuh minimal 4 satelit terlihat, bukan 3? <br>→ Tiga untuk
-   posisi 3D (x, y, z), satu lagi untuk **koreksi jam** penerima — jam ponsel
-   jauh dari presisi jam atom satelit.
+4. Tiga untuk posisi 3D (x, y, z), satu lagi untuk **koreksi jam** penerima
+   — jam ponsel jauh dari presisi jam atom satelit.
+
+</details>
 
 Ketinggian sudah dipilih — sekarang bagaimana sinyal benar-benar menempuh
 jarak itu? Lanjut ke [Komunikasi Satelit](/satelit/komunikasi).
-
-</details>

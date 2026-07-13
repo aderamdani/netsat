@@ -8,15 +8,25 @@ const props = defineProps<{
 const isPlaying = ref(false)
 const currentStep = ref(-1)
 
+type TcpStep = {
+  type: 'klien_to_server' | 'server_to_klien'
+  text: string
+  desc: string
+  success: boolean
+  dropped?: boolean
+  highlight?: boolean
+  retransmit?: boolean
+}
+
 // Handshake Mode Data
-const handshakeSteps = [
+const handshakeSteps: TcpStep[] = [
   { type: 'klien_to_server', text: 'SYN (seq=x)', desc: 'Klien meminta membuka koneksi baru.', success: true },
   { type: 'server_to_klien', text: 'SYN-ACK (seq=y, ack=x+1)', desc: 'Server setuju, membalas SYN dan mengakui SYN klien.', success: true },
   { type: 'klien_to_server', text: 'ACK (ack=y+1)', desc: 'Klien mengakui SYN server. Koneksi Terbentuk!', success: true }
 ]
 
 // Recovery Mode Data
-const recoverySteps = [
+const recoverySteps: TcpStep[] = [
   { type: 'klien_to_server', text: 'Data: seq=1..1000', desc: 'Klien mengirim 1000 byte pertama.', success: true },
   { type: 'server_to_klien', text: 'ACK: 1001', desc: 'Server membalas: "sudah kuterima s.d. byte 1000".', success: true },
   { type: 'klien_to_server', text: 'Data: seq=1001..2000', desc: 'Klien mengirim 1000 byte berikutnya.', success: false, dropped: true },

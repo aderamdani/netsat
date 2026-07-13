@@ -122,21 +122,22 @@ Router adalah titik pandang terbaik untuk troubleshooting
 
 ## Cek pemahaman
 
+1. `add address=192.0.2.1 interface=ether2` (tanpa `/24`) — apa akibatnya?
+2. Alamat ber-bendera `D` dari mana?
+3. Link p2p antar-router paling hemat memakai prefix apa?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. `add address=192.0.2.1 interface=ether2` (tanpa `/24`) — apa akibatnya?
-   → RouterOS menganggap `/32`; klien LAN takkan menemukan gateway-nya.
+1. RouterOS menganggap `/32`; klien LAN takkan menemukan gateway-nya.
    Prefix bukan hiasan.
-2. Alamat ber-bendera `D` dari mana? → Dinamis — DHCP client, PPP, dsb;
-   dikelola prosesnya, bukan oleh `/ip/address`.
-3. Link p2p antar-router paling hemat memakai prefix apa? →
-   [`/30`](/networking/subnetting#vlsm-subnet-dengan-ukuran-berbeda-beda)
+2. Dinamis — DHCP client, PPP, dsb; dikelola prosesnya, bukan oleh
+   `/ip/address`.
+3. [`/30`](/networking/subnetting#vlsm-subnet-dengan-ukuran-berbeda-beda)
    (atau `/31`).
+
+</details>
 
 Satu port satu kabel sudah beres. Menggabungkan banyak port menjadi switch —
 lengkap dengan VLAN — adalah bab berikutnya:
 [Bridging & Switching](/mikrotik/bridging-switching).
-
-</details>

@@ -84,12 +84,15 @@ Contoh: blokir akses antar-pelanggan (isolasi):
 
 ## Cek pemahaman
 
+1. Pelanggan terkoneksi (status `connected`) tapi tidak bisa membuka situs web — apa yang pertama diperiksa?
+2. Kenapa sesi PPPoE client tidak perlu `/ip/dhcp-client`?
+3. Bedakan `local-address` dan `remote-address` di profile.
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Pelanggan terkoneksi (status `connected`) tapi tidak bisa membuka situs web — apa yang pertama diperiksa? → Firewall `forward`: pastikan ada aturan `accept` dari `in-interface=pppoe-...` ke WAN atau aturan `established,related` di posisi pertama.
-2. Kenapa sesi PPPoE client tidak perlu `/ip/dhcp-client`? → IP dan gateway diberikan langsung oleh server PPPoE melalui mekanisme PPP (IPCP), bukan DHCP.
-3. Bedakan `local-address` dan `remote-address` di profile. → `local-address` adalah IP router untuk ujung terowongan; `remote-address` bisa berupa pool — alamat yang diberikan ke klien.
+1. Firewall `forward`: pastikan ada aturan `accept` dari `in-interface=pppoe-...` ke WAN atau aturan `established,related` di posisi pertama.
+2. IP dan gateway diberikan langsung oleh server PPPoE melalui mekanisme PPP (IPCP), bukan DHCP.
+3. `local-address` adalah IP router untuk ujung terowongan; `remote-address` bisa berupa pool — alamat yang diberikan ke klien.
 
 </details>

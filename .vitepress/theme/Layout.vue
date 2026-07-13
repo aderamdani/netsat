@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useData } from 'vitepress'
 import { useSidebar } from 'vitepress/theme'
 import DefaultTheme from 'vitepress/theme'
 import { ref, onMounted } from 'vue'

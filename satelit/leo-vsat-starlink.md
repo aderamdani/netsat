@@ -36,15 +36,16 @@ Antena Starlink ("Dishy") menggunakan teknologi **Phased Array**. Permukaan ante
 
 Dengan memanipulasi milidetik fase waktu (*phase delay*) sinyal yang keluar dari setiap pemancar mikro, arah gelombang dapat dibelokkan (*steering beam*) secara instan ke arah satelit yang lewat tanpa menggerakkan fisik antena sama sekali.
 
-```text
-       Sinyal dibelokkan ke kanan secara elektronik
-              \  \  \  \  \  \
-               \  \  \  \  \  \
-     ┌──────────────────────────────────┐
-     │ ◉   ◉   ◉   ◉   ◉   ◉   ◉   ◉   ◉│ -> Ratusan pemancar mikro
-     └──────────────────────────────────┘
-                 Antena Larik Berfase
-```
+Intinya: setiap elemen pemancar mikro menembakkan sinyal yang sama, tapi
+dengan **jeda fase berbeda-beda** antar-elemen. Jeda inilah yang membuat
+gelombang gabungannya menguat ke satu arah tertentu (bukan lurus ke depan) —
+murni permainan waktu, tanpa ada bagian yang bergerak secara fisik:
+
+| Yang diatur | Efeknya |
+| --- | --- |
+| Semua elemen fase sama (0°) | Beam lurus ke depan |
+| Fase bertahap antar-elemen (mis. +Δ° tiap elemen ke kanan) | Beam miring/membelok ke kanan |
+| Fase diubah ulang tiap milidetik | Beam "mengikuti" satelit yang bergerak melintasi langit |
 
 ### Mekanisme Handover LEO
 Karena satelit LEO bergerak cepat, terminal remote harus melakukan **handover** (perpindahan link) dari satu satelit yang akan tenggelam di cakrawala ke satelit berikutnya yang baru terbit.

@@ -357,32 +357,29 @@ celah atau pintu belakang sejak lahir? Praktik minimal:
 
 ## Cek pemahaman
 
+1. Domain email perusahaanmu sering dipakai phishing. Rekaman DNS apa yang
+   harus segera dipasang?
+2. Tim pengembang melaporkan server web `203.0.113.5` sering diserang SQL
+   injection. Apa yang bisa kamu lakukan dari sisi jaringan?
+3. Sebuah AP berpindah lokasi dan ditempel di meja resepsionis tanpa
+   sepengetahuan IT. Ancaman apa ini?
+4. Kamu menerima notifikasi SIEM: 1.500 login gagal ke SSH router dari IP
+   asing dalam 3 menit. Langkah pertama?
+5. Backup konfigurasi yang disimpan di cloud — apakah sudah cukup aman?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Domain email perusahaanmu sering dipakai phishing. Rekaman DNS apa yang
-   harus segera dipasang? <br>→ **SPF** (siapa yang sah kirim surel),
-   **DKIM** (tanda tangan verifikasi), **DMARC** (perintah ke penerima).
-   Naik dari `p=none` ke `p=reject` bertahap.
-
-2. Tim pengembang melaporkan server web `203.0.113.5` sering diserang SQL
-   injection. Apa yang bisa kamu lakukan dari sisi jaringan? <br>→ Pasang
-   **WAF** di depan server, atau blokir pola serangan di firewall L7.
+1. **SPF** (siapa yang sah kirim surel), **DKIM** (tanda tangan verifikasi),
+   **DMARC** (perintah ke penerima). Naik dari `p=none` ke `p=reject`
+   bertahap.
+2. Pasang **WAF** di depan server, atau blokir pola serangan di firewall L7.
    Tapi solusi permanen tetap di sisi aplikasi (parameterized query).
-
-3. Sebuah AP berpindah lokasi dan ditempel di meja resepsionis tanpa
-   sepengetahuan IT. Ancaman apa ini? <br>→ **Rogue AP** — potensi pintu
-   belakang ke jaringan internal. Atasi dengan pemindaian RF, WIPS, dan
-   kebijakan "dilarang pasang AP pribadi".
-
-4. Kamu menerima notifikasi SIEM: 1.500 login gagal ke SSH router dari IP
-   asing dalam 3 menit. Langkah pertama? <br>→ Blokir IP tersebut di
-   firewall (address-list dinamis atau manual). Ini pola brute-force.
-   Jangan tunggu sampai berhasil.
-
-5. Backup konfigurasi yang disimpan di cloud — apakah sudah cukup aman?
-   <br>→ Belum: pastikan backup dienkripsi (`password=`), dan *restore*
-      pernah diuji. Backup yang tidak bisa di-restore bukan backup.
+3. **Rogue AP** — potensi pintu belakang ke jaringan internal. Atasi dengan
+   pemindaian RF, WIPS, dan kebijakan "dilarang pasang AP pribadi".
+4. Blokir IP tersebut di firewall (address-list dinamis atau manual). Ini
+   pola brute-force. Jangan tunggu sampai berhasil.
+5. Belum: pastikan backup dienkripsi (`password=`), dan *restore*
+   pernah diuji. Backup yang tidak bisa di-restore bukan backup.
 
 </details>

@@ -235,20 +235,23 @@ loss menentukan seberapa dekat kamu ke batas itu**.
 
 ## Cek pemahaman
 
+1. Wi-Fi rumahmu termasuk jenis jaringan apa?
+2. Kenapa jaringan kantor memakai topologi star, bukan mesh?
+3. Perangkat apa yang memisahkan jaringan lokalmu dari internet?
+4. Link 50 Mbps dengan RTT 600 ms vs link 10 Mbps dengan RTT 20 ms — mana yang
+   lebih nyaman untuk video call?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-1. Wi-Fi rumahmu termasuk jenis jaringan apa? <br>→ **WLAN** — dan koneksi
-   rumah ke ISP adalah bagian dari **WAN**.
-2. Kenapa jaringan kantor memakai topologi star, bukan mesh? <br>→ Biaya:
-   mesh butuh kabel & port ke setiap perangkat lain. Star cukup satu kabel per
-   perangkat ke switch — kegagalan satu kabel pun hanya memutus satu perangkat.
-3. Perangkat apa yang memisahkan jaringan lokalmu dari internet? <br>→
-   **Router** (gateway) — sering digabung dengan firewall dan modem dalam satu
-   kotak "router rumah".
-4. Link 50 Mbps dengan RTT 600 ms vs link 10 Mbps dengan RTT 20 ms — mana yang
-   lebih nyaman untuk video call? <br>→ Yang kedua: video call butuh latensi
-   rendah dan stabil; bandwidth 10 Mbps sudah jauh lebih dari cukup.
+1. **WLAN** — dan koneksi rumah ke ISP adalah bagian dari **WAN**.
+2. Biaya: mesh butuh kabel & port ke setiap perangkat lain. Star cukup satu
+   kabel per perangkat ke switch — kegagalan satu kabel pun hanya memutus
+   satu perangkat.
+3. **Router** (gateway) — sering digabung dengan firewall dan modem dalam
+   satu kotak "router rumah".
+4. Yang kedua: video call butuh latensi rendah dan stabil; bandwidth 10 Mbps
+   sudah jauh lebih dari cukup.
 
 </details>
 

@@ -128,11 +128,10 @@ Bagaimana VLAN 10 di switch A tersambung ke VLAN 10 di switch B? Lewat **trunk
 port** — satu kabel yang membawa banyak VLAN sekaligus. Setiap frame di trunk
 diberi **tag 802.1Q**: 4 byte tambahan berisi VLAN ID (1–4094).
 
-```text
-Frame biasa : [MAC tujuan|MAC sumber|      Type|data|FCS]
-Frame tagged: [MAC tujuan|MAC sumber|802.1Q|Type|data|FCS]
-                                      └─ VLAN ID di sini
-```
+| Jenis frame | MAC tujuan | MAC sumber | 802.1Q (4 byte) | Type | Data | FCS |
+| --- | --- | --- | --- | --- | --- | --- |
+| Frame biasa | ✓ | ✓ | — | ✓ | ✓ | ✓ |
+| Frame tagged | ✓ | ✓ | **VLAN ID (1–4094)** | ✓ | ✓ | ✓ |
 
 - **Access port** — milik satu VLAN; frame keluar-masuk tanpa tag (untuk
   perangkat akhir).
@@ -189,28 +188,30 @@ lompatan 36.000 km.
 
 ## Cek pemahaman
 
+1. Frame tiba dengan MAC tujuan yang tidak ada di tabel switch. Apa yang
+   terjadi?
+2. Dua PC di VLAN 10 dan VLAN 20 pada switch yang sama saling `ping` — gagal.
+   Normal?
+3. Laptop mau mengirim ke server di subnet lain. Laptop meng-ARP alamat siapa?
+4. Kabel antar-switch dicabut dan trafik VLAN 30 antar-gedung mati, padahal
+   VLAN 10 masih hidup lewat kabel lain. Dugaan?
+
 <details>
 <summary>Lihat jawaban</summary>
 
+1. **Flooding** — dikirim ke semua port kecuali port asal; begitu tujuan
+   membalas, MAC-nya langsung dipelajari.
+2. **Normal.** VLAN memisahkan di layer 2; antar-VLAN harus lewat router /
+   switch L3.
+3. **Gateway**-nya, bukan server tujuan — frame hanya perlu sampai ke router.
+4. Kabel yang tercabut adalah **trunk** yang membawa VLAN 30, sedangkan
+   kabel satunya tidak mengizinkan VLAN 30 — periksa daftar VLAN di
+   konfigurasi trunk.
 
-1. Frame tiba dengan MAC tujuan yang tidak ada di tabel switch. Apa yang
-   terjadi? <br>→ **Flooding** — dikirim ke semua port kecuali port asal;
-   begitu tujuan membalas, MAC-nya langsung dipelajari.
-2. Dua PC di VLAN 10 dan VLAN 20 pada switch yang sama saling `ping` — gagal.
-   Normal? <br>→ **Normal.** VLAN memisahkan di layer 2; antar-VLAN harus
-   lewat router / switch L3.
-3. Laptop mau mengirim ke server di subnet lain. Laptop meng-ARP alamat siapa?
-   <br>→ **Gateway**-nya, bukan server tujuan — frame hanya perlu sampai ke
-   router.
-4. Kabel antar-switch dicabut dan trafik VLAN 30 antar-gedung mati, padahal
-   VLAN 10 masih hidup lewat kabel lain. Dugaan? <br>→ Kabel yang tercabut
-   adalah **trunk** yang membawa VLAN 30, sedangkan kabel satunya tidak
-   mengizinkan VLAN 30 — periksa daftar VLAN di konfigurasi trunk.
+</details>
 
 **Praktik:** bangun bridge, access port, dan trunk 802.1Q dari halaman ini di
 [Bridging & Switching (MikroTik)](/mikrotik/bridging-switching).
 
 Berikutnya: nama-nama protokol yang sejak tadi berseliweran — TCP, UDP, DNS,
 DHCP, HTTP — dibedah satu per satu di [Protokol Jaringan](/networking/protokol).
-
-</details>

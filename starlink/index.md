@@ -27,15 +27,10 @@ jenis layanannya, sampai praktik integrasinya dengan RouterOS.
 - **Sangat dekat.** Ketinggian orbit ±550 km — sekitar 65 kali lebih dekat
   daripada satelit GEO (35.786 km).
 
-```text
-  [Satelit GEO] ────────────────────────── ±35.786 km (RTT ±500–600 ms)
-
-
-
-  [Satelit LEO Starlink] ── ±550 km (RTT ±25–45 ms)
-
-  [BUMI]
-```
+| Satelit | Ketinggian | RTT |
+| --- | --- | --- |
+| GEO | ±35.786 km | ±500–600 ms |
+| LEO Starlink | ±550 km | ±25–45 ms |
 
 ## Mengapa latensi rendah sangat penting?
 
@@ -79,25 +74,25 @@ kedaulatan. Perbandingan menyeluruhnya ada di
 
 ## Cek pemahaman
 
+1. Berapa ketinggian rata-rata satelit Starlink, dan mengapa latensinya jauh
+   lebih rendah dari VSAT GEO tradisional?
+2. Mengapa Starlink butuh ribuan satelit aktif, sementara GEO cukup 3 satelit
+   untuk mencakup hampir seluruh bumi?
+3. Aplikasi apa saja yang sangat terpengaruh latensi sehingga berjalan baik di
+   Starlink tetapi tersiksa di VSAT GEO?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Berapa ketinggian rata-rata satelit Starlink, dan mengapa latensinya jauh
-   lebih rendah dari VSAT GEO tradisional?
-   <br>→ ±550 km di atas bumi — jauh lebih dekat daripada GEO (35.786 km),
+1. ±550 km di atas bumi — jauh lebih dekat daripada GEO (35.786 km),
    sehingga waktu tempuh sinyal (yang dibatasi kecepatan cahaya) jauh lebih
    singkat: RTT ≈30 ms vs ±500–600 ms.
-2. Mengapa Starlink butuh ribuan satelit aktif, sementara GEO cukup 3 satelit
-   untuk mencakup hampir seluruh bumi?
-   <br>→ Karena orbit LEO sangat rendah, *footprint* tiap satelit sempit dan
+2. Karena orbit LEO sangat rendah, *footprint* tiap satelit sempit dan
    satelit melintas sangat cepat — dibutuhkan ribuan satelit yang saling
    menyambung agar selalu ada satelit di atas langit pengguna setiap saat.
-3. Aplikasi apa saja yang sangat terpengaruh latensi sehingga berjalan baik di
-   Starlink tetapi tersiksa di VSAT GEO?
-   <br>→ Aplikasi real-time: panggilan video, game online, VPN terenkripsi,
+3. Aplikasi real-time: panggilan video, game online, VPN terenkripsi,
    dan aplikasi database/cloud interaktif yang sensitif terhadap jeda.
 
-Lanjut ke bagaimana semua ini tersusun: [Arsitektur Jaringan](/starlink/arsitektur).
-
 </details>
+
+Lanjut ke bagaimana semua ini tersusun: [Arsitektur Jaringan](/starlink/arsitektur).

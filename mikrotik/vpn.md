@@ -266,21 +266,23 @@ heterogen atau klien yang tidak bisa/tidak mau instal aplikasi: IKEv2.
 
 ## Cek pemahaman
 
+1. Terowongan WireGuard tersambung (handshake sukses) tapi LAN lawan tak
+   ter-ping — tersangka pertama?
+2. Kenapa hanya sisi cabang yang memakai `endpoint-address` dan
+   `persistent-keepalive`?
+3. Kapan EoIP masuk akal?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Terowongan WireGuard tersambung (handshake sukses) tapi LAN lawan tak
-   ter-ping — tersangka pertama? → `allowed-address` tidak memuat subnet LAN
-   lawan.
-2. Kenapa hanya sisi cabang yang memakai `endpoint-address` dan
-   `persistent-keepalive`? → Pusat ber-IP publik statis cukup pasif; cabang
-   (IP dinamis/di belakang NAT) yang harus memulai dan menjaga lubang NAT.
-3. Kapan EoIP masuk akal? → Saat dua situs harus berbagi
+1. `allowed-address` tidak memuat subnet LAN lawan.
+2. Pusat ber-IP publik statis cukup pasif; cabang (IP dinamis/di belakang
+   NAT) yang harus memulai dan menjaga lubang NAT.
+3. Saat dua situs harus berbagi
    [broadcast domain](/networking/switching#broadcast-domain-dan-masalah-skala)
    (aplikasi legacy, migrasi) — dibungkus VPN terenkripsi.
 
+</details>
+
 Tinggal satu bab: udara dan angkasa —
 [Wireless & Satelit](/mikrotik/wireless-dan-satelit).
-
-</details>

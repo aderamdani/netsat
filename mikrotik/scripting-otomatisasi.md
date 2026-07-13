@@ -165,17 +165,15 @@ Router yang menggunakan koneksi internet dengan IP Publik dinamis (berubah-ubah 
 
 ## Cek pemahaman
 
+1. **Apa perbedaan antara `:local` dan `:global` dalam pembuatan variabel di RouterOS?**
+2. **Mengapa pada perintah `/tool/fetch` untuk API Telegram tanda tanya (`?`) ditulis dengan backslash (`\?`)?**
+3. **Bagaimana cara mencegah penjadwalan backup menguras memori internal (storage) router?**
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. **Apa perbedaan antara `:local` dan `:global` dalam pembuatan variabel di RouterOS?**
-   <br>→ Variabel `:local` hanya hidup di dalam cakupan kode di mana ia dideklarasikan (fungsi atau skrip saat itu) dan langsung dihapus saat skrip selesai. Variabel `:global` tersimpan di RAM router secara permanen, sehingga nilainya dapat dibaca oleh skrip lain atau tetap tersimpan sampai router di-reboot.
-
-2. **Mengapa pada perintah `/tool/fetch` untuk API Telegram tanda tanya (`?`) ditulis dengan backslash (`\?`)?**
-   <br>→ Karena dalam sintaks RouterOS CLI, karakter tanda tanya (`?`) digunakan sebagai tombol bantuan (*help*). Menggunakan backslash `\` berfungsi untuk mengabaikan fungsi bantuan (*escape character*) sehingga karakter `?` terkirim sebagai bagian dari teks URL.
-
-3. **Bagaimana cara mencegah penjadwalan backup menguras memori internal (storage) router?**
-   <br>→ Dengan menambahkan baris penghapusan file lokal setelah proses upload FTP selesai di dalam skrip, misalnya menambahkan perintah: `/file/remove [find name="$backupFile.backup"]` dan `/file/remove [find name="$backupFile.rsc"]`.
+1. Variabel `:local` hanya hidup di dalam cakupan kode di mana ia dideklarasikan (fungsi atau skrip saat itu) dan langsung dihapus saat skrip selesai. Variabel `:global` tersimpan di RAM router secara permanen, sehingga nilainya dapat dibaca oleh skrip lain atau tetap tersimpan sampai router di-reboot.
+2. Karena dalam sintaks RouterOS CLI, karakter tanda tanya (`?`) digunakan sebagai tombol bantuan (*help*). Menggunakan backslash `\` berfungsi untuk mengabaikan fungsi bantuan (*escape character*) sehingga karakter `?` terkirim sebagai bagian dari teks URL.
+3. Dengan menambahkan baris penghapusan file lokal setelah proses upload FTP selesai di dalam skrip, misalnya menambahkan perintah: `/file/remove [find name="$backupFile.backup"]` dan `/file/remove [find name="$backupFile.rsc"]`.
 
 </details>

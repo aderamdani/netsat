@@ -13,20 +13,19 @@ di modul teori: **user segment**, **space segment**, dan **ground segment**.
 
 ## Tiga segmen utama jaringan
 
-```text
-       [ SPACE SEGMENT ]
-       ● [Satelit LEO] ◄═════ Laser (ISL) ═════► ● [Satelit LEO]
-        ▲                                          │
-        │ Ku-band / Ka-band                        │ Ka-band / V-band
-        │ (frekuensi sinyal)                       ▼
- ┌──────┴─────────┐                         ┌──────┴──────────┐
- │ USER SEGMENT   │                         │ GROUND SEGMENT  │
- │ Antena remote  │                         │ Teleport/Gateway│
- └──────┬─────────┘                         └──────┬──────────┘
-        │ LAN                                      │ Serat optik
-   [ Laptop ]                                  [ Internet POP /
-                                                 ISP backbone ]
+```mermaid
+flowchart TD
+    subgraph Space["SPACE SEGMENT"]
+        SatA["Satelit LEO"] <-->|"Laser (ISL)"| SatB["Satelit LEO"]
+    end
+    SatA -->|"Ku-band / Ka-band<br/>(frekuensi sinyal)"| User["USER SEGMENT<br/>Antena remote"]
+    SatB -->|"Ka-band / V-band"| Ground["GROUND SEGMENT<br/>Teleport/Gateway"]
+    User -->|LAN| Laptop["Laptop"]
+    Ground -->|"Serat optik"| POP["Internet POP /<br/>ISP backbone"]
 ```
+*Tiga segmen Starlink: satelit LEO saling terhubung lewat laser ISL, lalu
+masing-masing turun ke user segment (terminal pengguna) dan ground segment
+(gateway ke internet).*
 
 ### 1. User segment (terminal pengguna)
 
@@ -70,9 +69,16 @@ radius ±1.000 km berarti tidak ada koneksi.
 
 Starlink memecahkannya dengan meneruskan data **antar-satelit** memakai laser:
 
-```text
- [Terminal di kapal] ──► [Satelit A] ─laser─► [Satelit B] ─laser─► [Satelit C] ──► [Gateway bumi]
+```mermaid
+flowchart LR
+    T["Terminal di kapal"] --> A["Satelit A"]
+    A -->|laser| B["Satelit B"]
+    B -->|laser| C["Satelit C"]
+    C --> G["Gateway bumi"]
 ```
+*Terminal di tengah laut memancar ke satelit terdekat, yang meneruskan
+trafik lewat laser antar-satelit sampai satelit yang jangkauannya
+mencapai gateway di darat.*
 
 1. Terminal di tengah samudra memancar ke satelit terdekat (A).
 2. Satelit A meneruskan lewat laser ke B, lalu C, yang sudah dekat daratan.
@@ -101,25 +107,25 @@ Perjalanan satu permintaan HTTP dari laptop lewat Starlink:
 
 ## Cek pemahaman
 
+1. Apa beda arsitektur *bent pipe* tradisional dengan arsitektur Starlink
+   ber-laser ISL?
+2. Frekuensi apa yang dipakai Starlink di udara, dan untuk apa?
+3. Di mana titik pertemuan pertama trafik Starlink dengan internet serat
+   optik komersial?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Apa beda arsitektur *bent pipe* tradisional dengan arsitektur Starlink
-   ber-laser ISL?
-   <br>→ Bent pipe hanya memantulkan sinyal — terminal dan gateway harus
+1. Bent pipe hanya memantulkan sinyal — terminal dan gateway harus
    berada di bawah satelit yang sama. Dengan laser ISL, data diteruskan
    antar-satelit di angkasa, sehingga layanan tetap hidup di area tanpa
    gateway terdekat (tengah samudra, kutub).
-2. Frekuensi apa yang dipakai Starlink di udara, dan untuk apa?
-   <br>→ **Ku-band** antara terminal pengguna dan satelit; **Ka-band** dan
+2. **Ku-band** antara terminal pengguna dan satelit; **Ka-band** dan
    **V-band** untuk jalur berkapasitas besar antara satelit dan gateway bumi.
-3. Di mana titik pertemuan pertama trafik Starlink dengan internet serat
-   optik komersial?
-   <br>→ Di **gateway/teleport**, yang meneruskannya ke **POP** untuk
+3. Di **gateway/teleport**, yang meneruskannya ke **POP** untuk
    interkoneksi dengan ISP lokal dan penyedia konten.
+
+</details>
 
 Berikutnya: perangkat yang dipegang pelanggan —
 [Perangkat Keras](/starlink/hardware).
-
-</details>

@@ -271,25 +271,29 @@ Satu blok `/48` memiliki 16 bit kosong sebelum mencapai batas standar `/64` (`64
 
 ## Cek pemahaman
 
+1. Berapa host efektif di `10.10.4.0/22`?
+2. `203.0.113.77/27` — network dan broadcast-nya?
+3. Butuh 6 subnet dari satu /24 — prefix barunya?
+4. Dua router dihubungkan langsung — prefix paling hemat?
+5. `172.16.44.10/20` dan `172.16.50.10/20` — satu subnet atau beda?
+6. Ponselmu di rumah mendapat IP `100.72.3.9`. Artinya?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Berapa host efektif di `10.10.4.0/22`? <br>→ 2¹⁰ − 2 = **1.022**
-2. `203.0.113.77/27` — network dan broadcast-nya? <br>→ block size 32; network
-   `203.0.113.64`, broadcast `203.0.113.95`
-3. Butuh 6 subnet dari satu /24 — prefix barunya? <br>→ 3 bit (2³ = 8 ≥ 6) → **/27**
-4. Dua router dihubungkan langsung — prefix paling hemat? <br>→ **/30** (atau /31)
-5. `172.16.44.10/20` dan `172.16.50.10/20` — satu subnet atau beda? <br>→
-   Block size 16 di oktet ketiga: 44 jatuh di blok 32–47, 50 jatuh di blok
+1. 2¹⁰ − 2 = **1.022**
+2. Block size 32; network `203.0.113.64`, broadcast `203.0.113.95`.
+3. 3 bit (2³ = 8 ≥ 6) → **/27**.
+4. **/30** (atau /31).
+5. Block size 16 di oktet ketiga: 44 jatuh di blok 32–47, 50 jatuh di blok
    48–63 → **beda subnet**, perlu router untuk saling bicara.
-6. Ponselmu di rumah mendapat IP `100.72.3.9`. Artinya? <br>→ Kamu di belakang
-   **CGNAT** ISP (blok 100.64.0.0/10) — tidak punya IP publik sendiri.
+6. Kamu di belakang **CGNAT** ISP (blok 100.64.0.0/10) — tidak punya IP
+   publik sendiri.
+
+</details>
 
 **Praktik:** pasang alamat dan prefix hasil hitunganmu ke router sungguhan di
 [Interface & IP Address (MikroTik)](/mikrotik/interface-ip).
 
 Selanjutnya: alamat sudah tertata — sekarang bagaimana paket berpindah
 antar-subnet? Lanjut ke [Routing](/networking/routing).
-
-</details>

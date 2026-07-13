@@ -57,13 +57,13 @@ Contekan dB yang membuat semua angka di bawah terbaca:
 (`dBW` = dB relatif terhadap 1 watt; `dBi` = penguatan antena relatif
 terhadap antena ideal tanpa arah.)
 
-```text
-EIRP (daya pancar efektif)
-  − FSPL (rugi lintasan ruang bebas)
-  − rugi atmosfer & hujan
-  + G/T (kualitas antena+penerima)
-  = C/N (carrier-to-noise) → menentukan kecepatan data maksimum
-```
+| Suku | Operasi | Artinya |
+| --- | --- | --- |
+| EIRP (daya pancar efektif) | mulai | Titik awal neraca |
+| FSPL (rugi lintasan ruang bebas) | − | Kehilangan terbesar, jarak² |
+| Rugi atmosfer & hujan | − | Redaman tambahan cuaca |
+| G/T (kualitas antena + penerima) | + | Makin tinggi, makin sensitif |
+| **C/N (carrier-to-noise)** | **=** | **Menentukan kecepatan data maksimum** |
 
 Pemeran utamanya:
 
@@ -157,11 +157,9 @@ paling keras.
 **1. Throughput dibatasi jendela.** TCP hanya boleh mengirim satu *window*
 data per RTT sebelum menunggu ACK:
 
-```text
-throughput maks = window / RTT
-
-Window 64 KB, RTT 0,5 s  →  64×8 / 0,5  ≈ 1 Mbps
-```
+> `throughput maks = window / RTT`
+>
+> Contoh: window 64 KB, RTT 0,5 s → (64 × 8) / 0,5 ≈ **1 Mbps**
 
 Link 100 Mbps pun akan terasa 1 Mbps per koneksi bila window-nya kecil.
 Obatnya: *window scaling* (RFC 7323) hingga jendela ≫ 64 KB — perlu
@@ -198,27 +196,28 @@ membutuhkan.
 
 ## Cek pemahaman
 
+1. Kenapa uplink dan downlink tak boleh memakai frekuensi yang sama?
+2. Hujan deras turun; kecepatan internet VSAT turun dari 20 Mbps ke 4 Mbps
+   tapi tidak putus. Mekanisme apa yang sedang bekerja?
+3. Kenapa FEC lebih penting di satelit daripada di LAN kabel?
+4. Link 50 Mbps, RTT 500 ms, window TCP 64 KB tanpa scaling. Berapa
+   throughput maksimum satu koneksi?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Kenapa uplink dan downlink tak boleh memakai frekuensi yang sama? <br>→
-   Pemancar satelit akan menulikan penerimanya sendiri — seperti berbisik
+1. Pemancar satelit akan menulikan penerimanya sendiri — seperti berbisik
    sambil meniup terompet di telinga sendiri.
-2. Hujan deras turun; kecepatan internet VSAT turun dari 20 Mbps ke 4 Mbps
-   tapi tidak putus. Mekanisme apa yang sedang bekerja? <br>→ **ACM**: modem
-   turun dari modulasi rapat ke QPSK + FEC kuat — mengorbankan kecepatan demi
-   mempertahankan link.
-3. Kenapa FEC lebih penting di satelit daripada di LAN kabel? <br>→ Minta
-   kirim ulang lewat GEO berarti +500 ms per percobaan; lebih murah membawa
-   bit redundansi agar error diperbaiki **di tempat**.
-4. Link 50 Mbps, RTT 500 ms, window TCP 64 KB tanpa scaling. Berapa
-   throughput maksimum satu koneksi? <br>→ 64 KB × 8 ÷ 0,5 s ≈ **1 Mbps** —
-   bukti kenapa window scaling dan PEP wajib di dunia GEO.
+2. **ACM**: modem turun dari modulasi rapat ke QPSK + FEC kuat —
+   mengorbankan kecepatan demi mempertahankan link.
+3. Minta kirim ulang lewat GEO berarti +500 ms per percobaan; lebih murah
+   membawa bit redundansi agar error diperbaiki **di tempat**.
+4. 64 KB × 8 ÷ 0,5 s ≈ **1 Mbps** — bukti kenapa window scaling dan PEP
+   wajib di dunia GEO.
+
+</details>
 
 ---
 
 Sinyal sudah sampai bumi — sekarang siapa yang menangkap dan mengolahnya?
 Lanjut ke [Ground Station](/satelit/ground-station).
-
-</details>

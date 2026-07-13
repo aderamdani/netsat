@@ -18,11 +18,9 @@ melonjak, atau koneksi putus total.
 Perjalanan sinyal adalah penjumlahan penguatan (gain) dan pengurangan redaman
 (loss). Dalam unit logaritmik (desibel), perkalian menjadi tambah-kurang biasa:
 
-```text
-Daya diterima = Daya pancar + Gain antena − Redaman perjalanan − Redaman cuaca
-
-P_rx = P_tx + G_tx + G_rx − L_fs − L_alt
-```
+> Daya diterima = Daya pancar + Gain antena − Redaman perjalanan − Redaman cuaca
+>
+> `P_rx = P_tx + G_tx + G_rx − L_fs − L_alt`
 
 | Simbol | Arti | Satuan |
 | --- | --- | --- |
@@ -38,9 +36,7 @@ P_rx = P_tx + G_tx + G_rx − L_fs − L_alt
 Sinyal radio menyebar seperti bola yang membesar — makin jauh merambat, makin
 encer energinya di satu titik. Rumusnya (d dalam km, f dalam MHz):
 
-```text
-FSPL = 20 × log10(d) + 20 × log10(f) + 32,44
-```
+> `FSPL = 20 × log10(d) + 20 × log10(f) + 32,44`
 
 ### Contoh kasus: bandingkan LEO vs GEO
 
@@ -113,15 +109,21 @@ Detail modulasi & coding-nya di
 
 1. Kenapa satelit GEO butuh antena stasiun bumi jauh lebih besar (diameter
    >1,2 m) daripada penerima Starlink LEO (±0,3 m)?
-   <br>→ Jarak GEO ±36.000 km membuat FSPL-nya ±36 dB lebih besar. Antena
-   besar mengumpulkan lebih banyak energi (gain lebih tinggi) untuk
-   mengompensasi kehilangan daya itu.
 2. Layanan VSAT Ka-band di daerah curah hujan tinggi (Bogor, Kalimantan) —
    apa yang harus disiapkan di link budget-nya?
-   <br>→ **Link margin** besar (antena lebih besar atau daya BUC lebih
-   tinggi) plus ACM aktif, agar link bertahan saat hujan deras.
 3. Kenapa C-band masih jadi pilihan utama jaringan ATM perbankan Indonesia
    meski bandwidth-nya sempit?
-   <br>→ **Availability**: panjang gelombang C-band cukup besar sehingga
+
+<details>
+<summary>Lihat jawaban</summary>
+
+1. Jarak GEO ±36.000 km membuat FSPL-nya ±36 dB lebih besar. Antena
+   besar mengumpulkan lebih banyak energi (gain lebih tinggi) untuk
+   mengompensasi kehilangan daya itu.
+2. **Link margin** besar (antena lebih besar atau daya BUC lebih
+   tinggi) plus ACM aktif, agar link bertahan saat hujan deras.
+3. **Availability**: panjang gelombang C-band cukup besar sehingga
    nyaris tak terganggu tetesan hujan tropis — transaksi tetap jalan di
    cuaca ekstrem sekalipun.
+
+</details>

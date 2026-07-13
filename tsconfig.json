@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "types": ["node", "vite/client"]
+  },
+  "include": [".vitepress/**/*.ts", ".vitepress/**/*.vue", "scripts/**/*.mjs"],
+  "exclude": [".vitepress/dist", ".vitepress/cache", "node_modules"]
+}

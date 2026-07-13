@@ -423,20 +423,11 @@ Arsitektur untuk aplikasi web yang serius:
 
 ```mermaid
 flowchart LR
-    I[Internet] --> FW1["FW1<br/>L3-L4 + L7 WAF"] --> W[Web Server]
-    W --> FW2["FW2<br/>L4"] --> A[App Server]
-    A --> FW3["FW3<br/>L4"] --> D[(Database)]
+    I[Internet] -- "port 80/443" --> FW1["FW1<br/>L3-L4 + L7 WAF"] --> W[Web Server]
+    W -- "port 8080" --> FW2["FW2<br/>L4"] --> A[App Server]
+    A -- "port 3306/5432" --> FW3["FW3<br/>L4"] --> D[(Database)]
 ```
-*Setiap lapisan hanya bisa bicara dengan lapisan di sampingnya lewat firewall khusus: FW1 di edge (L3-L4 + L7 WAF), FW2 (L4) antara web dan app, FW3 (L4) antara app dan database.*
-
-Setiap lapisan hanya bisa bicara dengan lapisan di sampingnya — web server
-tidak bisa langsung ke database. Aturan:
-
-```bash
-# FW1 (edge): WAN → web server (port 80/443)
-# FW2 (internal): hanya web → app (port spesifik, misal 8080)
-# FW3 (database): hanya app → DB (port 3306/5432)
-```
+*Setiap lapisan hanya bisa bicara dengan lapisan di sampingnya lewat firewall khusus dan port tertentu: FW1 di edge (L3-L4 + L7 WAF) hanya buka 80/443, FW2 (L4) antara web dan app hanya buka port aplikasi (mis. 8080), FW3 (L4) antara app dan database hanya buka port DB (3306/5432) — web server tidak bisa langsung ke database.*
 
 ## Fitur firewall lanjutan
 
@@ -908,38 +899,36 @@ Firewall itu sendiri adalah target. Amankan akses manajemennya:
 
 ## Cek pemahaman
 
+1. Sebuah server web di DMZ bisa mengakses database di LAN. Apa masalahnya?
+2. Aturan firewall sudah benar tapi koneksi baru dari WAN tetap ditolak.
+   Conntrack tidak penuh. Apa yang salah?
+3. Di RouterOS, kenapa FastTrack harus diletakkan di atas aturan `accept`
+   `forward`?
+4. Apa perbedaan aturan `reject` dan `drop`? Kapan pakai yang mana?
+5. Untuk ISP edge dengan throughput 10 Gbps, apakah FastTrack di RouterOS
+   x86 bisa menangani?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Sebuah server web di DMZ bisa mengakses database di LAN. Apa masalahnya?
-   <br>→ DMZ → LAN harusnya **ditolak**. Server DMZ yang dibobol memberi
+1. DMZ → LAN harusnya **ditolak**. Server DMZ yang dibobol memberi
    akses langsung ke database. Aturannya: DMZ → LAN = `action=drop`.
-
-2. Aturan firewall sudah benar tapi koneksi baru dari WAN tetap ditolak.
-   Conntrack tidak penuh. Apa yang salah? <br>→ Mungkin stateful rule
-   `established,related` di chain `forward` tidak ada, atau aturan `accept`
-   di `forward` untuk koneksi `NEW` belum dibuat.
-
-3. Di RouterOS, kenapa FastTrack harus diletakkan di atas aturan `accept`
-   `forward`? <br>→ FastTrack berfungsi setelah koneksi `established`. Ia
+2. Mungkin stateful rule `established,related` di chain `forward` tidak ada,
+   atau aturan `accept` di `forward` untuk koneksi `NEW` belum dibuat.
+3. FastTrack berfungsi setelah koneksi `established`. Ia
    harus dicocokkan sebelum aturan lain. Tanpa FastTrack, setiap paket dalam
    koneksi established tetap dievaluasi terhadap semua aturan.
-
-4. Apa perbedaan aturan `reject` dan `drop`? Kapan pakai yang mana?
-   <br>→ `reject` mengirim balasan TCP RST atau ICMP unreachable
+4. `reject` mengirim balasan TCP RST atau ICMP unreachable
    (memberi tahu penyerang ada perangkat di sana). `drop` diam tanpa balasan.
    **Pakai `drop`** kecuali punya alasan kuat untuk `reject`.
-
-5. Untuk ISP edge dengan throughput 10 Gbps, apakah FastTrack di RouterOS
-   x86 bisa menangani? <br>→ Tergantung CPU. FastTrack bisa mencapai 2–10
+5. Tergantung CPU. FastTrack bisa mencapai 2–10
    Gbps di CPU modern multi-core. Di atas 10 Gbps, butuh hardware offloading
    atau dedicated firewall ASIC. Juga pertimbangkan DPDK atau VPP.
+
+</details>
 
 ---
 
 ::: tip Praktik langsung
 Semua konsep di halaman ini diterapkan di [Firewall & QoS MikroTik](/mikrotik/firewall-qos).
 :::
-
-</details>

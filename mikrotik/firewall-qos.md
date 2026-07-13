@@ -244,21 +244,23 @@ jam kerja, batasi internet anak-anak di malam hari:
 
 ## Cek pemahaman
 
+1. Kenapa `established,related` selalu aturan pertama?
+2. QoS-mu tidak berefek sama sekali padahal queue sudah benar — tersangka
+   utamanya?
+3. Port forward jalan, tapi kamu ingin hanya kantor cabang
+   (`198.51.100.0/24`) yang boleh mengaksesnya — di mana menyaringnya?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Kenapa `established,related` selalu aturan pertama? → Efisiensi: mayoritas
-   paket langsung lolos tanpa mengevaluasi sisa daftar — firewall stateful
+1. Efisiensi: mayoritas paket langsung lolos tanpa mengevaluasi sisa daftar
+   — firewall stateful
    [bekerja sekali di paket pembuka](/networking/keamanan#firewall).
-2. QoS-mu tidak berefek sama sekali padahal queue sudah benar — tersangka
-   utamanya? → **FastTrack**: koneksi melompati queue. Matikan/kecualikan.
-3. Port forward jalan, tapi kamu ingin hanya kantor cabang
-   (`198.51.100.0/24`) yang boleh mengaksesnya — di mana menyaringnya? →
-   chain `forward` dengan `connection-nat-state=dstnat` +
+2. **FastTrack**: koneksi melompati queue. Matikan/kecualikan.
+3. Chain `forward` dengan `connection-nat-state=dstnat` +
    `src-address=198.51.100.0/24`.
+
+</details>
 
 Lalu lintas sudah tersaring dan terjadwal. Berikutnya menyambungkan
 pulau-pulau jaringan dengan terowongan terenkripsi: [VPN](/mikrotik/vpn).
-
-</details>

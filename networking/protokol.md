@@ -206,22 +206,26 @@ telanjang di sana. Sangat dianjurkan dicoba minimal sekali.
 
 ## Cek pemahaman
 
+1. Kamu mengganti rekaman A domainmu, tapi sebagian pengunjung masih diarahkan
+   ke server lama selama beberapa jam. Kenapa?
+2. Laptop mendapat IP `169.254.100.7`. Apa artinya dan apa langkah pertamamu?
+3. Kenapa DNS memakai UDP, padahal jawabannya penting?
+4. `curl -v https://situs` menunjukkan handshake TLS sukses tapi respons HTTP
+   `503`. Masalahnya di lapisan mana?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Kamu mengganti rekaman A domainmu, tapi sebagian pengunjung masih diarahkan
-   ke server lama selama beberapa jam. Kenapa? <br>→ **Cache resolver** masih
-   menyimpan jawaban lama sampai TTL-nya habis.
-2. Laptop mendapat IP `169.254.100.7`. Apa artinya dan apa langkah pertamamu?
-   <br>→ DHCP gagal. Periksa: server DHCP hidup? kabel/VLAN benar? (broadcast
+1. **Cache resolver** masih menyimpan jawaban lama sampai TTL-nya habis.
+2. DHCP gagal. Periksa: server DHCP hidup? kabel/VLAN benar? (broadcast
    DISCOVER tidak menyeberangi router.)
-3. Kenapa DNS memakai UDP, padahal jawabannya penting? <br>→ Satu pertanyaan
-   satu jawaban kecil — handshake TCP hanya menambah RTT. Kalau jawaban tidak
-   datang, klien cukup bertanya ulang. (Jawaban besar/transfer zona memakai TCP.)
-4. `curl -v https://situs` menunjukkan handshake TLS sukses tapi respons HTTP
-   `503`. Masalahnya di lapisan mana? <br>→ **Aplikasi (L7)** — jaringan,
-   TCP, dan TLS sudah terbukti sehat; server/aplikasinya yang sedang bermasalah.
+3. Satu pertanyaan satu jawaban kecil — handshake TCP hanya menambah RTT.
+   Kalau jawaban tidak datang, klien cukup bertanya ulang. (Jawaban
+   besar/transfer zona memakai TCP.)
+4. **Aplikasi (L7)** — jaringan, TCP, dan TLS sudah terbukti sehat;
+   server/aplikasinya yang sedang bermasalah.
+
+</details>
 
 **Praktik:** DHCP server, DNS cache, dan NAT dari halaman ini dipasang langkah
 demi langkah di [DHCP, DNS & NAT (MikroTik)](/mikrotik/dhcp-dns-nat).
@@ -229,5 +233,3 @@ demi langkah di [DHCP, DNS & NAT (MikroTik)](/mikrotik/dhcp-dns-nat).
 Protokol-protokol ini dirancang di era jaringan yang saling percaya. Apa yang
 terjadi ketika ada pihak yang berniat jahat? Lanjut ke
 [Keamanan Jaringan](/networking/keamanan).
-
-</details>

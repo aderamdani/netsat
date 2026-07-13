@@ -69,6 +69,15 @@ export default withMermaid(defineConfig({
     config: (md) => applyGlossaryTooltips(md, projectRoot),
   },
 
+  // font diagram Mermaid dinaikkan — ukuran natural default-nya terlalu kecil
+  // untuk kolom konten ~700px (lihat juga aturan .mermaid svg di custom.css)
+  mermaid: {
+    theme: 'base',
+    themeVariables: { fontSize: '17px' },
+    flowchart: { useMaxWidth: true },
+    sequence: { useMaxWidth: true },
+  },
+
   sitemap: {
     hostname: 'https://netsat.aderamdani.web.id',
   },

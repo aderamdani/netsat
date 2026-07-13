@@ -67,17 +67,15 @@ tidak mungkin — koneksi masuk mati di NAT milik Starlink. Solusinya membalik
 arah: router **membuka koneksi keluar** ke VPS ber-IP publik, lalu trafik
 masuk menumpang terowongan itu:
 
-```text
- [ Klien di internet ] ──► [ VPS IP publik: 203.0.113.5 ]
-                                      │
-                         === WIREGUARD TUNNEL === (keluar menembus CGNAT)
-                                      │
-                                      ▼
-                                 [ RouterOS ] (WAN IP: 100.64.x.x)
-                                      │
-                                      ▼
-                              [ Web server LAN ]
+```mermaid
+flowchart TD
+    Klien["Klien di internet"] --> VPS["VPS IP publik<br/>203.0.113.5"]
+    VPS -->|"WireGuard tunnel<br/>(keluar menembus CGNAT)"| Router["RouterOS<br/>WAN IP: 100.64.x.x"]
+    Router --> Web["Web server LAN"]
 ```
+*Router membuka koneksi keluar ke VPS lebih dulu, sehingga trafik masuk dari
+klien menumpang terowongan WireGuard yang sudah terbentuk — mengakali CGNAT
+yang memblokir koneksi masuk langsung.*
 
 Konfigurasi WireGuard di RouterOS (dasar-dasarnya di
 [bab VPN](/mikrotik/vpn#wireguard-site-to-site)):
@@ -125,25 +123,25 @@ add name=starlink-cake-qos target=192.168.88.0/24 \
 
 ## Cek pemahaman
 
+1. Mengapa `persistent-keepalive=25s` penting pada WireGuard penembus CGNAT?
+2. Apa keunggulan QoS CAKE dibanding simple queue statis (`max-limit` kaku)
+   di link satelit LEO?
+3. Setelah bypass mode aktif, apakah manajemen bandwidth dan firewall tetap
+   bisa dilakukan di RouterOS?
+
 <details>
 <summary>Lihat jawaban</summary>
 
-
-1. Mengapa `persistent-keepalive=25s` penting pada WireGuard penembus CGNAT?
-   <br>→ NAT Starlink menghapus pemetaan sesi yang lama diam. Paket kecil
+1. NAT Starlink menghapus pemetaan sesi yang lama diam. Paket kecil
    tiap 25 detik menjaga pemetaan tetap hidup sehingga terowongan bisa terus
    dimasuki dari arah luar.
-2. Apa keunggulan QoS CAKE dibanding simple queue statis (`max-limit` kaku)
-   di link satelit LEO?
-   <br>→ CAKE membagi bandwidth secara dinamis dan adil (*fair queueing*)
+2. CAKE membagi bandwidth secara dinamis dan adil (*fair queueing*)
    tanpa batas kaku — pas untuk Starlink yang kapasitasnya naik-turun;
    antrean statis justru memicu bufferbloat saat kapasitas turun.
-3. Setelah bypass mode aktif, apakah manajemen bandwidth dan firewall tetap
-   bisa dilakukan di RouterOS?
-   <br>→ Ya — justru penuh: RouterOS memegang IP WAN langsung, sehingga
+3. Ya — justru penuh: RouterOS memegang IP WAN langsung, sehingga
    firewall, NAT, routing, dan QoS untuk seluruh LAN 100% di tanganmu.
+
+</details>
 
 Terakhir: saat koneksi bermasalah —
 [Troubleshooting & Diagnostik](/starlink/troubleshooting).
-
-</details>

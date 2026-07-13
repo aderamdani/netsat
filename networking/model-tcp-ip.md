@@ -42,21 +42,20 @@ sumber ke alamat tujuan, **melintasi jaringan apa pun di tengahnya**. Sifatnya:
 
 ### Anatomi header IPv4
 
-```text
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-------+-------+---------------+-------------------------------+
-|Versi  | IHL   |    DSCP/ECN   |        Total Length           |
-+-------+-------+---------------+-----+-------------------------+
-|         Identification        |Flags|    Fragment Offset      |
-+---------------+---------------+-----+-------------------------+
-|      TTL      |   Protocol    |       Header Checksum         |
-+---------------+---------------+-------------------------------+
-|                     Source IP Address                         |
-+---------------------------------------------------------------+
-|                  Destination IP Address                       |
-+---------------------------------------------------------------+
-```
+| Field | Panjang | Fungsi |
+| --- | --- | --- |
+| Versi | 4 bit | Versi IP — selalu `4` untuk IPv4 |
+| IHL | 4 bit | Panjang header dalam kelipatan 32 bit (biasanya `5`) |
+| DSCP/ECN | 8 bit | Prioritas QoS dan penanda kemacetan |
+| Total Length | 16 bit | Panjang total paket (header + data) dalam byte |
+| Identification | 16 bit | ID unik paket, dipakai saat fragmentasi |
+| Flags | 3 bit | Penanda seperti *Don't Fragment* dan *More Fragments* |
+| Fragment Offset | 13 bit | Posisi fragmen ini terhadap paket aslinya |
+| TTL | 8 bit | Berkurang 1 tiap router; capai 0 → paket dibuang |
+| Protocol | 8 bit | Protokol di lapisan atas: 6 = TCP, 17 = UDP, 1 = ICMP |
+| Header Checksum | 16 bit | Deteksi error/korupsi khusus pada header |
+| Source IP Address | 32 bit | Alamat IP pengirim |
+| Destination IP Address | 32 bit | Alamat IP tujuan |
 
 *Jelajahi setiap field header IPv4 di atas melalui komponen interaktif ini:*
 <IpHeaderInteractive />
@@ -115,13 +114,16 @@ sama tanpa saling bertabrakan.
 
 TCP membuka koneksi lewat **three-way handshake**:
 
-```text
-Klien                         Server
-  │ ── SYN  (seq=x) ────────────▶ │
-  │ ◀─ SYN-ACK (seq=y, ack=x+1) ─ │
-  │ ── ACK  (ack=y+1) ──────────▶ │
-  │        koneksi terbentuk      │
+```mermaid
+sequenceDiagram
+    participant Klien
+    participant Server
+    Klien->>Server: SYN (seq=x)
+    Server-->>Klien: SYN-ACK (seq=y, ack=x+1)
+    Klien->>Server: ACK (ack=y+1)
+    Note over Klien,Server: koneksi terbentuk
 ```
+*Three-way handshake: klien mengusulkan nomor urut awal (SYN), server membalas sambil mengonfirmasi (SYN-ACK), klien mengonfirmasi balik (ACK) — baru setelah itu data mengalir.*
 
 *Simulasikan proses pembentukan koneksi:*
 <TcpInteractiveDemo mode="handshake" />
@@ -129,13 +131,16 @@ Klien                         Server
 Setelah itu setiap byte diberi nomor urut, penerima mengirim ACK, dan data yang
 hilang dikirim ulang. Begini wujudnya dalam satu pertukaran kecil:
 
-```text
-Klien mengirim 1000 byte  : seq=1..1000
-Server membalas           : ack=1001   ("sudah kuterima s.d. byte 1000")
-Klien mengirim 1000 lagi  : seq=1001..2000     ✖ hilang di jalan
-Klien mengirim 1000 lagi  : seq=2001..3000
-Server membalas           : ack=1001   (tetap! "aku masih menunggu byte 1001")
-Klien menyadari, kirim ulang seq=1001..2000 → aliran pulih
+```mermaid
+sequenceDiagram
+    participant Klien
+    participant Server
+    Klien->>Server: seq=1..1000 (1000 byte)
+    Server-->>Klien: ack=1001 (sudah terima s.d. byte 1000)
+    Klien-xServer: seq=1001..2000 (hilang di jalan)
+    Klien->>Server: seq=2001..3000
+    Server-->>Klien: ack=1001 (tetap! masih menunggu byte 1001)
+    Note over Klien,Server: Klien sadar, kirim ulang seq=1001..2000 → aliran pulih
 ```
 
 *Simulasikan kehilangan paket di tengah jalan:*
@@ -198,10 +203,6 @@ utuh dari ujung ke ujung**. Itulah inti desain internet: *IP over everything*.
 
 ## Cek pemahaman
 
-<details>
-<summary>Lihat jawaban</summary>
-
-
 <QuizBox 
   question="IP tidak menjamin paket sampai. Lalu kenapa unduhan file tidak pernah bolong isinya?"
   :options="['Karena internet kabel sudah sangat andal', 'Karena router menyimpan cadangan paket', 'Karena ada TCP di atasnya yang meminta kirim ulang', 'Karena DNS otomatis memperbaikinya']"
@@ -229,9 +230,6 @@ utuh dari ujung ke ujung**. Itulah inti desain internet: *IP over everything*.
   :correctIndex="2"
   explanation="Mekanisme Congestion Control pada TCP (seperti Slow Start) menaikkan jendela transmisi (window) setiap kali menerima ACK (satu RTT). Jika RTT-nya lama (500ms), maka akselerasinya pun ikut lambat."
 />
-
-
-</details>
 
 ## Lanjut ke mana?
 
