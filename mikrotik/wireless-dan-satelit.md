@@ -19,7 +19,7 @@ RouterOS v7 memakai paket driver baru bernama `wifi` (menu
 
 Sintaks resmi konfigurasi dasar AP:
 
-```
+```routeros
 /interface/wifi/set wifi1 disabled=no configuration.country=Indonesia \
   configuration.ssid=NetSat-Kantor security.authentication-types=wpa2-psk,wpa3-psk \
   security.passphrase=SandiWiFi_Kantor1
@@ -40,7 +40,7 @@ Sintaks resmi konfigurasi dasar AP:
 Untuk menautkan gedung seberang (point-to-point) atau menumpang Wi-Fi lain,
 radio menjadi *station*:
 
-```
+```routeros
 /interface/wifi/set wifi1 configuration.mode=station configuration.ssid=NetSat-Kantor \
   security.passphrase=SandiWiFi_Kantor1
 ```
@@ -55,7 +55,7 @@ Mengelola 30 AP satu per satu tidak masuk akal. **CAPsMAN** menjadikan satu
 router pengendali (*controller*) bagi semua AP (*CAP*): konfigurasi SSID,
 keamanan, dan kanal ditulis sekali di controller, disebarkan otomatis.
 
-```
+```routeros
 /interface/wifi/capsman/set enabled=yes
 /interface/wifi/provisioning/add action=create-dynamic-enabled \
   master-configuration=konfig-kantor
@@ -71,14 +71,15 @@ keamanan, dan kanal ditulis sekali di controller, disebarkan otomatis.
 Di puluhan ribu titik [VSAT](/satelit/vsat) Indonesia, kotak setelah modem
 satelit sering kali RouterOS. Topologinya:
 
+```mermaid
+flowchart LR
+    SAT(("SATELIT GEO")) -.-> ANT["Antena + BUC/LNB"]
+    ANT -- "IFL" --> MODEM["Modem VSAT<br/>(PEP di sini)"]
+    MODEM -- "ether1" --> ROS["RouterOS"]
+    ROS -- "bridge1<br/>(DHCP, firewall, QoS, VLAN)" --> LAN["LAN sekolah/puskesmas"]
 ```
-   [SATELIT GEO]
-      ~ ~ ~
- [Antena + BUC/LNB]
-        │ IFL
- [Modem VSAT] ── ether1 ── [RouterOS] ── bridge1 ── LAN sekolah/puskesmas
-  (PEP di sini)                          (DHCP, firewall, QoS, VLAN)
-```
+*Rantai perangkat khas titik VSAT sekolah/puskesmas: satelit → antena → modem
+(PEP) → RouterOS → LAN lokal.*
 
 Semua bab sebelumnya berlaku apa adanya — plus penyesuaian khusus link
 [ber-RTT ±600 ms](/satelit/komunikasi#latensi-per-orbit):
@@ -93,7 +94,7 @@ pilih WireGuard/UDP bila memang harus.
 dijamin mungkin hanya 2 Mbps — tanpa antrean prioritas, satu unduhan Windows
 Update membunuh telepon VoIP puskesmas:
 
-```
+```routeros
 /queue/tree/add name=uplink parent=global max-limit=2M
 /queue/tree/add name=voip-sat parent=uplink packet-mark=voip priority=1 limit-at=512k max-limit=1M
 /queue/tree/add name=data-sat parent=uplink packet-mark=no-mark priority=8 max-limit=2M
@@ -108,7 +109,7 @@ Update membunuh telepon VoIP puskesmas:
 
 **3. Layani sebanyak mungkin secara lokal.** Setiap RTT yang dihemat terasa:
 
-```
+```routeros
 /ip/dns/set allow-remote-requests=yes cache-size=4096KiB
 /system/ntp/server/set enabled=yes
 /system/ntp/client/set enabled=yes servers=203.0.113.123
@@ -121,7 +122,7 @@ Update membunuh telepon VoIP puskesmas:
 
 **4. Awasi link-nya dari jauh.** Situs VSAT jarang punya teknisi:
 
-```
+```routeros
 /tool/netwatch/add host=172.16.0.1 interval=30s down-script="/log warning \"link satelit down\""
 /interface/monitor-traffic ether1 once
 ```
@@ -139,7 +140,7 @@ detik. Longgarkan timer, atau cukup gunakan rute statis + `check-gateway` —
 sederhana sering kali lebih tangguh.
 :::
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

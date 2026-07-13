@@ -17,20 +17,19 @@ Halaman ini merangkai semua bab sebelumnya menjadi satu sistem nyata.
 Arsitektur VSAT klasik adalah [topologi star](/networking/#topologi-jaringan)
 dengan pusatnya di bumi dan "kabelnya" di orbit:
 
-```text
-                    ┌──────────┐
-                    │ SATELIT  │ GEO / HTS
-                    └─▲─────┬──┘
-        outbound/forward│   │ inbound/return
-       (TDM, satu carrier) (MF-TDMA, banyak carrier)
-              ┌─────────┘   └──────────┐
-      ┌───────┴────────┐      ┌────────┴────────┐
-      │  HUB / GATEWAY │      │ REMOTE  REMOTE…  │  (ratusan–ribuan)
-      │  antena 7–13 m │      │ antena 0,9–1,8 m│
-      └───────┬────────┘      └────────┬────────┘
-          internet /               LAN lokal:
-          jaringan korporat        PC, router, Wi-Fi, EDC
+```mermaid
+flowchart TB
+    NET["Internet /<br/>jaringan korporat"] --- HUB["HUB / GATEWAY<br/>antena 7–13 m"]
+    SAT(("SATELIT<br/>GEO / HTS"))
+    R["REMOTE, REMOTE…<br/>antena 0,9–1,8 m<br/>(ratusan–ribuan)"] --- LAN["LAN lokal:<br/>PC, router, Wi-Fi, EDC"]
+
+    HUB -- "outbound/forward: TDM, satu carrier" --> SAT
+    SAT -- "outbound/forward" --> R
+    R -- "inbound/return: MF-TDMA, banyak carrier" --> SAT
+    SAT -- "inbound/return" --> HUB
 ```
+*Topologi star VSAT: hub memancarkan satu carrier TDM ke semua remote sekaligus
+(outbound), sementara para remote berbagi kanal balik lewat MF-TDMA (inbound).*
 
 - **Outbound (forward)**: hub memancarkan **satu carrier TDM besar** berisi
   data untuk semua remote; tiap remote memungut bagiannya.

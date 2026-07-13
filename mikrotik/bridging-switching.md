@@ -14,7 +14,7 @@ Bridge menggabungkan beberapa interface menjadi satu switch layer 2 — lengkap
 dengan [MAC learning](/networking/switching#bagaimana-switch-belajar) dan
 satu broadcast domain:
 
-```
+```routeros
 /interface/bridge/add name=bridge1 comment="switch LAN"
 /interface/bridge/port/add bridge=bridge1 interface=ether2
 /interface/bridge/port/add bridge=bridge1 interface=ether3
@@ -25,7 +25,7 @@ satu broadcast domain:
   interface biasa, jadi **IP router dipasang ke `bridge1`**, bukan ke salah
   satu port anggotanya:
 
-```
+```routeros
 /ip/address/add address=192.0.2.1/24 interface=bridge1
 ```
 
@@ -35,7 +35,7 @@ satu broadcast domain:
 Tabel MAC hasil *learning* bisa dilihat — bandingkan dengan
 [teorinya](/networking/switching#bagaimana-switch-belajar):
 
-```
+```routeros
 /interface/bridge/host/print
 #  Flags: D - dynamic, L - local
 #  MAC-ADDRESS        ON-INTERFACE  BRIDGE
@@ -48,7 +48,7 @@ Pada perangkat dengan chip switch, RouterOS menurunkan pekerjaan forwarding
 ke silikon (*hardware offload*) — paket antar-port tidak menyentuh CPU sama
 sekali, alias *wire speed*:
 
-```
+```routeros
 /interface/bridge/port/print
 #  #  INTERFACE  BRIDGE   HW
 #  0  ether2     bridge1  yes
@@ -64,17 +64,17 @@ sekali, alias *wire speed*:
 Skenario klasik — satu trunk ke arah distribusi, dua access port
 (persis contoh *Bridge VLAN Table* di manual resmi):
 
-```
-ether1 = trunk (VLAN 20 & 30, tagged)
-ether2 = access VLAN 20 (untagged) → PC karyawan
-ether3 = access VLAN 30 (untagged) → CCTV
-```
+| Interface | Peran | VLAN | Perangkat |
+| --- | --- | --- | --- |
+| `ether1` | Trunk (tagged) | 20 & 30 | Ke arah distribusi |
+| `ether2` | Access (untagged) | 20 | PC karyawan |
+| `ether3` | Access (untagged) | 30 | CCTV |
 
 Konfigurasinya tiga babak:
 
 **1. Masukkan port dengan PVID untuk access:**
 
-```
+```routeros
 /interface/bridge/add name=bridge1 vlan-filtering=no
 /interface/bridge/port/add bridge=bridge1 interface=ether1
 /interface/bridge/port/add bridge=bridge1 interface=ether2 pvid=20
@@ -89,7 +89,7 @@ Konfigurasinya tiga babak:
 
 **2. Isi tabel VLAN — siapa tagged, siapa untagged, per VLAN ID:**
 
-```
+```routeros
 /interface/bridge/vlan/add bridge=bridge1 tagged=ether1 untagged=ether2 vlan-ids=20
 /interface/bridge/vlan/add bridge=bridge1 tagged=ether1 untagged=ether3 vlan-ids=30
 ```
@@ -101,7 +101,7 @@ Konfigurasinya tiga babak:
 
 **3. Nyalakan pagarnya:**
 
-```
+```routeros
 /interface/bridge/set bridge1 vlan-filtering=yes
 ```
 
@@ -110,7 +110,7 @@ Bridge (CPU router) juga anggota VLAN. Jika kamu mengelola router lewat
 `ether2` (VLAN 20), pastikan CPU ikut VLAN itu **sebelum** menyalakan
 filtering — jika tidak, akses manajemenmu ikut terfilter:
 
-```
+```routeros
 /interface/bridge/vlan/set [find vlan-ids=20] untagged=bridge1,ether2
 /interface/bridge/set bridge1 pvid=20
 ```
@@ -125,7 +125,7 @@ Supaya VLAN 20 dan 30 bisa saling bicara (lewat layer 3, karena
 [layer 2-nya sengaja dipisah](/networking/switching#antar-vlan-tetap-butuh-router)),
 buat interface VLAN di atas bridge dan beri IP:
 
-```
+```routeros
 /interface/vlan/add name=vlan20 vlan-id=20 interface=bridge1
 /interface/vlan/add name=vlan30 vlan-id=30 interface=bridge1
 /ip/address/add address=192.0.2.1/26 interface=vlan20
@@ -143,7 +143,7 @@ Bridge RouterOS menyalakan **RSTP** secara bawaan (`protocol-mode=rstp`) —
 [pencegah loop layer 2](/networking/switching#spanning-tree-protocol-stp) itu
 bekerja tanpa kamu minta. Lengkapi dengan penjaga kedua di port akses:
 
-```
+```routeros
 /interface/ethernet/set ether2 loop-protect=on
 ```
 
@@ -169,7 +169,7 @@ bekerja tanpa kamu minta. Lengkapi dengan penjaga kedua di port akses:
 - Juga per interface Ethernet: `/interface/ethernet/set ether1 storm-rate=100`
 - Konsep: proteksi switch — bukan QoS untuk paket normal
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

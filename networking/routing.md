@@ -166,7 +166,7 @@ Dua titik temu yang menarik:
   terus karena [satelit bergerak](/satelit/orbit#leo-low-earth-orbit) ±7,5 km/s,
   masalah routing yang tidak pernah dihadapi jaringan darat.
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

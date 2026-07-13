@@ -41,12 +41,11 @@ const orbitData: Record<string, { alt: string, speed: string, latency: string }>
     </div>
 
     <!-- diagram orbit: LEO / MEO / GEO mengelilingi Bumi -->
-    <div 
-      class="ns-hero-orbit ns-orbit-anim" 
+    <div
+      class="ns-hero-orbit ns-orbit-anim"
       :class="hoveredOrbit ? `has-hover hover-${hoveredOrbit}` : ''"
-      aria-hidden="true"
     >
-      <svg viewBox="0 0 420 420" class="ns-orbit-svg">
+      <svg viewBox="0 0 420 420" class="ns-orbit-svg" aria-hidden="true">
         <!-- cincin orbit -->
         <circle cx="210" cy="210" r="88" class="ns-ring ns-ring-leo" />
         <circle cx="210" cy="210" r="138" class="ns-ring ns-ring-meo" />
@@ -99,24 +98,52 @@ const orbitData: Record<string, { alt: string, speed: string, latency: string }>
       </svg>
       
       <div class="ns-orbit-labels">
-        <span 
-          @mouseenter="hoveredOrbit = 'leo'" 
+        <button
+          type="button"
+          class="ns-orbit-label-btn"
+          @mouseenter="hoveredOrbit = 'leo'"
           @mouseleave="hoveredOrbit = null"
+          @focus="hoveredOrbit = 'leo'"
+          @blur="hoveredOrbit = null"
           :class="{ active: hoveredOrbit === 'leo' }"
-        >LEO</span>
-        <span 
-          @mouseenter="hoveredOrbit = 'meo'" 
+          aria-describedby="ns-orbit-desc-leo"
+        >LEO</button>
+        <button
+          type="button"
+          class="ns-orbit-label-btn"
+          @mouseenter="hoveredOrbit = 'meo'"
           @mouseleave="hoveredOrbit = null"
+          @focus="hoveredOrbit = 'meo'"
+          @blur="hoveredOrbit = null"
           :class="{ active: hoveredOrbit === 'meo' }"
-        >MEO</span>
-        <span 
-          @mouseenter="hoveredOrbit = 'geo'" 
+          aria-describedby="ns-orbit-desc-meo"
+        >MEO</button>
+        <button
+          type="button"
+          class="ns-orbit-label-btn"
+          @mouseenter="hoveredOrbit = 'geo'"
           @mouseleave="hoveredOrbit = null"
+          @focus="hoveredOrbit = 'geo'"
+          @blur="hoveredOrbit = null"
           :class="{ active: hoveredOrbit === 'geo' }"
-        >GEO</span>
+          aria-describedby="ns-orbit-desc-geo"
+        >GEO</button>
       </div>
 
-      <div class="ns-orbit-tooltip" :class="{ visible: hoveredOrbit }">
+      <!-- deskripsi lengkap tiap orbit, selalu ada di pohon aksesibilitas
+           (bukan cuma saat tooltip visual muncul) supaya pengguna keyboard
+           dan pembaca layar tetap dapat datanya lewat aria-describedby -->
+      <span id="ns-orbit-desc-leo" class="ns-sr-only">
+        LEO — ketinggian {{ orbitData.leo.alt }}, kecepatan {{ orbitData.leo.speed }}, latensi {{ orbitData.leo.latency }}.
+      </span>
+      <span id="ns-orbit-desc-meo" class="ns-sr-only">
+        MEO — ketinggian {{ orbitData.meo.alt }}, kecepatan {{ orbitData.meo.speed }}, latensi {{ orbitData.meo.latency }}.
+      </span>
+      <span id="ns-orbit-desc-geo" class="ns-sr-only">
+        GEO — ketinggian {{ orbitData.geo.alt }}, kecepatan {{ orbitData.geo.speed }}, latensi {{ orbitData.geo.latency }}.
+      </span>
+
+      <div class="ns-orbit-tooltip" :class="{ visible: hoveredOrbit }" aria-hidden="true">
         <template v-if="hoveredOrbit">
           <div class="tt-row"><span>Ketinggian</span><strong>{{ orbitData[hoveredOrbit].alt }}</strong></div>
           <div class="tt-row"><span>Kecepatan</span><strong>{{ orbitData[hoveredOrbit].speed }}</strong></div>
@@ -293,15 +320,20 @@ const orbitData: Record<string, { alt: string, speed: string, latency: string }>
   color: var(--vp-c-text-3);
 }
 
-.ns-orbit-labels span {
-  cursor: default;
+.ns-orbit-label-btn {
+  cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: inherit;
   transition: color 0.2s, background-color 0.2s;
 }
 
-.ns-orbit-labels span:hover,
-.ns-orbit-labels span.active {
+.ns-orbit-label-btn:hover,
+.ns-orbit-label-btn.active,
+.ns-orbit-label-btn:focus-visible {
   color: var(--ns-gold);
   background: var(--ns-gold-soft);
 }

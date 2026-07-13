@@ -1,5 +1,10 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitepress'
 import { withMermaid } from 'vitepress-plugin-mermaid'
+import { applyGlossaryTooltips } from './glossary-tooltip'
+
+const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
 export default withMermaid(defineConfig({
   lang: 'id-ID',
@@ -15,42 +20,42 @@ export default withMermaid(defineConfig({
     ['link', { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     ['link', { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }],
     ['meta', { name: 'theme-color', content: '#0B0E14' }],
-    [
-      'meta',
-      {
-        name: 'description',
-        content:
-          'Dokumentasi dan pembelajaran lengkap seputar jaringan komputer dan komunikasi satelit dalam bahasa Indonesia — dari model OSI, subnetting, dan routing hingga orbit LEO/MEO/GEO, ground station, dan VSAT.',
-      },
-    ],
     ['meta', { property: 'og:site_name', content: 'NetSat' }],
-    ['meta', { property: 'og:title', content: 'NetSat — Networking & Satelit' }],
-    [
-      'meta',
-      {
-        property: 'og:description',
-        content:
-          'Dokumentasi dan pembelajaran lengkap seputar jaringan komputer dan komunikasi satelit dalam bahasa Indonesia.',
-      },
-    ],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:url', content: 'https://netsat.aderamdani.web.id' }],
     ['meta', { property: 'og:image', content: 'https://netsat.aderamdani.web.id/og-image.png' }],
     ['meta', { property: 'og:image:width', content: '1200' }],
     ['meta', { property: 'og:image:height', content: '630' }],
     ['meta', { property: 'og:locale', content: 'id_ID' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { name: 'twitter:title', content: 'NetSat — Networking & Satelit' }],
-    [
-      'meta',
-      {
-        name: 'twitter:description',
-        content:
-          'Dokumentasi dan pembelajaran lengkap seputar jaringan komputer dan komunikasi satelit dalam bahasa Indonesia.',
-      },
-    ],
     ['meta', { name: 'twitter:image', content: 'https://netsat.aderamdani.web.id/og-image.png' }],
   ],
+
+  // og/twitter/meta-description & canonical berbeda per halaman — dihitung di
+  // sini (bukan array `head` statis) supaya link yang dibagikan dari halaman
+  // materi menampilkan judul & URL halaman itu sendiri, bukan selalu beranda.
+  transformHead({ pageData }) {
+    const base = 'https://netsat.aderamdani.web.id'
+    const isHome = pageData.relativePath === 'index.md'
+    const defaultDescription =
+      'Dokumentasi dan pembelajaran lengkap seputar jaringan komputer dan komunikasi satelit dalam bahasa Indonesia — dari model OSI, subnetting, dan routing hingga orbit LEO/MEO/GEO, ground station, dan VSAT.'
+
+    let path = pageData.relativePath.replace(/\.md$/, '')
+    path = path.endsWith('index') ? path.slice(0, -'index'.length) : path
+    const url = `${base}/${path}`
+
+    const title = isHome ? 'NetSat — Networking & Satelit' : `${pageData.title} — NetSat`
+    const description = pageData.frontmatter.description || defaultDescription
+
+    return [
+      ['link', { rel: 'canonical', href: url }],
+      ['meta', { name: 'description', content: description }],
+      ['meta', { property: 'og:title', content: title }],
+      ['meta', { property: 'og:description', content: description }],
+      ['meta', { property: 'og:url', content: url }],
+      ['meta', { name: 'twitter:title', content: title }],
+      ['meta', { name: 'twitter:description', content: description }],
+    ]
+  },
 
   vite: {
     server: { hmr: { overlay: false } },
@@ -61,6 +66,7 @@ export default withMermaid(defineConfig({
 
   markdown: {
     languageAlias: { routeros: 'bash' },
+    config: (md) => applyGlossaryTooltips(md, projectRoot),
   },
 
   sitemap: {

@@ -29,17 +29,15 @@ Jika Anda melihat alamat ber-prefix `fe80::` (Link-Local Address), berarti modul
 
 Di dunia IPv4, pelanggan biasanya mendapatkan **satu** IP Publik untuk interface WAN, lalu menggunakan NAT untuk LAN. Di IPv6, ISP akan mendelegasikan **satu blok utuh** (biasanya `/56` atau `/64`) agar router Anda bisa mendistribusikannya ke client LAN tanpa NAT. Fitur ini disebut **DHCPv6 Prefix Delegation (PD)**.
 
+```mermaid
+flowchart TD
+    ISP["ISP IPv6 Gateway"] -- "delegasikan blok<br/>2001:db8:cafe::/56 via DHCPv6-PD" --> WAN["ether1 – WAN<br/>terima prefix, simpan di pool-ipv6"]
+    WAN --> ROS["RouterOS"]
+    ROS --> LAN["bridge1 – LAN<br/>ambil /64 dari pool-ipv6, iklankan"]
+    LAN -- "SLAAC / ND" --> CLIENT["Client LAN<br/>IP otomatis: 2001:db8:cafe:1::abc"]
 ```
-       [ISP IPv6 Gateway]
-               │ (Delegasikan blok 2001:db8:cafe::/56 via DHCPv6-PD)
-               ▼
-        [ether1 - WAN] (Menerima prefix & menyimpannya di pool: pool-ipv6)
-          [RouterOS]
-        [bridge1 - LAN] (Mengambil prefix /64 dari pool-ipv6 & mengiklankannya)
-               │ (SLAAC / ND)
-               ▼
-         [Client LAN] (Mengonfigurasi IP otomatis: 2001:db8:cafe:1::abc)
-```
+*Alur delegasi DHCPv6-PD: ISP mendelegasikan satu blok ke WAN, RouterOS
+memecahnya untuk LAN, lalu client mengonfigurasi diri otomatis lewat SLAAC/ND.*
 
 ### Konfigurasi DHCPv6-PD Client:
 ```bash
@@ -118,7 +116,7 @@ add chain=forward in-interface=ether1 connection-state=new action=drop comment="
 
 ---
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

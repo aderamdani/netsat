@@ -21,7 +21,7 @@ Matikan dulu fungsi routing di router bawaan Starlink:
 Lalu minta IP secara otomatis:
 
 ```routeros
-/ip dhcp-client add interface=ether1 disabled=no use-peer-dns=yes use-peer-ntp=yes
+/ip/dhcp-client/add interface=ether1 disabled=no use-peer-dns=yes use-peer-ntp=yes
 ```
 
 Periksa `/ip/dhcp-client/print`: paket Residensial menerima IP
@@ -35,7 +35,7 @@ yang menyajikan telemetri (latensi, obstruction, dll.) ke aplikasi Starlink.
 Tambahkan rute statis agar klien LAN tetap bisa membukanya:
 
 ```routeros
-/ip route add dst-address=192.168.100.1/32 gateway=ether1 distance=1 comment="Akses aplikasi Starlink"
+/ip/route/add dst-address=192.168.100.1/32 gateway=ether1 distance=1 comment="Akses aplikasi Starlink"
 ```
 
 ## 3. Konfigurasi IPv6 prefix delegation
@@ -47,13 +47,13 @@ seisi LAN mendapat alamat global tanpa NAT (teori dasarnya di
 **Langkah 1 — minta prefix dari Starlink**, simpan ke pool:
 
 ```routeros
-/ipv6 dhcp-client add interface=ether1 pool-name=starlink-v6-pool request=prefix prefix-hint=::/56 disabled=no
+/ipv6/dhcp-client/add interface=ether1 pool-name=starlink-v6-pool request=prefix prefix-hint=::/56 disabled=no
 ```
 
 **Langkah 2 — distribusikan ke LAN (SLAAC):**
 
 ```routeros
-/ipv6 address add address=::1/64 from-pool=starlink-v6-pool interface=bridge1 advertise=yes
+/ipv6/address/add address=::1/64 from-pool=starlink-v6-pool interface=bridge1 advertise=yes
 ```
 
 Dengan `advertise=yes`, klien LAN membuat alamat global IPv6-nya sendiri
@@ -84,13 +84,13 @@ Konfigurasi WireGuard di RouterOS (dasar-dasarnya di
 
 ```routeros
 # 1. Buat interface WireGuard
-/interface wireguard add name=wg-cgnat-bypass listen-port=13231
+/interface/wireguard/add name=wg-cgnat-bypass listen-port=13231
 
 # 2. Alamat IP terowongan yang dijatah VPS (mis. 10.0.0.2/24)
-/ip address add address=10.0.0.2/24 interface=wg-cgnat-bypass
+/ip/address/add address=10.0.0.2/24 interface=wg-cgnat-bypass
 
 # 3. Hubungkan peer ke VPS publik
-/interface wireguard peers add interface=wg-cgnat-bypass \
+/interface/wireguard/peers/add interface=wg-cgnat-bypass \
   public-key="MASUKKAN_PUBLIC_KEY_VPS_ANDA=" \
   endpoint-address=203.0.113.5 endpoint-port=51820 \
   allowed-address=0.0.0.0/0 persistent-keepalive=25s

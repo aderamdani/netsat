@@ -109,7 +109,7 @@ Modem satelit modern melawan cuaca secara dinamis:
 Detail modulasi & coding-nya di
 [Komunikasi Satelit](/satelit/komunikasi#modulasi-dan-coding).
 
-## Cek Pemahaman
+## Cek pemahaman
 
 1. Kenapa satelit GEO butuh antena stasiun bumi jauh lebih besar (diameter
    >1,2 m) daripada penerima Starlink LEO (±0,3 m)?

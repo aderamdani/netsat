@@ -163,7 +163,7 @@ Router yang menggunakan koneksi internet dengan IP Publik dinamis (berubah-ubah 
 
 ---
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

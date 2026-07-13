@@ -309,7 +309,7 @@ Lalu jadwalkan:
 Untuk firewall `output`, pastikan `tcp/587` (atau `tcp/465`) diizinkan keluar
 menuju server SMTP.
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

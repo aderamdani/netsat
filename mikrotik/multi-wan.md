@@ -111,7 +111,7 @@ Jika kamu menggunakan **FastTrack** pada firewall rule IPv4, paket yang di-FastT
 
 ---
 
-## Cek Pemahaman
+## Cek pemahaman
 
 1.  Mengapa `check-gateway=ping` pada rute statis biasa dianggap kurang andal untuk link satelit atau modem internet modern?
     <br>→ Karena hanya menguji konektivitas lokal antara port router dan modem. Jika modem tetap menyala tetapi jaringan satelit/internet di atasnya putus, router akan tetap menganggap jalur tersebut aktif dan tidak akan memindahkan trafik.

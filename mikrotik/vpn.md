@@ -264,7 +264,7 @@ IKEv2 bukan pengganti WireGuard — pilih sesuai situasi. Untuk jaringan
 MikroTik-murni atau kebutuhan sederhana: WireGuard. Untuk lingkungan
 heterogen atau klien yang tidak bisa/tidak mau instal aplikasi: IKEv2.
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

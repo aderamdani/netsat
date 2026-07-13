@@ -21,7 +21,7 @@ Semua pintu keluar-masuk paket adalah *interface* — fisik maupun logis:
 | WireGuard/EoIP/GRE | `wireguard1` | Terowongan [VPN](/mikrotik/vpn) |
 | Loopback | `lo` | Alamat internal router — stabil untuk manajemen & BGP |
 
-```
+```routeros
 /interface/print
 ```
 
@@ -29,7 +29,7 @@ Bacaan pentingnya ada di kolom bendera: `R` = *running* (link hidup),
 `X` = *disabled*, `S` = *slave* (milik bridge/bonding — lihat bab berikutnya).
 Beri nama yang bermakna sejak awal:
 
-```
+```routeros
 /interface/ethernet/set ether1 comment="WAN - ke modem ISP"
 /interface/ethernet/set ether2 comment="LAN - switch kantor"
 ```
@@ -38,7 +38,7 @@ Beri nama yang bermakna sejak awal:
 
 Perintah inti seluruh halaman ini:
 
-```
+```routeros
 /ip/address/add address=192.0.2.1/24 interface=ether2 comment="Gateway LAN"
 ```
 
@@ -52,7 +52,7 @@ Perintah inti seluruh halaman ini:
 
 Periksa hasilnya:
 
-```
+```routeros
 /ip/address/print
 # Flags: D - dynamic
 #  #   ADDRESS            NETWORK         INTERFACE
@@ -76,7 +76,7 @@ yang jujur.
 Interface boleh memikul beberapa subnet sekaligus — berguna saat migrasi
 penomoran:
 
-```
+```routeros
 /ip/address/add address=192.0.2.1/24 interface=ether2
 /ip/address/add address=198.51.100.1/24 interface=ether2 comment="migrasi lama"
 ```
@@ -84,7 +84,7 @@ penomoran:
 Dan untuk link antar-router yang hanya butuh 2 alamat, gunakan `/30` persis
 seperti [teorinya](/networking/subnetting#subnetting-membagi-satu-blok-menjadi-beberapa):
 
-```
+```routeros
 /ip/address/add address=198.51.100.1/30 interface=ether5 comment="p2p ke router-B"
 ```
 
@@ -93,7 +93,7 @@ seperti [teorinya](/networking/subnetting#subnetting-membagi-satu-blok-menjadi-b
 Tabel penerjemah [IP ↔ MAC](/networking/switching#arp-jembatan-antara-ip-dan-mac)
 bisa diintip langsung:
 
-```
+```routeros
 /ip/arp/print
 #  #    ADDRESS        MAC-ADDRESS        INTERFACE
 #  0 DC 192.0.2.10     4C:5E:0C:11:22:33  ether2
@@ -108,7 +108,7 @@ bisa diintip langsung:
 Router adalah titik pandang terbaik untuk troubleshooting
 [per lapisan](/networking/model-osi#berpikir-per-lapisan-saat-troubleshooting):
 
-```
+```routeros
 /interface/monitor-traffic ether1 once     # L1/L2: link & laju bit
 /ping 192.0.2.10 count=4                   # L3: keterjangkauan host LAN
 /ping 203.0.113.1 src-address=192.0.2.1    # L3: uji dari alamat tertentu
@@ -120,7 +120,7 @@ Router adalah titik pandang terbaik untuk troubleshooting
   bukan dari router; sering mengungkap masalah yang "ping dari router jalan,
   dari klien tidak".
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

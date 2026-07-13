@@ -80,7 +80,7 @@ add chain=forward action=change-mss new-mss=1360 passthrough=no \
 
 ---
 
-## Cek Pemahaman
+## Cek pemahaman
 
 1.  Mengapa satu paket data yang terfragmentasi (terpecah) memiliki dampak penurunan performa yang jauh lebih buruk pada link satelit GEO dibanding link serat optik biasa?
     <br>→ Karena jika salah satu pecahan paket hilang, proses kirim ulang (*retransmission*) pada link satelit GEO memakan waktu RTT sangat tinggi (≈600 ms). Jeda waktu yang lama ini memicu mekanisme pencegahan kemacetan TCP untuk memotong kecepatan transfer data, membuat VPN terasa sangat lambat.

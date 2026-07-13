@@ -203,16 +203,13 @@ iptables -A INPUT -s 203.0.113.0/24 -p tcp --dport 22 -i eth0 -m state --state N
 | PREROUTING | (NAT chain) | `PREROUTING` | **Sebelum** keputusan routing — untuk DNAT |
 | POSTROUTING | (NAT chain) | `POSTROUTING` | **Sesudah** keputusan routing — untuk SNAT/MASQUERADE |
 
+```mermaid
+flowchart LR
+    P[Paket masuk] --> R{Routing}
+    R -- "Tujuan: firewall sendiri" --> I[INPUT] --> L[Proses lokal]
+    R -- Diteruskan --> F[FORWARD] --> PO[POSTROUTING] --> K[Keluar]
 ```
-                  ┌─────┐
-          ┌──────▶│INPUT│──▶ Proses lokal
-          │       └─────┘
-Paket ──▶──┼─────────────────────────▶ Routing ──▶──┐
-          │                                          │
-          │       ┌────────┐                         ▼
-          └──────▶│FORWARD │──────────────────────▶ POSTROUTING ──▶ Keluar
-                  └────────┘
-```
+*Paket yang ditujukan ke firewall sendiri masuk ke chain INPUT, sedangkan paket yang diteruskan melewati FORWARD lalu POSTROUTING sebelum keluar.*
 
 ### 2. Interface & zone
 
@@ -305,9 +302,11 @@ IP publik:
 
 Router di edge jaringan yang melakukan packet filtering dasar:
 
+```mermaid
+flowchart LR
+    A[Internet] --> B["Router (ACL)"] --> C[LAN]
 ```
-Internet ──▶ Router (ACL) ──▶ LAN
-```
+*Screening router: satu perangkat di edge melakukan packet filtering dasar antara internet dan LAN.*
 
 **Cocok untuk**: kantor kecil, koneksi tunggal, tim IT minimal.
 **Kelemahan**: tanpa stateful inspection, fitur terbatas.
@@ -317,11 +316,11 @@ Internet ──▶ Router (ACL) ──▶ LAN
 Host yang sengaja diekspos ke internet — satu-satunya titik masuk ke
 jaringan internal:
 
+```mermaid
+flowchart LR
+    A[Internet] --> B[Firewall] --> C["Bastion<br/>(SSH/RDP/Web)"] --> D[Jaringan internal]
 ```
-Internet ──▶ Firewall ──▶ Bastion (SSH/RDP/Web) ──▶ Jaringan internal
-                  │
-                  └──▶ Semua akses ke internal WAJIB lewat bastion
-```
+*Bastion host adalah satu-satunya titik masuk ke jaringan internal — semua akses (SSH/RDP/Web) wajib melewatinya, tidak ada jalur pintas langsung.*
 
 Bastion menyediakan:
 - **Jump box** untuk SSH/RDP ke server internal.
@@ -344,18 +343,13 @@ Segmen terpisah antara internet dan jaringan internal. Server publik
 (misal web, email, DNS) ditaruh di DMZ — jika dibobol, penyerang tidak
 langsung masuk ke LAN internal:
 
+```mermaid
+flowchart TD
+    I[Internet] --> F[Firewall]
+    F --> L["LAN<br/>Privat"]
+    F --> D["DMZ<br/>Publik"]
 ```
-             ┌──────────┐
-Internet ──▶ │ Firewall │
-             └────┬─────┘
-                  │
-          ┌───────┴────────┐
-          ▼                ▼
-      ┌────────┐     ┌──────────┐
-      │  LAN   │     │   DMZ    │
-      │ Privat │     │  Publik  │
-      └────────┘     └──────────┘
-```
+*Firewall memisahkan internet dari dua segmen: LAN privat (internal) dan DMZ publik (server yang diekspos) — jika DMZ dibobol, penyerang tidak langsung masuk ke LAN.*
 
 **Aturan firewall untuk DMZ**:
 
@@ -380,9 +374,11 @@ Internet ──▶ │ Firewall │
 Firewall tidak bertindak sebagai router. Ia "diselipkan" di antara switch
 dan router, bekerja di L2 seperti bridge yang memeriksa paket:
 
+```mermaid
+flowchart LR
+    A[Router] --> B["Firewall (bridge)"] --> C[Switch] --> D[Klien]
 ```
-Router ──▶ Firewall (bridge) ──▶ Switch ──▶ Klien
-```
+*Mode transparent/bridge: firewall bekerja di L2 tanpa IP, "diselipkan" di antara router dan switch tanpa mengubah skema pengalamatan.*
 
 **Cocok untuk**: organisasi yang tidak ingin mengubah skema IP. Firewall
 dioper tanpa IP pada interface bridge-nya.
@@ -406,22 +402,15 @@ Firewall adalah *single point of failure*. Solusinya: pasangan HA.
 - IP dan sesi dialihkan (state sync).
 - RouterOS: `/interface/vrrp/`.
 
+```mermaid
+flowchart TD
+    S1[Switch] --> FW1["FW1<br/>Aktif"]
+    S1 --> FW2["FW2<br/>Pasif"]
+    FW1 -- "Heartbeat (VRRP sync)" --- FW2
+    FW1 --> S2[Switch]
+    FW2 --> S2
 ```
-        ┌──────────┐
-        │  Switch  │
-        └────┬─────┘
-          ┌──┴──┐
-          ▼     ▼
-      ┌─────┐ ┌─────┐
-      │ FW1 │ │ FW2 │  ← Heartbeat (VRRP sync)
-      │ Aktif│ │ Pasif│
-      └──┬──┘ └──┬──┘
-          └──┬───┘
-             ▼
-        ┌──────────┐
-        │  Switch  │
-        └──────────┘
-```
+*Pasangan HA Active/Passive: kedua firewall terhubung ke switch di kedua sisi dan saling bertukar heartbeat (VRRP) — jika FW1 (aktif) mati, FW2 (pasif) mengambil alih.*
 
 **Active / Active (A/A)**:
 - Kedua firewall aktif, membagi beban trafik.
@@ -432,10 +421,13 @@ Firewall adalah *single point of failure*. Solusinya: pasangan HA.
 
 Arsitektur untuk aplikasi web yang serius:
 
+```mermaid
+flowchart LR
+    I[Internet] --> FW1["FW1<br/>L3-L4 + L7 WAF"] --> W[Web Server]
+    W --> FW2["FW2<br/>L4"] --> A[App Server]
+    A --> FW3["FW3<br/>L4"] --> D[(Database)]
 ```
-Internet ──▶ FW1 ──▶ Web Server ──▶ FW2 ──▶ App Server ──▶ FW3 ──▶ Database
-   (L3-L4)    (L7 WAF)             (L4)                  (L4)
-```
+*Setiap lapisan hanya bisa bicara dengan lapisan di sampingnya lewat firewall khusus: FW1 di edge (L3-L4 + L7 WAF), FW2 (L4) antara web dan app, FW3 (L4) antara app dan database.*
 
 Setiap lapisan hanya bisa bicara dengan lapisan di sampingnya — web server
 tidak bisa langsung ke database. Aturan:
@@ -477,11 +469,11 @@ yang hanya memberi peringatan.
 
 Integrasi firewall + IPS:
 
+```mermaid
+flowchart LR
+    T[Trafik] --> F["Firewall (L3-L4)<br/>blokir cepat"] --> I["IPS (L7)<br/>blokir cerdas"] --> L[LAN]
 ```
-Trafik ──▶ Firewall (L3-L4) ──▶ IPS (L7) ──▶ LAN
-               │                    │
-           blokir cepat       blokir cerdas
-```
+*Firewall melakukan blokir cepat di L3-L4 (ACL/stateful), lalu IPS memeriksa lebih dalam di L7 untuk mendeteksi pola serangan yang lebih halus.*
 
 RouterOS versi 7 mendukung IPS dasar dengan *packet sniffer* dan skrip
 deteksi, tapi untuk IPS serius, pasang Suricata/Snort di sistem terpisah.
@@ -490,14 +482,12 @@ deteksi, tapi untuk IPS serius, pasang Suricata/Snort di sistem terpisah.
 
 Firewall memeriksa konten HTTPS dengan menjadi "man in the middle" yang sah:
 
+```mermaid
+flowchart LR
+    B[Browser] -- "🔒 TLS (sertifikat internal FW)" --> F[Firewall]
+    F -- "🔒 TLS (sertifikat asli server)" --> S[Server]
 ```
-Browser ──▶ Firewall ──▶ Server
-   │            │           │
-   │  🔒 TLS    │  🔒 TLS   │
-   │  dengan FW  │  dengan   │
-   │  (sertifikat│  server   │
-   │  internal)  │  asli     │
-```
+*Firewall menjadi "man in the middle" yang sah: satu sesi TLS terpisah ke browser (sertifikat internal) dan satu sesi TLS lain ke server asli, sehingga isi trafik HTTPS bisa diperiksa di tengah.*
 
 **Cara kerja**:
 1. Firewall mencegat koneksi HTTPS dari klien.
@@ -668,10 +658,11 @@ Menyalakan `log=yes` di aturan `drop` default adalah resep bencana:
 
 ### 1. ISP edge — BGP + firewall
 
+```mermaid
+flowchart LR
+    I["Internet<br/>(BGP)"] --> B["Border Router<br/>(Core)"] --> F["Firewall<br/>(Edge FW)"] --> D[Distribusi] --> P[Pelanggan]
 ```
-Internet (BGP) ──▶ Border Router ──▶ Firewall ──▶ Distribusi ──▶ Pelanggan
-                   (Core)           (Edge FW)
-```
+*Topologi ISP edge: border router menangani routing BGP inti, firewall edge menyaring akses sebelum trafik didistribusikan ke pelanggan.*
 
 Tantangan:
 - **Throughput tinggi**: kecepatan 1–100 Gbps — FastTrack atau hardware
@@ -694,11 +685,13 @@ Tantangan:
 
 ### 2. Branch / kantor cabang
 
+```mermaid
+flowchart LR
+    I["Internet<br/>(MPLS / broadband)"] --> F[Firewall]
+    F --> L[LAN]
+    F -- VPN --> P[Pusat]
 ```
-Internet (MPLS / broadband) ──▶ Firewall ──▶ LAN
-                                     │
-                                     └──▶ VPN ke pusat
-```
+*Firewall kantor cabang meneruskan trafik lokal ke LAN sekaligus membuka tunnel VPN ke kantor pusat.*
 
 Tantangan:
 - **Manajemen terpusat**: The Dude, Ansible, atau TR-069.
@@ -716,13 +709,13 @@ Tantangan:
 
 ### 3. Data center
 
+```mermaid
+flowchart LR
+    I[Internet] --> LB[LB] --> FW[FW] --> T["ToR Switch"] --> S[Server]
+    I -. "DDoS scrubber (cloud)" .-> LB
+    FW -. "Management network (out-of-band)" .-> M[Management]
 ```
-Internet ──▶ LB ──▶ FW ──▶ ToR Switch ──▶ Server
-             │         │
-             │         └──▶ Management network (out-of-band)
-             │
-             └──▶ DDoS scrubber (cloud)
-```
+*Trafik data center melewati load balancer lalu firewall sebelum ke ToR switch dan server; DDoS scrubbing terjadi di cloud sebelum LB, dan jaringan manajemen terpisah (out-of-band) dari jalur data utama.*
 
 Tantangan:
 - **Aplikasi publik HTTP/HTTPS**: DNAT ke server internal.
@@ -746,9 +739,11 @@ Tantangan:
 
 ### 4. SOHO / rumah
 
+```mermaid
+flowchart LR
+    M["ISP Modem"] --> R[RouterOS] --> W["Wi-Fi AP"] --> D[Perangkat]
 ```
-ISP Modem ──▶ RouterOS ──▶ Wi-Fi AP ──▶ Perangkat
-```
+*Topologi SOHO sederhana: satu perangkat RouterOS sering merangkap NAT, firewall, dan Wi-Fi AP dalam satu kotak.*
 
 Tantangan:
 - **Setup sederhana**: masquerade + allow established + drop default.

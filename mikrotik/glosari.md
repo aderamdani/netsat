@@ -229,6 +229,12 @@ dan slot waktu tertentu. Lihat
 MTU dikurangi header. Klamping MSS penting untuk VPN di atas link satelit.
 Lihat [VPN & satelit](/mikrotik/vpn#vpn-di-atas-link-satelit).
 
+**MTU** — *Maximum Transmission Unit*. Ukuran maksimum satu frame/paket yang
+boleh lewat sebuah interface tanpa dipecah (fragmentasi). Overhead tunnel
+(VPN, PPPoE, VLAN) mengurangi MTU efektif — sumber masalah klasik yang
+diselesaikan dengan klamping MSS. Lihat
+[Optimasi VPN & MTU/MSS](/mikrotik/vpn-optimization).
+
 ## N
 
 **NAT** — *Network Address Translation*. Menerjemahkan alamat IP privat ke
@@ -236,11 +242,20 @@ publik (src-nat) atau sebaliknya (dst-nat). Lihat
 [NAT](/mikrotik/dhcp-dns-nat#nat).
 
 **Neighbor discovery** — Protokol RouterOS untuk menemukan perangkat MikroTik
-lain di segmen layer 2 yang sama. Lihat
+lain di segmen layer 2 yang sama. Jangan tertukar dengan *Neighbor Discovery*
+(ND) IPv6 — lihat entri **SLAAC** di bawah. Lihat
 [Ritual WinBox](/mikrotik/akses-awal#ritual-pertama-di-winbox).
 
 **Netinstall** — Utilitas untuk menginstal atau memulihkan RouterOS dari
 komputer, biasanya saat firmware rusak (*bricked*).
+
+**Netwatch** — Alat monitoring RouterOS yang memeriksa status host/link
+secara berkala (mis. lewat ping) dan menjalankan skrip ketika kondisinya
+berubah. Di RouterOS v7, probe ICMP-nya bisa memantau *latency-avg*,
+*jitter*, dan *loss-percent* — bukan cuma UP/DOWN — sehingga bisa memicu
+penyesuaian bandwidth otomatis saat link memburuk (mis. rain fade di VSAT).
+Lihat [QoS Dinamis](/mikrotik/dynamic-qos) dan
+[Pemantauan Link Lanjutan](/mikrotik/scripting-otomatisasi#_2-pemantauan-link-lanjutan-dengan-netwatch).
 
 **NTP** — *Network Time Protocol*. Menjaga jam router tetap akurat. Penting
 untuk log, sertifikat, dan troubleshooting. Lihat
@@ -323,6 +338,13 @@ skrip, backup, atau perintah pada waktu/interval tertentu. Lihat
 **Simple queue** — Metode QoS paling sederhana: batasi bandwidth per
 target (IP, subnet, interface). Lihat
 [Simple queue](/mikrotik/firewall-qos#simple-queue).
+
+**SLAAC** — *Stateless Address Autoconfiguration*. Metode IPv6 di mana host
+menyusun sendiri alamatnya dari Router Advertisement, tanpa server DHCP —
+mengandalkan protokol *Neighbor Discovery* (ND) IPv6, berbeda dari "Neighbor
+discovery" MikroTik di atas yang murni protokol penemuan perangkat L2
+RouterOS. Lihat
+[Distribusi Alamat ke LAN](/mikrotik/ipv6#_3-distribusi-alamat-ke-lan-slaac-nd).
 
 **SNMP** — *Simple Network Management Protocol*. Protokol untuk memantau
 perangkat jaringan dari sistem monitoring (Zabbix, LibreNMS). Lihat

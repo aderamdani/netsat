@@ -87,7 +87,7 @@ add name=skrip-cuaca-cerah source={
 
 ---
 
-## Cek Pemahaman
+## Cek pemahaman
 
 1.  Kenapa kita tidak boleh membiarkan batas limit QoS (`max-limit`) tetap di 10 Mbps ketika kapasitas riil satelit menurun menjadi 3 Mbps saat hujan lebat?
     <br>→ Karena jika batas limit tetap 10 Mbps, antrean data tidak akan tertahan di router (karena router merasa masih ada sisa bandwidth). Paket data akan langsung diteruskan ke modem satelit dan menumpuk di buffer modem. Hal ini menyebabkan penundaan (*bufferbloat*) yang parah dan membuat aturan prioritas QoS di router tidak berfungsi sama sekali.

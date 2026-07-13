@@ -306,7 +306,7 @@ di tiap segmen. Cukup satu server pusat, dan sisanya dilayani oleh *relay*:
 Tanpa baris ini, server tak tahu gateway dan DNS apa yang harus
 diberikan ke klien di VLAN 10.
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

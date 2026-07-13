@@ -19,6 +19,7 @@ import OsiInteractive from './components/OsiInteractive.vue'
 import EncapsulationDemo from './components/EncapsulationDemo.vue'
 import IpHeaderInteractive from './components/IpHeaderInteractive.vue'
 import TcpInteractiveDemo from './components/TcpInteractiveDemo.vue'
+import SubnetCalculator from './components/SubnetCalculator.vue'
 
 export default {
   extends: DefaultTheme,
@@ -33,6 +34,7 @@ export default {
     app.component('EncapsulationDemo', EncapsulationDemo)
     app.component('IpHeaderInteractive', IpHeaderInteractive)
     app.component('TcpInteractiveDemo', TcpInteractiveDemo)
+    app.component('SubnetCalculator', SubnetCalculator)
 
     // View Transitions API
     if (typeof window !== 'undefined' && 'startViewTransition' in document) {

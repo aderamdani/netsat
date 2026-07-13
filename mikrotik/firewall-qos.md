@@ -242,7 +242,7 @@ jam kerja, batasi internet anak-anak di malam hari:
 - Kombinasikan dengan address-list untuk kontrol **siapa** dan **kapan**:
   daftar `anak` diisi manual, aturan waktu di atas membatasi jadwal.
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

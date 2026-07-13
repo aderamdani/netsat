@@ -73,6 +73,13 @@ tersita:
 - **Network address** — semua bit host `0` (mis. `192.168.10.0`), nama subnet itu sendiri.
 - **Broadcast address** — semua bit host `1` (mis. `192.168.10.255`), alamat "ke semua".
 
+### Coba sendiri: kalkulator subnet
+
+Ubah alamat IP atau geser prefix-nya, lihat bit jaringan/host serta
+network/broadcast/rentang host berubah langsung.
+
+<SubnetCalculator />
+
 ## Alamat khusus yang wajib hafal
 
 | Blok | Fungsi |
@@ -214,13 +221,13 @@ Untuk mempermudah penulisan, terdapat dua aturan resmi:
 ### 2. Anatomi Alamat IPv6
 Secara default, alamat IPv6 standar untuk pengguna akhir (LAN) adalah **/64**. Alamat ini dibagi menjadi dua bagian sama besar:
 
-```
-┌───────────────────────────────── 128 Bit ─────────────────────────────────┐
-│              Network Prefix (64 Bit)              │   Interface ID (64 Bit)   │
-├───────────────────────────────────┼───────────────┼───────────────────────┤
-│    Global Routing Prefix (48 Bit) │ Subnet (16 Bit)│   MAC / Random (64)   │
-└───────────────────────────────────┴───────────────┴───────────────────────┘
-```
+| Segmen | Panjang | Bagian dari | Fungsi |
+| --- | --- | --- | --- |
+| Global Routing Prefix | 48 bit | Network Prefix (64 bit) | Blok alamat dari ISP ke organisasi/pelanggan |
+| Subnet ID | 16 bit | Network Prefix (64 bit) | Segmentasi jaringan internal (hingga 2¹⁶ subnet /64) |
+| Interface ID | 64 bit | — | Identitas host: MAC (EUI-64) atau acak untuk privasi |
+
+*Alamat IPv6 /64 standar terbagi rata: 64 bit pertama (Network Prefix) dipecah lagi menjadi Global Routing Prefix dan Subnet ID, sementara 64 bit terakhir (Interface ID) menjadi identitas host — total 128 bit.*
 
 * **Network Prefix (64 bit pertama):** Digunakan untuk proses routing di internet dan lokal.
   * **Global Routing Prefix (biasanya 48 bit pertama):** Blok alamat yang diberikan oleh ISP ke organisasi/pelanggan.
@@ -262,7 +269,7 @@ Satu blok `/48` memiliki 16 bit kosong sebelum mencapai batas standar `/64` (`64
 
 ---
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

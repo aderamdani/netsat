@@ -340,7 +340,7 @@ Mengetahui musuh dan alatnya membuat pertahanan lebih tajam:
 
 ```bash
 # Di RouterOS: blokir IOC via address-list (contoh)
-/ip/firewall/address-list/add list=threat-intel address=185.220.101.0/24
+/ip/firewall/address-list/add list=threat-intel address=203.0.113.0/24
 /ip/firewall/filter/add chain=input src-address-list=threat-intel action=drop
 ```
 

@@ -82,7 +82,7 @@ Contoh: blokir akses antar-pelanggan (isolasi):
 /ip/firewall/filter/add chain=forward in-interface=pppoe-pppoe-wan out-interface=pppoe-pppoe-wan action=drop
 ```
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

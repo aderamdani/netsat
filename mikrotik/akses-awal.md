@@ -161,7 +161,7 @@ Rangkuman yang layak ditempel di dinding — urutan untuk **setiap** kotak baru:
 Tujuh baris, lima menit — dan routermu sudah lebih aman daripada mayoritas
 perangkat yang tersambung ke internet hari ini.
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

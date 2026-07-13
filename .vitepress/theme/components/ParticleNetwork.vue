@@ -46,15 +46,24 @@ const resize = () => {
   particles = Array.from({ length: numParticles }, () => new Particle(width, height))
 }
 
+const isDark = () => document.documentElement.classList.contains('dark')
+
 const render = () => {
   if (!ctx || !canvasRef.value) return
-  
+
   ctx.clearRect(0, 0, width, height)
-  
-  // Warna garis dasar
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)'
-  
+
+  // Warna partikel/garis menyesuaikan tema — putih transparan cocok di latar
+  // gelap tapi nyaris tak terlihat di latar terang (--ns-paper hampir putih),
+  // jadi pakai warna ink gelap saat mode terang.
+  const dark = isDark()
+  const particleColor = dark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(16, 22, 31, 0.22)'
+  const lineColor = dark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(16, 22, 31, 0.07)'
+  const [goldR, goldG, goldB] = dark ? [227, 179, 94] : [154, 103, 0] // --ns-gold per tema
+
+  ctx.fillStyle = particleColor
+  ctx.strokeStyle = lineColor
+
   for (let i = 0; i < particles.length; i++) {
     const p = particles[i]
     p.update()
@@ -85,13 +94,12 @@ const render = () => {
     const distSqMouse = dxm * dxm + dym * dym
     if (distSqMouse < 25000) {
       ctx.beginPath()
-      // e.g. gold color var(--ns-gold) roughly rgba(212, 175, 55, ...)
-      ctx.strokeStyle = `rgba(212, 175, 55, ${0.4 * (1 - distSqMouse / 25000)})` 
+      ctx.strokeStyle = `rgba(${goldR}, ${goldG}, ${goldB}, ${0.4 * (1 - distSqMouse / 25000)})`
       ctx.lineWidth = 1.5
       ctx.moveTo(p.x, p.y)
       ctx.lineTo(mouse.x, mouse.y)
       ctx.stroke()
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)' // Reset
+      ctx.strokeStyle = lineColor // Reset
       ctx.lineWidth = 1
     }
   }

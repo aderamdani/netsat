@@ -33,7 +33,7 @@
 
   --vp-c-text-1: var(--ns-ink);
   --vp-c-text-2: #4b5263;
-  --vp-c-text-3: #767d8d;
+  --vp-c-text-3: #636a78; /* AA 5.2:1 vs --ns-paper (naik dari 3.95:1) */
 
   --vp-font-family-base: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --vp-font-family-mono: var(--ns-font-mono);
@@ -79,7 +79,7 @@
 
   --vp-c-text-1: #e8e6df;
   --vp-c-text-2: #a3a89f;
-  --vp-c-text-3: #6f7580;
+  --vp-c-text-3: #7f8694; /* AA 5.15:1 vs --vp-c-bg (naik dari 4.07:1) */
 
   --vp-button-brand-bg: var(--ns-gold);
   --vp-button-brand-border: var(--ns-gold);
@@ -248,6 +248,20 @@
   color: var(--ns-gold);
 }
 
+/* konten yang harus tetap terbaca pembaca layar walau tersembunyi visual
+   (mis. deskripsi data yang di layar hanya muncul lewat tooltip hover) */
+.ns-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ---------- aksesibilitas ---------- */
 
 :focus-visible {
@@ -255,10 +269,17 @@
   outline-offset: 2px;
 }
 
+/* aturan payung: matikan semua animasi/transisi/scroll-anim di seluruh situs
+   kalau OS minta reduced motion, supaya komponen interaktif baru otomatis
+   patuh tanpa perlu opt-in satu-satu di tiap file */
 @media (prefers-reduced-motion: reduce) {
-  .ns-orbit-anim,
-  .ns-orbit-anim * {
-    animation: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

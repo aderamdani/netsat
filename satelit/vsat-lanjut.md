@@ -19,10 +19,13 @@ secara permanen ke satu koneksi.
 
 ### Cara kerja
 
+```mermaid
+flowchart LR
+    A["Remote A"] -- "14.025 GHz (dedicated)" --> T["Transponder"]
+    B["Remote B"] -- "14.050 GHz (dedicated)" --> T
+    T --> HUB["Hub"]
 ```
-Remote A ──▶ 14.025 GHz (dedicated) ──▶ Transponder ──▶ Hub
-Remote B ──▶ 14.050 GHz (dedicated) ──▶ Transponder ──▶ Hub
-```
+*Setiap remote SCPC memancar di frekuensi carrier sendiri yang selalu aktif — tidak berebut slot seperti MF-TDMA.*
 
 Berbeda dengan TDMA yang bergiliran dalam slot waktu, setiap remote SCPC
 memiliki frekuensi sendiri yang selalu aktif — seperti jalur pribadi di
@@ -321,15 +324,14 @@ Berikut adalah penjelasan mendalam tentang penyebab, dampak, dan prosedur troubl
 
 **Slop Mekanis** adalah adanya celah kelonggaran, ruang main, atau *backlash* pada komponen fisik penyangga (mount) atau roda gigi penggerak antena VSAT. 
 
+```mermaid
+flowchart TD
+    A["Beban angin / getaran"] --> B["Reflektor"]
+    B -- "slop mekanik / celah gear" --> C["Sudut pointing bergeser<br/>(±0,2° s.d. ±1°)"]
+    C --> D["Sinyal drop / off target"]
 ```
-[Beban Angin / Getaran]
-      │
-      ▼
-   [Reflektor] ──(slop mekanik/celah gear)──▶ Sudut Pointing Bergeser (±0.2° s.d ±1°)
-                                                   │
-                                                   ▼
-                                         Sinyal Drop / Off Target
-```
+*Kelonggaran mekanis pada mount atau gearbox penggerak antena berujung pada
+pergeseran pointing yang menjatuhkan sinyal.*
 
 #### A. Mengapa Slop Mekanis Terjadi?
 * **Keausan Gigi Gearbox:** Pada sistem antena bermotor (seperti *Auto-Pointing* atau *tracking antenna* pada kapal maritim), gesekan terus-menerus mengikis gigi-gigi penggerak sehingga timbul celah.
@@ -357,19 +359,10 @@ Berikut adalah penjelasan mendalam tentang penyebab, dampak, dan prosedur troubl
 
 Berbeda dengan slop mekanik, **Slope RF** adalah deviasi atau ketidakrataan respons frekuensi di mana sinyal mengalami penurunan gain (redaman) secara bertahap seiring dengan meningkatnya frekuensi kerja di sepanjang kabel koaksial IFL (*Inter-Facility Link*).
 
-```
-Level Sinyal (dB)
-  ▲
-  │   [Respons Frekuensi Rata / Flat]
-  │  ────────────────────────────────────── (Tanpa Redaman Kabel Panjang)
-  │
-  │  ──＼
-  │      ＼
-  │        ＼  [Slope RF / Redaman Miring] (Sinyal frekuensi tinggi teredam lebih parah)
-  │          ──＼
-  ─┴──────────────────────────────────────▶ Frekuensi L-Band (MHz)
-     950 MHz                           2150 MHz
-```
+| Kondisi | Bentuk respons frekuensi (950–2150 MHz) | Implikasi |
+| --- | --- | --- |
+| **Ideal (flat)** | Redaman rata di seluruh band — tanpa kabel IFL yang panjang | Tidak perlu kompensasi |
+| **Nyata (slope RF)** | Redaman meningkat bertahap seiring naiknya frekuensi | Sinyal dekat 2150 MHz teredam jauh lebih parah dibanding dekat 950 MHz |
 
 #### A. Mengapa Slope RF Terjadi?
 Sinyal IF (Intermediate Frequency) antara modem (IDU) dan ODU ditransmisikan menggunakan kabel koaksial (biasanya L-Band: 950–2150 MHz). Berdasarkan hukum fisika RF, redaman kabel koaksial berbanding lurus dengan frekuensi.
@@ -441,21 +434,20 @@ graph TD
 
 Hub adalah "otak" jaringan VSAT. Ia jauh lebih kompleks dari remote:
 
-```text
-Antena besar (7–13 m)
-    │
-    ├── HPA (High Power Amplifier) — 100–500W
-    ├── LNB/LNA dengan redundancy
-    │
-    Modem Hub — menerima banyak carrier inbound
-    │
-    ├── BMS (Bandwidth Management System) — alokasi TDMA, QoS, CIR/MIR
-    ├── PEP Server — akselerasi TCP
-    ├── NMS (Network Management System) — monitoring + konfigurasi
-    ├── DHCP / DNS server
-    │
-    └── Router — koneksi ke internet / WAN korporat
+```mermaid
+flowchart TD
+    ANT["Antena besar (7–13 m)"] --> HPA["HPA (High Power Amplifier)<br/>100–500W"]
+    ANT --> LNB["LNB/LNA<br/>dengan redundancy"]
+    HPA --> MODEM["Modem Hub<br/>menerima banyak carrier inbound"]
+    LNB --> MODEM
+    MODEM --> BMS["BMS (Bandwidth Management System)<br/>alokasi TDMA, QoS, CIR/MIR"]
+    MODEM --> PEP["PEP Server<br/>akselerasi TCP"]
+    MODEM --> NMS["NMS (Network Management System)<br/>monitoring + konfigurasi"]
+    MODEM --> DHCP["DHCP / DNS server"]
+    MODEM --> ROUTER["Router<br/>koneksi ke internet / WAN korporat"]
 ```
+*Komponen inti hub VSAT: antena besar dan modem sebagai pusat, dengan BMS,
+PEP, NMS, DHCP, dan router bercabang di baliknya.*
 
 ### Redundancy
 
@@ -609,22 +601,20 @@ Tidak semua satelit stasioner di GEO. Untuk pengguna yang bergerak:
 
 ### Arsitektur
 
+```mermaid
+flowchart TD
+    GW["Gateway<br/>(11 stasiun bumi nasional)"] -- "fiber" --> NOC["NOC BAKTI + NMS"]
+    GW --> SAT(("SATRIA-1<br/>GEO 146° BT"))
+    SAT --> SB1["Spot beam A1 → Sumatera Utara"]
+    SAT --> SB2["Spot beam B3 → Kalimantan Tengah"]
+    SAT --> SB3["Spot beam D2 → Papua"]
+    SAT --> SBN["… 143 spot beam lainnya"]
+    SB1 & SB2 & SB3 & SBN --> R["Remote VSAT (0,9–1,8 m)"]
+    R --> ROS["RouterOS → LAN"]
 ```
-Gateway (11 stasiun bumi nasional)
-    │ (fiber)
-    ├── NOC BAKTI + NMS
-    │
-    └── SATRIA-1 GEO 146° BT
-            │
-            ├── Spot beam [A1] → Sumatera Utara
-            ├── Spot beam [B3] → Kalimantan Tengah
-            ├── Spot beam [D2] → Papua
-            └── ... 143 spot beam lainnya
-                    │
-                    ▼
-            Remote VSAT (0,9–1,8 m)
-                └── RouterOS → LAN
-```
+*Arsitektur SATRIA-1: gateway nasional naik ke satelit lewat fiber, satelit
+memancarkan 146 spot beam ke seluruh Indonesia, tiap spot melayani banyak
+remote VSAT yang berakhir di RouterOS lokal.*
 
 ### Apa artinya bagi network engineer
 

@@ -261,11 +261,16 @@ PCC akan membagi koneksi menjadi 2 bagian (`denominator=2`):
 * Koneksi bagian pertama (`remainder=0`) dikirim ke **WAN1**.
 * Koneksi bagian kedua (`remainder=1`) dikirim ke **WAN2**.
 
+```mermaid
+flowchart LR
+    C["Client LAN"] --> PRE["Prerouting"]
+    PRE -- "Mangle (PCC 2/0)" --> T1["Table: via-wan1"]
+    T1 --> W1["WAN1 – Fiber"]
+    PRE -- "Mangle (PCC 2/1)" --> T2["Table: via-wan2"]
+    T2 --> W2["WAN2 – Starlink/VSAT"]
 ```
-                           ┌──▶ Mangle (PCC 2/0) ──▶ Table: via-wan1 ──▶ [WAN1 - Fiber]
- [Client-Client LAN] ──▶ Prerouting
-                           └──▶ Mangle (PCC 2/1) ──▶ Table: via-wan2 ──▶ [WAN2 - Starlink]
-```
+*PCC mengklasifikasikan koneksi di Prerouting menjadi dua kelompok (remainder
+0/1), masing-masing selalu lewat tabel routing WAN yang sama secara konsisten.*
 
 ### Langkah-Langkah Konfigurasi PCC (Dual-WAN)
 
@@ -355,7 +360,7 @@ Dengan metode Hybrid WAN ini, pengguna mendapatkan kenyamanan ganda: berselancar
 
 ---
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

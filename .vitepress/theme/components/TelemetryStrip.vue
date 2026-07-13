@@ -58,26 +58,29 @@ const testPing = async () => {
           <dd>2³²</dd>
         </div>
         <div class="ns-readout live-data">
-          <dt>KONEKSI AKTIF <span class="blink">●</span></dt>
+          <dt>KONEKSI AKTIF (SIMULASI) <span class="blink">●</span></dt>
           <dd>{{ activeConnections.toLocaleString('id-ID') }}</dd>
         </div>
         <div class="ns-readout live-data">
-          <dt>SIGNAL STRENGTH</dt>
+          <dt>SIGNAL STRENGTH (SIMULASI)</dt>
           <dd>{{ signalStrength }}%</dd>
         </div>
         <div class="ns-readout">
-          <dt>LIVE PING</dt>
+          <dt>PING (SIMULASI)</dt>
           <dd class="ping-display">{{ pingValue }}</dd>
         </div>
       </dl>
-      <button 
-        class="ns-btn-ping" 
-        @click="testPing" 
+      <button
+        class="ns-btn-ping"
+        @click="testPing"
         :disabled="isPinging"
       >
-        {{ isPinging ? 'Menguji...' : 'Test Ping' }}
+        {{ isPinging ? 'Menguji...' : 'Coba simulasi ping' }}
       </button>
     </div>
+    <p class="ns-telemetry-note">
+      Angka di atas ilustratif untuk keperluan belajar, bukan data jaringan real-time.
+    </p>
   </section>
 </template>
 
@@ -164,5 +167,11 @@ const testPing = async () => {
 
 .ping-display {
   min-width: 110px;
+}
+
+.ns-telemetry-note {
+  margin: 10px 0 0;
+  font-size: 11.5px;
+  color: var(--vp-c-text-3);
 }
 </style>

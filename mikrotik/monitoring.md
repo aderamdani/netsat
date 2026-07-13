@@ -102,7 +102,7 @@ Contoh keluaran (output) terminal:
  1 192.168.88.1                     0%   5    0.4ms    0.5ms    0.3ms    0.8ms
  2 10.10.10.1                       0%   5    5.2ms    6.1ms    4.8ms    12ms
  3 *                                100% 5    timeout
- 4 103.12.15.5                      0%   5    15.4ms   16.2ms   15.1ms   22ms
+ 4 203.0.113.5                      0%   5    15.4ms   16.2ms   15.1ms   22ms
  5 1.1.1.1                          0%   5    18.1ms   19.0ms   17.8ms   25ms
 ```
 
@@ -156,7 +156,7 @@ Sintaks dasar di RouterOS CLI:
 Contoh keluaran (output) terminal:
 ```text
  MAC-SRC           IP-SRC             IP-DST             PORT  TX-RATE   RX-RATE  
- AA:BB:CC:DD:EE:11 192.168.88.254     104.244.42.1       443   12.5kbps  1.2Mbps
+ AA:BB:CC:DD:EE:11 192.168.88.254     203.0.113.10       443   12.5kbps  1.2Mbps
  AA:BB:CC:DD:EE:22 192.168.88.253     8.8.8.8            53    1.2kbps   0.8kbps
  AA:BB:CC:DD:EE:33 192.168.88.120     198.51.100.42      80    2.4Mbps   12.1kbps
 ```
@@ -222,7 +222,7 @@ tambahan:
   mendukung.
 - Cek `/container/print` — status harus `running`.
 
-## Uji pemahaman
+## Cek pemahaman
 
 <details>
 <summary>Lihat jawaban</summary>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
 const steps = [
   { name: 'Application',  sender: '[Data]',                               receiver: '[Data]' },

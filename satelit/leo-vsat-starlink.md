@@ -102,7 +102,7 @@ Untuk kebutuhan mobilitas ini, Starlink menggunakan antena tipe **Flat High Perf
 
 ---
 
-## Cek Pemahaman
+## Cek pemahaman
 
 1.  Mengapa Starlink tidak memerlukan perangkat PEP (akselerator TCP) eksternal seperti halnya VSAT GEO?
     <br>→ Karena latensi Starlink sangat rendah (≈30 ms). Dengan latensi sekecil itu, mekanisme konfirmasi paket TCP (ACK) diterima dengan cepat, sehingga jendela pengiriman TCP tidak mengalami kemacetan (*window starvation*) dan kecepatan tinggi bisa dicapai secara native.
